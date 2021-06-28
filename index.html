@@ -1,17 +1,76 @@
+<!DOCTYPE html>
+<html lang="cn">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <link rel="stylesheet" href="theme/bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="theme/css/my.css" />
+    <title>MyNotes</title>
+  </head>
 
-<html>
-<head>
-    <link rel="stylesheet" href="theme/main.css" type="text/css" />
-    <meta name="viewport"content="width=device-width, initial-scale=1"/>
-</head>
-<body>
-<ul class="grid">
-<li><a href="architecture/index.html">architecture</a>
-<li><a href="backend/index.html">backend</a>
-<li><a href="database/index.html">database</a>
-<li><a href="Doing/index.html">Doing</a>
-<li><a href="Java/index.html">Java</a>
-<li><a href="life/index.html">life</a>
-<li><a href="management/index.html">management</a>
-<li><a href="product/index.html">product</a>
-</ul></body></html>
+  <body>
+    <div id="container" class="container">
+      <div class="row">
+        <header class="col-md-2">
+          <div class="logo">
+            <span class="visiable-xs">MyNotes</span>
+          </div>
+          <div class="header-nav">
+            <ul class="clearfix">
+              <li><a id="Doing" href="#" class="glyphicon glyphicon-camera" @click="changeCate">Doing</a></li>
+              <li><a id="architecture" href="#" class="glyphicon glyphicon-camera" @click="changeCate">架构</a></li>
+              <li><a id="backend" href="#" class="glyphicon glyphicon-camera" @click="changeCate">后端</a></li>
+              <li><a id="database" href="#" class="glyphicon glyphicon-camera" @click="changeCate">数据库</a></li>
+              <li><a id="Java" href="#" class="glyphicon glyphicon-camera" @click="changeCate">Java</a></li>
+              <li><a id="management" href="#" class="glyphicon glyphicon-camera" @click="changeCate">管理</a></li>
+              <li><a id="life" href="#" class="glyphicon glyphicon-camera" @click="changeCate">生活</a></li>
+              <li><a id="product" href="#" class="glyphicon glyphicon-camera" @click="changeCate">产品</a></li>
+            </ul>
+          </div>
+        </header>
+        <article class="col-md-9">
+          <div id="publish" class="publish">
+            <!--
+            <div class="row col-md-12">
+              <h3>世界真美 令人惊叹 卫星拍地球风景地貌</h3>
+              <p class="text-muted">
+                2015年11月29日，四川成都，貌似马云的门卫柯全寿。日前，在新鸿路南一巷一小区内，一名叫柯全寿的门卫被许多小区住户认为其长相貌似阿里巴巴总裁
+              </p>
+            </div>
+            -->
+          </div>
+        </article>
+      </div>
+    </div>
+
+    <script src="https://unpkg.com/vue@3.1.2/dist/vue.global.prod.js"></script>
+    <script src="axios.min.js"></script>
+
+    <script type="text/javascript">
+      const Counter = {
+        data() {
+          return {
+            counter: "",
+          };
+        },
+        methods: {
+          changeCate(event) {
+            axios
+              .get("https://gjhuai.github.io/"+ event.target.id +"/index.html")
+              .then((response) => {
+                console.log(response.data);
+                document.getElementById("publish").innerHTML = response.data;
+              })
+              .catch((error) => {
+                alert(error);
+              });
+          },
+        },
+        mounted() {},
+      };
+
+      Vue.createApp(Counter).mount("#container");
+    </script>
+  </body>
+</html>

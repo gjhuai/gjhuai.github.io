@@ -1,0 +1,151 @@
+@media screen and (max-width:768px){
+  .header-nav ul li{
+    float: left !important;
+    width: 20%;
+    text-align: center;
+    height: 100%;
+  }
+  .header-nav ul{
+    margin-bottom: 0;
+    border-bottom: 1px solid #666;
+  }
+  .header-nav ul li a{
+    padding: 0;
+  }
+  header{
+    padding: 0 !important;
+  }
+  .news li:nth-child(1){
+    width: 100% !important;
+  }
+  .news li{
+    width: 50% !important;
+  }
+}
+
+ul li{
+  list-style: none !important;
+  
+}
+a:hover{
+  text-decoration: none;
+}
+a{
+  text-decoration: none;
+  color: #666;
+}
+
+/* .container的最大宽度为1280px */
+@media screen and (min-width:1280px){
+  .container{
+    width: 1280px;
+  }
+}
+.logo span{
+  color: #eee;
+  background-color: #428bca;
+  font-size: 18px;
+  display: block;
+  height: 50px;
+  line-height: 50px;
+  text-align: center;
+}
+/* header */
+header{
+  padding-left: 0 !important;
+  margin-bottom: 20px;
+}
+header img{
+  width: 100%;
+}
+
+.header-nav{
+  background-color: #eee;
+  border-bottom: 1px solid #ccc;
+}
+.header-nav ul{
+  padding: 0;
+}
+.header-nav a{
+  display: block;
+  height: 50px;
+  line-height: 50px;
+  padding-left:40px ;
+  font-size: 16px;
+}
+.header-nav a:hover{
+  background-color: #fff;
+  color: #333;
+}
+.header-nav a::before{
+  vertical-align: middle;
+  padding-right: 5px;
+}
+/* 中间 */
+.news ul{
+  padding-left: 0;
+}
+.news li{
+  float: left;
+  width: 25%;
+  height: 128px;
+  padding-right: 10px;
+  margin-bottom: 10px;
+}
+.news li a{
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+  background-color: purple;
+}
+.news li:nth-child(1){
+  width: 50%;
+  float: left;
+  height: 266px;
+  /* background-color: pink; */
+}
+.news li:nth-child(1) p{
+  line-height: 41px;
+  font-size: 20px;
+  padding: 0 10px;
+}
+.news li a img{
+  width: 100%;
+  height: 100%;
+}
+.news li a p{
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 41px;
+  margin-bottom: 0;
+  background: rgba(0, 0, 0, .5);
+  width: 100%;
+  padding-left: 10px;
+  color: #fff;
+  font-size: 12px;
+  padding: 5px 10px;
+}
+.publish{
+  border-top: 1px #ccc solid ;
+}
+.publish .row{
+  border-bottom: 1px solid #ccc;
+  padding: 10px 0;
+}
+
+.hot{
+  display: block;
+  margin-top: 20px;
+  border: 1px solid #ccc;
+  padding: 0 10px 5px;
+}
+.hot span{
+  border-radius: 0;
+  margin-bottom: 20px;
+}
+
+.hot p{
+  font-size: 12px;
+}
