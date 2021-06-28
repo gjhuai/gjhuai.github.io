@@ -18,7 +18,7 @@
           </div>
           <div class="header-nav">
             <ul class="clearfix">
-              <li><a id="Doing" href="#" class="glyphicon glyphicon-camera" @click="changeCate">Doing</a></li>
+              <li><a id="lastest" href="#" class="glyphicon glyphicon-camera" @click="changeCate">最近</a></li>
               <li><a id="architecture" href="#" class="glyphicon glyphicon-camera" @click="changeCate">架构</a></li>
               <li><a id="backend" href="#" class="glyphicon glyphicon-camera" @click="changeCate">后端</a></li>
               <li><a id="database" href="#" class="glyphicon glyphicon-camera" @click="changeCate">数据库</a></li>
@@ -30,15 +30,13 @@
           </div>
         </header>
         <article class="col-md-9">
-          <div id="publish" class="publish">
-            <!--
-            <div class="row col-md-12">
-              <h3>世界真美 令人惊叹 卫星拍地球风景地貌</h3>
-              <p class="text-muted">
-                2015年11月29日，四川成都，貌似马云的门卫柯全寿。日前，在新鸿路南一巷一小区内，一名叫柯全寿的门卫被许多小区住户认为其长相貌似阿里巴巴总裁
-              </p>
+          <div class="publish">
+            
+            <div class="row col-md-12" v-for="art in articles">
+              <h3><a :href="category + art.substring(0, art.length-2) + 'html'">{{art}}</a></h3>
+              <p class="text-muted"></p>
             </div>
-            -->
+            
           </div>
         </article>
       </div>
@@ -48,29 +46,38 @@
     <script src="theme/js/axios.min.js"></script>
 
     <script type="text/javascript">
-      const Counter = {
+      const Markdown = {
         data() {
           return {
-            counter: "",
+            md_index: {},
+            category: "",
+            articles: []
           };
         },
         methods: {
           changeCate(event) {
-            axios
-              .get("https://gjhuai.github.io/"+ event.target.id +"/index.html")
-              .then((response) => {
-                console.log(response.data);
-                document.getElementById("publish").innerHTML = response.data;
-              })
-              .catch((error) => {
-                alert(error);
-              });
+	          if (event.target.id === "lastest"){
+		          this.category = "";
+	          } else {
+		          this.category = event.target.id + "/";
+	          }
+	          this.articles = this.md_index[event.target.id];
+	          //console.log(this.articles)
           },
         },
-        mounted() {},
+        mounted() {
+			axios.get("https://gjhuai.github.io/md_index.json")
+              .then((response) => {
+                this.md_index = response.data;
+                console.log(this.md_index);
+              })
+              .catch((error) => {
+                console.log(error);
+              });
+	        },
       };
 
-      Vue.createApp(Counter).mount("#container");
+      Vue.createApp(Markdown).mount("#container");
     </script>
   </body>
 </html>
