@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="1 概述由于工作的项目上的需求，需要在浏览器上不间断的播放图片，即像播放视频一样播放图片。 后端支持采用Java实现，需要用Java编写一个Http服务器，并提供WebSocket服务。前后端通过Http链接或WebSocket提供图片浏览服务，前端采用JS轮询或WebSocket推送的方式获取图片，浏览器显示图片有两种方式：一种是采用连续切换图片源，实现播放效果；另一种采用将图片画在canvas">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Hexo">
+<meta property="og:url" content="http://example.com/2021/06/28/architecture/%E5%9B%BE%E7%89%87%E6%92%AD%E6%94%BE%E6%8A%80%E6%9C%AF%E6%80%BB%E7%BB%93/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="1 概述由于工作的项目上的需求，需要在浏览器上不间断的播放图片，即像播放视频一样播放图片。 后端支持采用Java实现，需要用Java编写一个Http服务器，并提供WebSocket服务。前后端通过Http链接或WebSocket提供图片浏览服务，前端采用JS轮询或WebSocket推送的方式获取图片，浏览器显示图片有两种方式：一种是采用连续切换图片源，实现播放效果；另一种采用将图片画在canvas">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2021-06-28T03:26:10.837Z">
+<meta property="article:modified_time" content="2020-05-19T11:28:44.000Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-architecture/图片播放技术总结" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2021/06/28/architecture/%E5%9B%BE%E7%89%87%E6%92%AD%E6%94%BE%E6%8A%80%E6%9C%AF%E6%80%BB%E7%BB%93/" class="article-date">
+  <time class="dt-published" datetime="2021-06-28T03:26:10.837Z" itemprop="datePublished">2021-06-28</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="1-概述"><a href="#1-概述" class="headerlink" title="1 概述"></a>1 概述</h1><p>由于工作的项目上的需求，需要在浏览器上不间断的播放图片，即像播放视频一样播放图片。</p>
+<p>后端支持采用Java实现，需要用Java编写一个Http服务器，并提供WebSocket服务。前后端通过Http链接或WebSocket提供图片浏览服务，前端采用JS轮询或WebSocket推送的方式获取图片，浏览器显示图片有两种方式：一种是采用<img>连续切换图片源，实现播放效果；另一种采用将图片画在canvas上面，实现播放。</p>
+<p>要完成这个功能涉及到以下技术：</p>
+<ul>
+<li>Http服务器的实现</li>
+<li>高速的读文件</li>
+<li>WebSocket原理及实现</li>
+<li>基于浏览器pull方式的http资源获取</li>
+<li>基于服务器端push方式的http资源获取</li>
+<li>JS播放图片帧的性能</li>
+</ul>
+<h1 id="2-技术分析"><a href="#2-技术分析" class="headerlink" title="2 技术分析"></a>2 技术分析</h1><h2 id="2-1-Http服务器的实现"><a href="#2-1-Http服务器的实现" class="headerlink" title="2.1 Http服务器的实现"></a>2.1 Http服务器的实现</h2><p>实现HTTP服务器比较容易，实现方式也有如下多种：</p>
+<ul>
+<li>基于jdk中com.sun包下面的HttpServer来实现。（不推荐，com.sun不在java规范内，jdk升级可能会不兼容）</li>
+<li>基于jetty或tomcat的嵌入式包来实现。此方式基于Servlet规范来实现的，较简单且易于理解。</li>
+<li>基于netty的方式实现。性能好，需要对NIO有了解，编程难度相对大一些。</li>
+<li>基于vert.x的实现。这种方式底层还是采用netty实现，较简单，但是也需要熟悉vert.x的编程模型。</li>
+</ul>
+<p>我们采用jetty的方式实现，基于servlet3.0规范，可以支持异步请求方式。代码如下：</p>
+<pre>
+public static void main(String[] args){
+    Server server = new Server();
+    ServerConnector connector = new ServerConnector(server);
+    connector.setPort(8080);
+    server.addConnector(connector);
+
+
+    ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
+    context.setContextPath("/");
+
+
+    context.addServlet(new ServletHolder(new HelloServlet()), "/hello");  
+    server.setHandler(context);
+
+
+    try {
+        // Initialize javax.websocket layer
+        ServerContainer wscontainer = WebSocketServerContainerInitializer.configureContext(context);
+        // Add WebSocket endpoint to javax.websocket layer
+        wscontainer.addEndpoint(EventSocket.class);
+
+
+        server.start();
+        server.dump(System.err);
+        server.join();
+    } catch (Throwable t){
+        t.printStackTrace(System.err);
+    }
+}
+</pre>
+
+
+<h2 id="2-2-高速的读文件"><a href="#2-2-高速的读文件" class="headerlink" title="2.2  高速的读文件"></a>2.2  高速的读文件</h2><p>关于Java高速读取文件可参考这篇文章：<a target="_blank" rel="noopener" href="http://nadeausoftware.com/articles/2008/02/java_tip_how_read_files_quickly">How to read files quickly</a><br>这篇文章得出四个结论：</p>
+<ul>
+<li>为了减少I/O操作，每次 应该 读一个byte数组，而不是一个byte字节，8K的byte数组就是一个好的选择。</li>
+<li>为了减少方法调用的开销，每次应该获取一个byte数组的数据，而不是一个byte字节。</li>
+<li>为了减少线程同步锁的开销，要么减少线程同步方法的调用，要么采用非线程安全的类，如：FileChannel 和MappedByteBuffer。</li>
+<li>为了减少在JVM/OS、 internal buffers和应用程序数组之间的数据拷贝，要么使用带有内存映射的FileChannel类，要么使用 a direct or wrapped array ByteBuffer.</li>
+</ul>
+<p>下面提高两种高速读取文件方法：</p>
+<pre>
+for (String filePath : fileList){
+try(FileChannel ch = new RandomAccessFile(filePath, "r").getChannel()){
+int size = (int) ch.size();
+MappedByteBuffer buf = ch.map(MapMode.READ_ONLY, 0, size);
+// 处理buf....
+} catch (IOException e) {
+e.printStackTrace();
+}
+}
+</pre>
+
+
+<pre>
+for (String filePath : fileList){
+try (SeekableByteChannel sbc = Files.newByteChannel(Paths.get(filePath), StandardOpenOption.READ)) {
+   ByteBuffer buf = ByteBuffer.allocate(10);
+
+
+   // Read the bytes with the proper encoding for this platform.  If
+   // you skip this step, you might see something that looks like
+   // Chinese characters when you expect Latin-style characters.
+   //String encoding = System.getProperty("file.encoding");
+   while (sbc.read(buf) > 0) {
+       buf.rewind();
+       // 处理buf...
+       //System.out.print(Charset.forName(encoding).decode(buf));
+       buf.flip();
+   }
+} catch (IOException x) {
+   System.out.println("caught exception: " + x);
+}
+}
+</pre>
+
+
+
+<h2 id="2-3-WebSocket原理及实现"><a href="#2-3-WebSocket原理及实现" class="headerlink" title="2.3  WebSocket原理及实现"></a>2.3  WebSocket原理及实现</h2><p>WebSocket的原理以及与Http区别可以参考：<a target="_blank" rel="noopener" href="http://blog.sina.com.cn/s/blog_bf397e780102w25k.html">WebSocket与http的区别，以及它的原理</a>，总体来说，原理及区别如下：</p>
+<ul>
+<li>WebSocket和Http协议没有太大的关系，WS只是借助Http实现了第一次握手，之后从http协议upgrade为ws://协议。</li>
+<li>WS是持久性连接（类似socket），而HTTP的短连接、长连接都不是持久的。</li>
+<li>WS协议是支持全双工的，可以pull，亦可以push。</li>
+</ul>
+<p>用Java实现WebSocket服务端：</p>
+<pre>
+@ClientEndpoint
+@ServerEndpoint(value="/events/")
+public class EventSocket{
+private static int DEFAULT_BUFFER_SIZE = 128 * 1024;// 8192
+private byte[] bytes;
+
+    @OnOpen
+    public void onWebSocketConnect(Session session, EndpointConfig config)  {
+session.setMaxBinaryMessageBufferSize(DEFAULT_BUFFER_SIZE);
+    }
+    
+    @OnMessage
+    public void onWebSocketText(Session session, String message) throws Exception{
+        System.out.println("Received TEXT message: " + message);
+        bytes = ... // 读取图片文件字节
+        // 发送图片文件
+        session.getAsyncRemote().sendBinary( ByteBuffer.wrap( this.bytes ) );
+    }
+    
+    @OnClose
+    public void onWebSocketClose(Session session, CloseReason reason){
+        System.out.println("Socket Closed: " + reason);
+    }
+    
+    @OnError
+    public void onWebSocketError(Session session, Throwable cause){
+        cause.printStackTrace(System.err);
+    }
+}
+</pre>
+
+
+
+<h2 id="2-4-浏览器并发请求与长连接"><a href="#2-4-浏览器并发请求与长连接" class="headerlink" title="2.4  浏览器并发请求与长连接"></a>2.4  浏览器并发请求与长连接</h2><p>浏览器请求一般都是拉取服务器的资源，而请求方式分为短连接和长连接两种，这篇文章介绍很清楚：<a target="_blank" rel="noopener" href="http://www.cnblogs.com/cswuyg/p/3653263.html">HTTP的长连接和短连接</a></p>
+<p>浏览器对后端资源的请求都是并发的执行的，不同的浏览器并发连接数不同。现在大多数浏览器都支持http1.1协议，默认都会开启keep-alive，支持长连接。在浏览器对后端的资源发出请求，在开启keep-alive情况下，都会复用连接通道。如果是不间断的下载图片，应该使用的是长连接通道复用功能。</p>
+<h2 id="2-5-Web服务器Push技术"><a href="#2-5-Web服务器Push技术" class="headerlink" title="2.5 Web服务器Push技术"></a>2.5 Web服务器Push技术</h2><p>实现服务器端Push有以下几种方式：</p>
+<ul>
+<li>Ajax轮询。采用setInterval方法不停的调用</li>
+<li>Ajax长轮询。俗称Comet方式，不需要重复建立连接，没有响应就一直等，等到才关闭连接。</li>
+<li> WebSocket</li>
+<li>server-sent-events</li>
+</ul>
+<p>Ajax轮询原理还是pull的方式，不算真正的push，但是对一些老版本的浏览器是适用的。WebSocket优点是支持全双工、可跨域。server-sent-server实现简单，但只支持server到client单向传输，且IE系列都不支持。 详细内容参考： <a target="_blank" rel="noopener" href="https://w3ctech.com/topic/1754">web服务器端推送技术简介</a></p>
+<p>除了上面一些方法外，还有一些其他方式，如：Flash  XML Socket， Java Applet等非主流。</p>
+<p>而在本案例中，如果采用WebSocket传送图片，可实现真正的服务器端不间断的推送图片数据，但是如果要实现并发传送，必须自己在浏览器端来实现，否则，仅仅单连接的情况下不一定比浏览器的并发连接快。</p>
+<h2 id="2-6-JS播放图片帧的性能"><a href="#2-6-JS播放图片帧的性能" class="headerlink" title="2.6  JS播放图片帧的性能"></a>2.6  JS播放图片帧的性能</h2><p>JS播放图片有多种方式，如：</p>
+<ul>
+<li>采用<img>标签，不停改变img的src属性，实现播放。</li>
+<li>采用Html5的Canvas，将Image对象画在Canvas上，实现播放。</li>
+<li>将图片设置为Div的背景，不停的更换背景，实现播放。</li>
+</ul>
+<p>采用<img>标签方式实现如下：</p>
+<pre>
+(function() {
+    var i = 0;
+    var pics = [ "andy_white.jpg", "andy_black.jpg" ];
+    var el = document.getElementById('img_to_flip');  // el doesn't change
+    function toggle() {
+        el.src = pics[i];           // set the image
+        i = (i + 1) % pics.length;  // update the counter
+    }
+    setInterval(toggle, 2000);
+})();
+</pre>
+
+
+
+<p>这种方式下浏览器CPU占用率非常高，在IE11和Chrome下，i3的CPU（T440P）占用都在60%左右，内存占用较少，大约在100M左右。CPU的消耗主要在浏览器对图片的渲染上。<br>用Canvas替代<img>标签，CPU占用方面，IE11仍然占用那么高，Chrome能降一半。更换背景的方式没有实验。基于以上，采用Canvas的方式是一种比较好的选择。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2021/06/28/architecture/%E5%9B%BE%E7%89%87%E6%92%AD%E6%94%BE%E6%8A%80%E6%9C%AF%E6%80%BB%E7%BB%93/" data-id="ckqg285u7002wrcfpddbt5ios" data-title="" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2021/06/28/architecture/%E5%9F%BA%E4%BA%8E%E6%95%B0%E6%8D%AE%E5%90%8C%E6%AD%A5%E7%9A%84%E4%BA%91%E6%9C%8D%E5%8A%A1%E6%9E%B6%E6%9E%84%E5%AE%9E%E8%B7%B5/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          (no title)
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2021/06/28/architecture/%E5%8C%BA%E5%9D%97%E9%93%BE/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title"></div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/06/">June 2021</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2021/06/28/product/%E9%9C%80%E6%B1%82%E8%B0%83%E7%A0%94%E7%9A%84%E5%86%85%E5%AE%B9%E5%92%8C%E5%B7%A5%E4%BD%9C%E6%8C%87%E5%BC%95/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2021/06/28/product/%E9%93%81%E8%B7%AF6C%E4%B8%9A%E5%8A%A1%E7%BB%93%E6%9E%84/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2021/06/28/product/%E9%9C%80%E6%B1%82%E8%B0%83%E7%A0%94%E5%8F%8A%E5%88%86%E6%9E%90%E6%96%B9%E6%B3%95/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2021/06/28/product/%E6%B0%B4%E7%94%B5%E7%AB%99%E7%94%9F%E4%BA%A7%E8%BF%90%E8%A1%8C%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2021/06/28/product/%E6%B0%B4%E7%94%B5%E5%8E%82%E8%BF%90%E8%A1%8C%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F/">(no title)</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2021 John Doe<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.4.1.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

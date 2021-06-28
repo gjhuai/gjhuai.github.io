@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="3引用VS拷贝Python中，在传递大型对象时如果的确需要持贝，那么可以明确要求。1.没有限制条件的分片表达式能够复制序列2.字典copy方法能够复制字典3.有些内置函数（例如1ist）能够生成持贝（list（L））4.copy标准库模块能够生成完整持贝  4比较、相等性和真值所有的Python对象也可以支持比较操作一测试相等性、相对大小等。Python的比较总是检查复合对象的部分，直到可以得出结">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Hexo">
+<meta property="og:url" content="http://example.com/2021/06/28/architecture/%E5%BF%AB%E9%80%9F%E6%8E%8C%E6%8F%A1Python%E5%AD%A6%E4%B9%A0%E6%89%8B%E5%86%8C/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="3引用VS拷贝Python中，在传递大型对象时如果的确需要持贝，那么可以明确要求。1.没有限制条件的分片表达式能够复制序列2.字典copy方法能够复制字典3.有些内置函数（例如1ist）能够生成持贝（list（L））4.copy标准库模块能够生成完整持贝  4比较、相等性和真值所有的Python对象也可以支持比较操作一测试相等性、相对大小等。Python的比较总是检查复合对象的部分，直到可以得出结">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/2021/06/28/architecture/%E5%BF%AB%E9%80%9F%E6%8E%8C%E6%8F%A1Python%E5%AD%A6%E4%B9%A0%E6%89%8B%E5%86%8C/_v_images/2019-11-21-20-56-21.png">
+<meta property="article:published_time" content="2021-06-28T03:26:10.851Z">
+<meta property="article:modified_time" content="2020-05-19T11:33:29.000Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2021/06/28/architecture/%E5%BF%AB%E9%80%9F%E6%8E%8C%E6%8F%A1Python%E5%AD%A6%E4%B9%A0%E6%89%8B%E5%86%8C/_v_images/2019-11-21-20-56-21.png">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-architecture/快速掌握Python学习手册" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2021/06/28/architecture/%E5%BF%AB%E9%80%9F%E6%8E%8C%E6%8F%A1Python%E5%AD%A6%E4%B9%A0%E6%89%8B%E5%86%8C/" class="article-date">
+  <time class="dt-published" datetime="2021-06-28T03:26:10.851Z" itemprop="datePublished">2021-06-28</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>3引用VS拷贝<br>Python中，在传递大型对象时如果的确需要持贝，那么可以明确要求。<br>1.没有限制条件的分片表达式能够复制序列<br>2.字典copy方法能够复制字典<br>3.有些内置函数（例如1ist）能够生成持贝（list（L））<br>4.copy标准库模块能够生成完整持贝</p>
+<hr>
+<p>4比较、相等性和真值<br>所有的Python对象也可以支持比较操作一测试相等性、相对大小等。Python的比较总是检查复合对象的部分，直到可以得出结果为止。事，当嵌套对象存在时，Python能够自动遍历数据结构，并从左到右递归地应用比较，要多深就走多深。<br>·“==”：操作符测试值的相等性。（递归地比较所有内嵌对象）<br>·“is”：表达式测试对象的一致性。（试二者是否是同一个对象，检查内存地址）</p>
+<p>一般来说，在Python不同的类型的比较方法如下：<br>·数字通过相对大小进行比较。k<br>·字符串是按照字典顺序，一个字符接一个字符地对比进行比较。<br>·列表和元组从左到右对每部分的内容进行比较。·字典通过排序之后的（键、值）列表进行比较。</p>
+<hr>
+<p><img src="_v_images/2019-11-21-20-56-21.png"></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>l = [<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>]</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>x = l *<span class="number">2</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>y = [l]*<span class="number">2</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>y</span><br><span class="line">[[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>], [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>]]</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>l[<span class="number">1</span>]=<span class="number">0</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>y</span><br><span class="line">[[<span class="number">1</span>, <span class="number">0</span>, <span class="number">3</span>], [<span class="number">1</span>, <span class="number">0</span>, <span class="number">3</span>]]</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>x</span><br><span class="line">[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>]</span><br></pre></td></tr></table></figure>
+
+
+
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2021/06/28/architecture/%E5%BF%AB%E9%80%9F%E6%8E%8C%E6%8F%A1Python%E5%AD%A6%E4%B9%A0%E6%89%8B%E5%86%8C/" data-id="ckqg285ua0033rcfpcg7sgebh" data-title="" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2021/06/28/architecture/%E6%8A%80%E6%9C%AF%E7%9F%A5%E8%AF%86%E4%BD%93%E7%B3%BB%E5%B1%82%E6%AC%A1/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          (no title)
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2021/06/28/architecture/%E5%B7%A5%E4%B8%9A4.0%E6%97%B6%E4%BB%A3%E7%9A%84%E7%89%A9%E8%81%94%E7%BD%91%E6%9E%B6%E6%9E%84%E5%AE%9E%E8%B7%B5%E4%B9%8B%E9%81%93/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title"></div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/06/">June 2021</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2021/06/28/product/%E9%9C%80%E6%B1%82%E8%B0%83%E7%A0%94%E7%9A%84%E5%86%85%E5%AE%B9%E5%92%8C%E5%B7%A5%E4%BD%9C%E6%8C%87%E5%BC%95/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2021/06/28/product/%E9%93%81%E8%B7%AF6C%E4%B8%9A%E5%8A%A1%E7%BB%93%E6%9E%84/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2021/06/28/product/%E9%9C%80%E6%B1%82%E8%B0%83%E7%A0%94%E5%8F%8A%E5%88%86%E6%9E%90%E6%96%B9%E6%B3%95/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2021/06/28/product/%E6%B0%B4%E7%94%B5%E7%AB%99%E7%94%9F%E4%BA%A7%E8%BF%90%E8%A1%8C%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2021/06/28/product/%E6%B0%B4%E7%94%B5%E5%8E%82%E8%BF%90%E8%A1%8C%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F/">(no title)</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2021 John Doe<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.4.1.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

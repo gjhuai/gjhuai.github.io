@@ -1,0 +1,2410 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta property="og:type" content="website">
+<meta property="og:title" content="Hexo">
+<meta property="og:url" content="http://example.com/page/20/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:locale" content="en_US">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main">
+  
+    <article id="post-architecture/Hibernate问答集" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2021/06/28/architecture/Hibernate%E9%97%AE%E7%AD%94%E9%9B%86/" class="article-date">
+  <time class="dt-published" datetime="2021-06-28T03:26:10.783Z" itemprop="datePublished">2021-06-28</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h3 id="Key-Generator"><a href="#Key-Generator" class="headerlink" title=" Key Generator "></a><font color=red> Key Generator </font></h3><ol>
+<li>Assigned<br>主键由外部程序负责生成，无需 Hibernate 参与。</li>
+<li>hilo<br>通过 hi/lo 算法实现的主键生成机制，需要额外的数据库表保存主<br>键生成历史状态。</li>
+<li>seqhilo<br>与 hilo 类似，通过 hi/lo 算法实现的主键生成机制，只是主键历史<br>状态保存在Sequence中，适用于支持Sequence的数据库，如Oracle。</li>
+<li>increment<br>主键按数值顺序递增。此方式的实现机制为在当前应用实例中维持<br>一个变量，以保存着当前的最大值，之后每次需要生成主键的时候<br>将此值加 1 作为主键。<br>这种方式可能产生的问题是：如果当前有多个实例访问同一个数据<br>库，那么由于各个实例各自维护主键状态，不同实例可能生成同样<br>的主键，从而造成主键重复异常。因此，如果同一数据库有多个实<br>例访问，此方式必须避免使用。</li>
+<li>identity<br>采用数据库提供的主键生成机制。如 DB2、SQL Server、MySQL<br>中的主键生成机制。</li>
+<li>sequence<br>采用数据库提供的 sequence 机制生成主键。如 Oralce 中的<br>Sequence。</li>
+<li>native<br>由 Hibernate 根据底层数据库自行判断采用 identity、hilo、sequence<br>其中一种作为主键生成方式。</li>
+<li>uuid.hex<br>由 Hibernate 基于 128 位唯一值产生算法生成 16 进制数值（编码后<br>以长度 32 的字符串表示）作为主键。</li>
+<li>uuid.string<br>与 uuid.hex 类似，只是生成的主键未进行编码（长度 16）。在某些<br>数据库中可能出现问题（如 PostgreSQL）。</li>
+<li>foreign<br>使用外部表的字段作为主键。<br>一般而言，利用 uuid.hex 方式生成主键将提供最好的性能和数据库平台适<br>应性。</li>
+</ol>
+<ul>
+<li>另外由于常用的数据库，如 Oracle、DB2、SQLServer、MySql 等，都提 供了易用的主键生成机制（Auto-Increase 字段或者 Sequence）。我们可以在数 据库提供的主键生成机制上，采用 generator-class=native 的主键生成方式。</li>
+</ul>
+<ul>
+<li>对于并发 Insert 要求较高的系统，推荐采用 uuid.hex 作为主键生成 机制。</li>
+</ul>
+<ul>
+<li>如果需要采用定制的主键产生算法，则在此处配置主键生成器，主键生成器必 须实现net.sf.hibernate.id.IdentifierGenerator 接口。</li>
+</ul>
+<h3 id="Inverse-和-和-Cascade"><a href="#Inverse-和-和-Cascade" class="headerlink" title=" Inverse 和 和 Cascade "></a><font color=red> Inverse 和 和 Cascade </font></h3><p><u>Inverse 指的是关联关系的控制方向，而 cascade 指的是层级之间的连锁操作。</u></p>
+<p>Inverse，直译为“反转”。 关联关系中，inverse=”false”的为主动方，由主动方负责维护关联关系。具体可 参见一对多关系中的描述。</p>
+<p>而 Cascade，译为“级联”，表明对象的级联关系，如 TUser 的 Cascade 设为 all， 就表明如果发生对 user 对象的操作，需要对 user 所关联的对象也进行同样的操作。如对 user 对象执行 save 操作，则必须对 user 对象相关联的 address 也执行 save 操作。</p>
+<h3 id="锁机制"><a href="#锁机制" class="headerlink" title=" 锁机制"></a><font color=red> 锁机制</font></h3><p>Hibernate 支持两种锁机制：即通常所说的“悲观锁（Pessimistic Locking）” 和“乐观锁（Optimistic Locking）”。</p>
+<p><strong>悲观锁（Pessimistic Locking）</strong></p>
+<p>悲观锁，正如其名，它指的是对数据被外界（包括本系统当前的其他事务，以及来自 外部系统的事务处理）修改持保守态度，因此，在整个数据处理过程中，将数据处于锁定 状态。<u>悲观锁的实现，往往依靠数据库提供的锁机制</u>（也只有数据库层提供的锁机制才能 真正保证数据访问的排他性，否则，即使在本系统中实现了加锁机制，也无法保证外部系 统不会修改数据）。</p>
+<p>一个典型的倚赖数据库的悲观锁调用：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">String hqlStr =  <span class="string">&quot;from TUser as user where user.name=&#x27;Erica&#x27;&quot;</span>;</span><br><span class="line">Query query = session.createQuery(hqlStr);</span><br><span class="line">query.setLockMode(<span class="string">&quot;user&quot;</span>,LockMode.UPGRADE); <span class="comment">//加锁</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">// select * from t_user where name=&#x27;Erica&#x27; for update</span></span><br><span class="line">List userList = query.list();<span class="comment">//执行查询，获取数据</span></span><br></pre></td></tr></table></figure>
+
+
+<p>这里 Hibernate 通过使用数据库的 for update 子句实现了悲观锁机制。<br>这条 sql 语句锁定了  t_user   表中所有符合检索条件（name=’Erica’）的记录。 本次事务提交之前（事务提交时会释放事务过程中的锁），外界无法修改这些记录。</p>
+<p>Hibernate 的加锁模式有：</p>
+<ul>
+<li>LockMode.NONE ： 无锁机制。</li>
+<li>LockMode.WRITE ：Hibernate 在 Insert 和 Update 记录的时候会自动 获取。</li>
+<li>LockMode.READ ： Hibernate 在读取记录的时候会自动获取。</li>
+</ul>
+<p>以上这三种锁机制一般由Hibernate内部使用，如Hibernate为了保证Update 过程中对象不会被外界修改，会在 save 方法实现中自动为目标对象加上 WRITE 锁。</p>
+<ul>
+<li>LockMode.UPGRADE ：利用数据库的 for update 子句加锁。</li>
+<li>LockMode. UPGRADE_NOWAIT ：Oracle 的特定实现，利用 Oracle 的 for  update nowait 子句实现加锁。</li>
+</ul>
+<p>上面这两种锁机制是我们在应用层较为常用的，加锁一般通过以下方法实现： Criteria.setLockMode、  Query.setLockMode、  Session.lock</p>
+<p>** 乐观锁（Optimistic Locking ）**</p>
+<p>乐观锁，大多是基于数据版本 （Version）记录机制实现。何谓数据版本？即为数据增加一个版本标识，在基于 数据库表的版本解决方案中，一般是通过为数据库表增加一个“version”字段来 实现。</p>
+<p>读取出数据时，将此版本号一同读出，之后更新时，对此版本号加一。此时，将提 交数据的版本数据与数据库表对应记录的当前版本信息进行比对，如果提交的数据 版本号大于数据库表当前版本号，则予以更新，否则认为是过期数据。</p>
+<p>乐观锁机制避免了长事务中的数据库加锁开销 ，大大提升了大并发量下的系 统整体性能表现。<br>需要注意的是，乐观锁机制往往基于系统中的数据存储逻辑，因此也具备一定的局 限性，如在上例中，由于乐观锁机制是在我们的系统中实现，来自外部系统的用户 余额更新操作不受我们系统的控制，因此可能会造成脏数据被更新到数据库中。在 系统设计阶段，我们应该充分考虑到这些情况出现的可能性，并进行相应调整（如 将乐观锁策略在数据库存储过程中实现，对外只开放基于此存储过程的数据更新途 径，而不是将数据库表直接对外公开）。</p>
+<h3 id="Cache-管理"><a href="#Cache-管理" class="headerlink" title=" Cache 管理 "></a><font color=red> Cache 管理 </font></h3><p>在我们的系统与第三方系统共享数据库的情况 下，Hibernate 的 Cache 机制可能失效。</p>
+<p>如果在同一套系统中，基于 Hibernate 和基于 JDBC 的两种数据访问方式并存，那么 通过 JDBC 更新数据库的时候，Hibernate 同样无法获知数据更新的情况，从而导致脏数 据的出现。</p>
+<p>Hibernate 中的 Cache 大致分为两层，第一层 Cache 在 Session 实现，属于事务 级数据缓冲，一旦事务结束，这个 Cache 也就失效。此层 Cache 为内置实现，无需我们 进行干涉。 第二层 Cache，是 Hibernate 中对其实例范围内的数据进行缓存的管理容器。也是 这里我们讨论的。 Hibernate提供了面向第三方 Cache 实现的接口,  第二级 Cache 实现有： EHCache、OSCache等。</p>
+<p>cache usage 可选值有以下几种：</p>
+<ol>
+<li>read-only<br>只读。</li>
+<li>read-write<br>可读可写。</li>
+<li>nonstrict-read-write<br>如果程序对并发数据修改要求不是非常严格，只是偶尔需要更新数据，可以采用 本选项，以减少无谓的检查，获得较好的性能。</li>
+<li>transactional<br>事务性 cache。在事务性 Cache 中，Cache 的相关操作也被添加到事务之中， 如果由于某种原因导致事务失败，我们可以连同缓冲池中的数据一同回滚到事务 开始之前的状态。目前 Hibernate 内置的 Cache 中，只有 JBossCache 支持事务性的 Cache 实现。</li>
+</ol>
+<h3 id="Hibernate查询的N-1问题及解决方案"><a href="#Hibernate查询的N-1问题及解决方案" class="headerlink" title=" Hibernate查询的N+1问题及解决方案"></a><font color=red> Hibernate查询的N+1问题及解决方案</font></h3><p>Hibernate 数据库查询， 用的最多的是两个方法：</p>
+<ul>
+<li>Query.list();</li>
+<li>Query.iterate();</li>
+</ul>
+<p>对于 list 方法而言，实际上 Hibernate 是通过一条 Select SQL 获取所有的记录。 并将其读出，填入到 POJO 中返回。</p>
+<p>而 iterate 方法，则是首先通过一条 Select SQL 获取所有符合查询条件的记录的 id，再对这个 id 集合进行循环操作，通过单独的 Select SQL 取出每个 id 所对应的记 录，之后填入 POJO 中返回。</p>
+<p>也就是说，对于 list 操作，需要一条 SQL 完成。而对于 iterate 操作，需要 n+1  条 SQL。</p>
+<p>看上去 iterate 方法似乎有些多余，但在不同的情况下确依然有其独特的功效，如对 海量数据的查询，如果用 list 方法将结果集一次取出，内存的开销可能无法承受。</p>
+<p>另一方面，对于我们现在的 Cache 机制而言，list 方法将不会从 Cache 中读取数据， 它总是一次性从数据库中直接读出所有符合条件的记录。而 iterate 方法因为每次根据 id 获取数据，这样的实现机制也就为从 Cache 读取数据提供了可能，hibernate 首先会 根据这个 id 在本地 Cache 内寻找对应的数据，如果没找到，再去数据库中检索。如果系 统设计中对 Cache 比较倚重，则请注意编码中这两种不同方法的应用组合，有针对性的改 善代码，最大程度提升系统的整体性能表现。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">* 会出现N+1问题，所谓的N+1指的是发出了N+1条sql语句</span></span><br><span class="line"><span class="comment">*</span></span><br><span class="line"><span class="comment">* 1:发出一条查询id列表的语句</span></span><br><span class="line"><span class="comment">* Hibernate: select student0_.id as col_0_0_ from t_student student0_</span></span><br><span class="line"><span class="comment">*</span></span><br><span class="line"><span class="comment">* N:根据id发出N条sql语句，加载相关的对象</span></span><br><span class="line"><span class="comment">* Hibernate: select student0_.id as id0_0_, student0_.name as name0_0_,</span></span><br><span class="line"><span class="comment">* student0_.createTime as createTime0_0_, student0_.classesid as classesid0_0_</span></span><br><span class="line"><span class="comment">* from t_student student0_ where student0_.id=?</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line">Iterator iter = session.createQuery(<span class="string">&quot;from Student&quot;</span>).iterate();</span><br><span class="line"><span class="keyword">while</span> (iter.hasNext()) &#123;</span><br><span class="line">    Student student = (Student)iter.next();</span><br><span class="line">    System.out.println(student.getName());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>iterate() 是使用缓存的（session里面缓存，也即是一级缓存）</p>
+<p>list() 和 iterate()配合使用</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">*</span></span><br><span class="line"><span class="comment">* 在默认情况下，每次执行list查询实体对象都会发出查询语句，除非配置了查询缓存</span></span><br><span class="line"><span class="comment">* 虽然一级缓存中存在Student数据，但list不用，所以仍然发出查询语句，</span></span><br><span class="line"><span class="comment">*</span></span><br><span class="line"><span class="comment">* 其实list就是只向缓存中放入数据，而不利用缓存中的数据</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line">List students = session.createQuery(<span class="string">&quot;from Student&quot;</span>).list();</span><br><span class="line"><span class="keyword">for</span> (Iterator iter=students.iterator(); iter.hasNext();) &#123;</span><br><span class="line">    Student student = (Student)iter.next();</span><br><span class="line">    System.out.println(student.getName());</span><br><span class="line">&#125;</span><br><span class="line">System.out.println(<span class="string">&quot;-----------------------------------------------------&quot;</span>);</span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">* 避免了N+1问题</span></span><br><span class="line"><span class="comment">*</span></span><br><span class="line"><span class="comment">* 因为执行list操作后会将数据放到session的缓存中（一级缓存），所以采用iterate的时候</span></span><br><span class="line"><span class="comment">* 首先会发出一条查询id列表的语句，再根据id到缓存中加载相应的数据，如果缓存中存在与之匹配的数据</span></span><br><span class="line"><span class="comment">* 则不再发出根据id查询的sql语句，直接使用缓存中的数据</span></span><br><span class="line"><span class="comment">*</span></span><br><span class="line"><span class="comment">* Iterate方法如果缓存中存在数据，它可以提高性能，否则出现N+1问题</span></span><br><span class="line"><span class="comment">*</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line">Iterator iter = session.createQuery(<span class="string">&quot;from Student&quot;</span>).iterate();</span><br><span class="line"><span class="keyword">while</span> (iter.hasNext()) &#123;</span><br><span class="line">    Student student = (Student)iter.next();</span><br><span class="line">    System.out.println(student.getName());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+
+<h3 id="比较Hibernate的三种检索策略优缺点"><a href="#比较Hibernate的三种检索策略优缺点" class="headerlink" title=" 比较Hibernate的三种检索策略优缺点 "></a><font color=red> 比较Hibernate的三种检索策略优缺点 </font></h3><ol>
+<li>立即检索；<br>优点：对应用程序完全透明，不管对象处于持久化状态，还是游离状态，应用程序都可以方便的从一个对象导航到与它关联的对象；<br>缺点：1.select语句太多；2.可能会加载应用程序不需要访问的对象白白浪费许多内存空间；</li>
+<li>延迟检索：<br>优点：由应用程序决定需要加载哪些对象，可以避免可执行多余的select语句，以及避免加载应用程序不需要访问的对象。因此能提高检索性能，并且能节省内存空间；<br>缺点：应用程序如果希望访问游离状态代理类实例，必须保证他在持久化状态时已经被初始化；</li>
+<li>迫切左外连接检索<br>优点：1对应用程序完全透明，不管对象处于持久化状态，还是游离状态，应用程序都可以方便地冲一个对象导航到与它关联的对象。2使用了外连接，select语句数目少；<br>缺点：1 可能会加载应用程序不需要访问的对象，白白浪费许多内存空间；2复杂的数据库表连接也会影响检索性能；</li>
+</ol>
+<h3 id="Hibernate的实体Bean三种状态？这三种状态的转换过程？"><a href="#Hibernate的实体Bean三种状态？这三种状态的转换过程？" class="headerlink" title=" Hibernate的实体Bean三种状态？这三种状态的转换过程？ "></a><font color=red> Hibernate的实体Bean三种状态？这三种状态的转换过程？ </font></h3><h3 id="在数据库中条件查询速度很慢的时候-如何优化"><a href="#在数据库中条件查询速度很慢的时候-如何优化" class="headerlink" title=" 在数据库中条件查询速度很慢的时候,如何优化? "></a><font color=red> 在数据库中条件查询速度很慢的时候,如何优化? </font></h3><ol>
+<li>建索引</li>
+<li>减少表之间的关联</li>
+<li>优化sql，尽量让sql很快定位数据，不要让sql做全表查询，应该走索引,把数据量大的表排在前面</li>
+<li>简化查询字段，没用的字段不要，已经对返回结果的控制，尽量返回少量数据</li>
+</ol>
+<h3 id="session-load-和session-get-的区别"><a href="#session-load-和session-get-的区别" class="headerlink" title=" session.load()和session.get()的区别 "></a><font color=red> session.load()和session.get()的区别 </font></h3><p>Session.load/get方法均可以根据指定的实体类和id从数据库读取记录，并返回与之对应的实体对象。其区别在于：</p>
+<p>如果未能发现符合条件的记录，get方法返回null，而load方法会抛出一个ObjectNotFoundException。</p>
+<p>Load方法可返回实体的代理类实例，而get方法永远直接返回实体类。</p>
+<p>load方法可以充分利用内部缓存和二级缓存中的现有数据，而get方法则仅仅在内部缓存中进行数据查找，如没有发现对应数据，将越过二级缓存，直接调用SQL完成数据读取。</p>
+<p>Session在加载实体对象时，将经过的过程：</p>
+<p>首先，Hibernate中维持了两级缓存。第一级缓存由Session实例维护，其中保持了Session当前所有关联实体的数据，也称为内部缓存。而第二级缓存则存在于SessionFactory层次，由当前所有由本SessionFactory构造的Session实例共享。出于性能考虑，避免无谓的数据库访问，Session在调用数据库查询功能之前，会先在缓存中进行查询。首先在第一级缓存中，通过实体类型和id进行查找，如果第一级缓存查找命中，且数据状态合法，则直接返回。</p>
+<p>之后，Session会在当前“NonExists”记录中进行查找，如果“NonExists”记录中存在同样的查询条件，则返回null。“NonExists”记录了当前Session实例在之前所有查询操作中，未能查询到有效数据的查询条件（相当于一个查询黑名单列表）。如此一来，如果Session中一个无效的查询条件重复出现，即可迅速作出判断，从而获得最佳的性能表现。</p>
+<p>对于load方法而言，如果内部缓存中未发现有效数据，则查询第二级缓存，如果第二级缓存命中，则返回。</p>
+<p>如在缓存中未发现有效数据，则发起数据库查询操作（Select SQL），如经过查询未发现对应记录，则将此次查询的信息在“NonExists”中加以记录，并返回null。</p>
+<p>根据映射配置和Select SQL得到的ResultSet，创建对应的数据对象。</p>
+<p>将其数据对象纳入当前Session实体管理容器（一级缓存）。</p>
+<p>执行Interceptor.onLoad方法（如果有对应的Interceptor）。</p>
+<p>将数据对象纳入二级缓存。</p>
+<p>如果数据对象实现了LifeCycle接口，则调用数据对象的onLoad方法。</p>
+<p>返回数据对象。</p>
+<h3 id="Session-管理"><a href="#Session-管理" class="headerlink" title=" Session 管理 "></a><font color=red> Session 管理 </font></h3><p>大多数情况下，Session 管理的目标聚焦于通过合理的设计，避免 Session 的频繁创建 和销毁，从而避免大量的内存开销和频繁的 JVM 垃圾回收，保证系统高效平滑运行。</p>
+<p>在各种 Session 管理方案中， ThreadLocal 模式得到了大量使用。ThreadLocal 是 Java 中一种较为特殊的线程绑定机制。通过 ThreadLocal 存取的数据，总是与当前线程相关， 也就是说，JVM 为每个运行的线程，绑定了私有的本地实例存取空间，从而为多线程环境常出 现的并发访问问题提供了一种隔离机制。</p>
+<p>首先，我们需要知道，SessionFactory 负责创建 Session，SessionFactory 是线程 安全的，多个并发线程可以同时访问一个 SessionFactory 并从中获取 Session 实例。而 Session 并非线程安全，也就是说，如果多个线程同时使用一个 Session 实例进行数据存取， 则将会导致 Session 数据存取逻辑混乱。 下面是一个典型的 Servlet，我们试图通过一个类 变量 session 实现 Session 的重用，以避免每次操作都要重新创建：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestServlet</span> <span class="keyword">extends</span> <span class="title">HttpServlet</span> </span>&#123;</span><br><span class="line">     <span class="keyword">private</span> Session session;</span><br><span class="line">     <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">doGet</span><span class="params">( HttpServletRequest request,  HttpServletResponse response)</span></span></span><br><span class="line"><span class="function">          <span class="keyword">throws</span> ServletException, IOException </span>&#123;</span><br><span class="line">          session = getSession();</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">          doSomething();</span><br><span class="line">          session.flush();</span><br><span class="line">     &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">     <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">doSomething</span><span class="params">()</span></span>&#123;</span><br><span class="line">          ......<span class="comment">//基于session的存取操作</span></span><br><span class="line">     &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<p>代码看上去正确无误，甚至在我们单机测试的时候可能也不会发生什么问题，但这样的代 码一旦编译部署到实际运行环境中，接踵而来的莫名其妙的错误很可能会使得我们摸不找头脑。 问题出在哪里？</p>
+<p>首先，Servlet 运行是多线程的，而应用服务器并不会为每个线程都创建一个 Servlet 实例，也就是说，TestServlet 在应用服务器中只有一个实例（在 Tomcat 中是这样，其他的 应用服务器可能有不同的实现），而这个实例会被许多个线程并发调用，doGet 方法也将被不 同的线程反复调用，可想而知，每次调用 doGet 方法，这个唯一的 TestServlet 实例的 session 变量都会被重置，线程 A 的运行过程中，其他的线程如果也被执行，那么 session 的引用将发生改变，之后线程 A 再调用 session，可能此时的 session 与其之前所用的 session 就不再一致，显然，错误也就不期而至。</p>
+<p>ThreadLocal 的出现，使得这个问题迎刃而解。 我们对上面的例子进行一些小小的修改：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestServlet</span> <span class="keyword">extends</span> <span class="title">HttpServlet</span> </span>&#123;</span><br><span class="line">     <span class="keyword">private</span> ThreadLocal localSession = <span class="keyword">new</span> ThreadLocal();</span><br><span class="line">     <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">doGet</span><span class="params">( HttpServletRequest request,  HttpServletResponse response)</span></span></span><br><span class="line"><span class="function">          <span class="keyword">throws</span> ServletException, IOException </span>&#123;</span><br><span class="line">          localSession.set(getSession());</span><br><span class="line">     doSomething();</span><br><span class="line">     session.flush();</span><br><span class="line">     &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">     <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">doSomething</span><span class="params">()</span></span>&#123;</span><br><span class="line">          Session session = (Session)localSession.get();</span><br><span class="line">     ......<span class="comment">//基于session的存取操作</span></span><br><span class="line">     &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<p>可以看到，localSession 是一个 ThreadLocal 类型的对象，在 doGet 方法中，我们 通过其 set 方法将获取的 session 实例保存，而在 doSomething 方法中，通过 get 方法取 出 session 实例。</p>
+<p>这也就是 ThreadLocal 的独特之处，它会为每个线程维护一个私有的变量空间。实际上， 其实现原理是在 JVM 中维护一个 Map，这个 Map 的 key 就是当前的线程对象，而 value 则是 线程通过 ThreadLocal.set 方法保存的对象实例。当线程调用 ThreadLocal.get 方法时， ThreadLocal 会根据当前线程对象的引用，取出 Map 中对应的对象返回。</p>
+<p>这样，ThreadLocal 通过以各个线程对象的引用作为区分，从而将不同线程的变量隔离开 来。</p>
+<p>回到上面的例子，通过应用 ThreadLocal 机制，线程 A 的 session 实例只能为线程 A  所用，同样，其他线程的 session 实例也各自从属于自己的线程。这样，我们就实现了线程安全的 Session 共享机制。</p>
+<p><strong>spring对hibernate是如何避免session的线程不安全的呢？</strong></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2021/06/28/architecture/Hibernate%E9%97%AE%E7%AD%94%E9%9B%86/" data-id="ckqg285w3005ircfp0nr8e74t" data-title="" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-architecture/Hadoop学习" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2021/06/28/architecture/Hadoop%E5%AD%A6%E4%B9%A0/" class="article-date">
+  <time class="dt-published" datetime="2021-06-28T03:26:10.781Z" itemprop="datePublished">2021-06-28</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h3 id="Hadoop管理员的十个最佳实践"><a href="#Hadoop管理员的十个最佳实践" class="headerlink" title="Hadoop管理员的十个最佳实践"></a>Hadoop管理员的十个最佳实践</h3><ol>
+<li>选择Cloudera CDH部署你的Cluster动机</li>
+<li>Hadoop集群配置与管理</li>
+<li>开启SecondaryNameNode</li>
+<li>使用Ganglia和Nagios监控你的集群</li>
+<li>设置好内存至关重要</li>
+<li>管理员玩转MapReduce</li>
+<li>NameNode HA</li>
+<li>使用firewall阻止坏人进入</li>
+<li>开启垃圾箱(trash)功能</li>
+<li>去社区寻找帮助</li>
+</ol>
+<p><img src="_v_images/2019-11-29-17-21-25.png"></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2021/06/28/architecture/Hadoop%E5%AD%A6%E4%B9%A0/" data-id="ckqg285tq001trcfp2sl2g96a" data-title="" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-architecture/GeoServer使用" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2021/06/28/architecture/GeoServer%E4%BD%BF%E7%94%A8/" class="article-date">
+  <time class="dt-published" datetime="2021-06-28T03:26:10.780Z" itemprop="datePublished">2021-06-28</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>[TOC]</p>
+<h2 id="GeoServer之发布Geotiff存在的问题"><a href="#GeoServer之发布Geotiff存在的问题" class="headerlink" title="GeoServer之发布Geotiff存在的问题"></a>GeoServer之发布Geotiff存在的问题</h2><p>首次使用geoserver发布geotiff时，在导入geotiff会遇到这样的问题：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Could not list layers for this store, an error occurred retrieving them: Failed to create reader from file://F:\tif\11.tif and hints Hints: REPOSITORY = org.geoserver.catalog.CatalogRepository@11d3c487 EXECUTOR_SERVICE = java.util.concurrent.ThreadPoolExecutor....</span><br></pre></td></tr></table></figure>
+<p>出现这种情况时因为所选的TIFF的头文件有问题或者geoserver无法识别投影坐标系。<br>解决方法：通过gdal_translate（提前安装了gdal）重写TIFF文件<br>CMD命令行输入： <code> gdal_translate -of GTiff -scale 输入文件路径 输出文件路径</code><br>或： <code>gdal\apps\gdal_translate.exe  -a_srs EPSG:900913 map-guangdong_Level_3.tif gd03-2.tif</code><br>官方链接： <a target="_blank" rel="noopener" href="https://gdal.org/1.11/gdal_translate.html">https://gdal.org/1.11/gdal_translate.html</a></p>
+<h2 id="瓦片地图的存储"><a href="#瓦片地图的存储" class="headerlink" title="瓦片地图的存储"></a>瓦片地图的存储</h2>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2021/06/28/architecture/GeoServer%E4%BD%BF%E7%94%A8/" data-id="ckqg285tp001rrcfp8te92y5c" data-title="" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-architecture/FreeMarker精要" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2021/06/28/architecture/FreeMarker%E7%B2%BE%E8%A6%81/" class="article-date">
+  <time class="dt-published" datetime="2021-06-28T03:26:10.780Z" itemprop="datePublished">2021-06-28</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>[toc]</p>
+<h2 id="一、FreeMarker基本"><a href="#一、FreeMarker基本" class="headerlink" title="一、FreeMarker基本"></a>一、FreeMarker基本</h2><h3 id="1-语法"><a href="#1-语法" class="headerlink" title="1 语法"></a>1 语法</h3><h4 id="1-1-条件判断"><a href="#1-1-条件判断" class="headerlink" title="1.1 条件判断"></a>1.1 条件判断</h4><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">&lt;#if condition&gt; </span><br><span class="line">&lt;#elseif condition&gt; </span><br><span class="line">&lt;#else&gt; </span><br><span class="line">&lt;/#if&gt; </span><br></pre></td></tr></table></figure>
+<p>其中condition是boolean值,可以进行返回boolean的表达式<br>如&lt;#if (user.age &gt; 23)&gt;&lt;/#if&gt;<br>  &lt;#if user.name == “mimi”&gt;&lt;/#if&gt; </p>
+<p>如果condition的包含的字符没有双引号引起来,就表示这是个变量${},<br>不用在condition里使用${}来表示变量<br>&lt;#if x &gt; 3&gt;&lt;/#if&gt;这种方式是错误的,因为freemarker会先解释前面那个”&gt;”,<br>可以使用&lt;#if (x &gt; 3)&gt;&lt;/#if&gt;或&lt;#if x &gt; 1&gt;&lt;?#if&gt; </p>
+<h4 id="1-2-循环语句"><a href="#1-2-循环语句" class="headerlink" title="1.2 循环语句"></a>1.2 循环语句</h4><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">&lt;#list userList as user&gt;</span><br><span class="line">…</span><br><span class="line">$&#123;user!user_index&#125;    //  从0开始计数,记录当前是第几个元素</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&lt;#if  item_has_next&gt; &lt;#/if&gt;    //  测试当前的item是不是最后一个元素 </span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&lt;#break&gt;                    //  跳出循环 </span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&lt;/#list&gt;</span><br></pre></td></tr></table></figure>
+
+
+<p>索引index</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;#list 0..fields?size-1 as i&gt;</span><br><span class="line">$&#123;fields[i]&#125;</span><br><span class="line">&lt;/#list&gt;</span><br></pre></td></tr></table></figure>
+
+
+<p>排序</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br><span class="line">&lt;#list list?sort as l&gt;…&lt;/#list&gt;     // 升序， 序列中的变量必须是：字符串（按首字母排序）,数字，日期值。</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&lt;#list userList?sort_by(“age”) as user&gt;…&lt;/#list&gt;     //  子变量排序</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&lt;#list list? reverse as l&gt;…&lt;/#list&gt;     //  降序排序</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&lt;#list userList?sort_by(“age”)?reverse as user&gt;…&lt;/#list&gt;     //  让用户按年龄降序排序</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+
+<h4 id="1-3-Null处理"><a href="#1-3-Null处理" class="headerlink" title="1.3 Null处理"></a>1.3 Null处理</h4><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">&lt;#if user?&gt;$&#123;user&#125;&lt;/#if&gt;                //  如果user存在才显示 </span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">h1</span>&gt;</span>Welcome $&#123;user!&quot;Anonymous&quot;&#125;!<span class="tag">&lt;/<span class="name">h1</span>&gt;</span>      //  如果user为null，取&quot;!&quot;后面的默认值 </span><br><span class="line"></span><br><span class="line"></span><br><span class="line">// 假设前提：user.name为null </span><br><span class="line">$&#123;user.name&#125;     //  异常  </span><br><span class="line">$&#123;user.name!&#125;     //  显示空白  </span><br><span class="line">$&#123;user.name!&#x27;vakin&#x27;&#125;     //  若user.name不为空则显示本身的值，否则显示vakin</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+<p>对于多级对象属性的情况使用()来防止中间的变量为null</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">// 使用??或exists判断对象不为null，if_exists表不存在</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&lt;#if (user.name)??&gt;$&#123;user.name&#125;&lt;/#if&gt; </span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&lt;#if aaa?if_exists&gt;</span><br><span class="line">  aaa不存在！</span><br><span class="line">&lt;/#if&gt;</span><br><span class="line">&lt;#if aaa?exists&gt;</span><br><span class="line">  aaa存在，值为$&#123;aaa&#125;</span><br><span class="line">&lt;/#if&gt;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">$&#123;(user.name)!&quot;Anonymous&quot;&#125; </span><br></pre></td></tr></table></figure>
+
+
+<p>空字符串判断</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;#if (person.name)!=&quot;&quot;&gt; </span><br><span class="line">    $&#123;(person.name)!&#125;</span><br><span class="line">&lt;/#if&gt;</span><br></pre></td></tr></table></figure>
+
+
+<h4 id="1-4-引入页面"><a href="#1-4-引入页面" class="headerlink" title="1.4 引入页面"></a>1.4 引入页面</h4><p>&lt;#include&gt;<br>可以使用它导入共用的的东西,比如footer,head<br>各种ftl tags可以嵌套使用 </p>
+<h3 id="3-表达式"><a href="#3-表达式" class="headerlink" title="3.表达式"></a>3.表达式</h3><p>可以在${…} &lt;#if&gt;的condition中进行各种表达式计算<br>比如 +,-,*,/,%<br>产生boolean值的表达式 </p>
+<blockquote>
+<p>, &lt;, ==, !=, &gt;=, &lt;=, &amp;&amp;, ||, !<br>当然&gt;,&gt;=比较特殊,因为它包括tags的结束符<br>所以应该转义 &gt;, &gte;<br>也可以使用()包裹着 </p>
+</blockquote>
+<h3 id="4-build-ins"><a href="#4-build-ins" class="headerlink" title="4.build-ins"></a>4.build-ins</h3><p>build-ins是修饰各种变量的有用funtion,比如要使用string变成大写,使用string的upper_case build-in,使用方法是在变量后加?<br>如 user?upper_case<br>freemarker提供了各种变量类型的许多build-ins<br>常用的有<br>str?html :将str中包含的html特殊字符转义,比如&lt;被转义成为&lt;<br>str?cap_first : 第一个字符大写<br>str?lower_case: 字符串转小写<br>str?upper_case: 字符串转大写<br>str?trim : 删除字符串两边空格 </p>
+<p>列表有个size build-in显示列表的长度<br>sequence?size </p>
+<p>可以将浮点数修改为int<br>-1.9?int 結果是1,只取int部分，不做各种舍取操作 </p>
+<h3 id="5-在模板里定义变量"><a href="#5-在模板里定义变量" class="headerlink" title="5.在模板里定义变量"></a>5.在模板里定义变量</h3><p>比如&lt;#assign user=”pp”&gt;<br>他会隐藏module里面的user变量,如果有的话 </p>
+<h3 id="6-命名空间"><a href="#6-命名空间" class="headerlink" title="6.命名空间"></a>6.命名空间</h3><p>默认的各种变量都是定义在main namespace中，虽然我们没有注意到<br>当我们写各种模板时,我们希望各个模板的变量不要被隐藏，这时这要到命名空间了.<br>当我们在主模板中引入其他模板时,这时不要使用&lt;#include&gt;了，而使用&lt;#import&gt;<br>&lt;#import “/lib/my_test.ftl” as my&gt;<br>这样我们要调用my_test.ftl中的变量时就用my.var调用了 </p>
+<h3 id="7-空格处理"><a href="#7-空格处理" class="headerlink" title="7.空格处理"></a>7.空格处理</h3><p>freemarker默认是不会压缩template中的空格,也就是你写了什么就是什么<br>这在一些应用可能有用,但在web应用无疑是浪费带宽,所以应该压缩一下freemarker<br>的output,可以在template中用&lt;#compress&gt;包裹内容.<br>但是如果每个文件都使用&lt;#compress&gt;会有点麻烦,<br>也可以configuration那个freemarker的主要配置类对象中设置<br>config.setWhitespaceTrip(true); (但我测试是无效) </p>
+<h2 id="二、FreeMarker编程式操作"><a href="#二、FreeMarker编程式操作" class="headerlink" title="二、FreeMarker编程式操作"></a>二、FreeMarker编程式操作</h2><h3 id="1-freemarker-template-Configuration"><a href="#1-freemarker-template-Configuration" class="headerlink" title="1.freemarker.template.Configuration"></a>1.freemarker.template.Configuration</h3><p>这是freemarker设置的中心地方,他还负责创建新的template,缓存预编译的template. Configuration的生命周期一般是应用级的,所以一般是在应用的开始时创建Configuration. </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">Configuration config = <span class="keyword">new</span> Configuration(); </span><br><span class="line"><span class="comment">//get the template </span></span><br><span class="line">Template template = config.getTemplate(<span class="string">&quot;test.ftl&quot;</span>); </span><br><span class="line"><span class="comment">//build module </span></span><br><span class="line">Map root = <span class="keyword">new</span> HashMap(); </span><br><span class="line">root.put(<span class="string">&quot;user&quot;</span>,<span class="string">&quot;bigfan&quot;</span>); </span><br><span class="line"><span class="comment">//Merge data-model with template </span></span><br><span class="line">Writer out = <span class="keyword">new</span> OutputStreamWriter(System.out); </span><br><span class="line">template.process(root, out); </span><br><span class="line">out.flush(); </span><br></pre></td></tr></table></figure>
+
+
+<h3 id="2-freemarker的有效变量"><a href="#2-freemarker的有效变量" class="headerlink" title="2.freemarker的有效变量"></a>2.freemarker的有效变量</h3><p>在freemarker内部,有效的变量必须是实现了freemarker.template.TemplateModel接口的java对象,但是我们之前用的String,List等并没有实现这个接口，其实这是因为freemarker使用了一种叫做object wrapping的方式将java标准类转换为相应的实现了这个接口的类. </p>
+<h3 id="3-freemarker内部有两大数据类型-Scalar-Container"><a href="#3-freemarker内部有两大数据类型-Scalar-Container" class="headerlink" title="3.freemarker内部有两大数据类型: Scalar, Container"></a>3.freemarker内部有两大数据类型: Scalar, Container</h3><p>其中Scalar包括<br>Boolean, Number, String, Date<br>基中Container包括<br>Hashes, sequences, Collections </p>
+<h3 id="4-设置Shared-variables"><a href="#4-设置Shared-variables" class="headerlink" title="4.设置Shared variables"></a>4.设置Shared variables</h3><p>这些变量在所有的template中都是有效的.<br>config.setSharedVariable(“company”, “Foo Inc.”); </p>
+<h3 id="5-settings是影响freemarker行为的值"><a href="#5-settings是影响freemarker行为的值" class="headerlink" title="5.settings是影响freemarker行为的值"></a>5.settings是影响freemarker行为的值</h3><p>比如locale, number_format<br>可以有三个层次的settings:<br>(1).在Configuration中设置的setting，使用setter方法<br>比如<br>myCfg.setLocale(java.util.Locale.ITALY);<br>myCfg.setNumberFormat(“0.####”);<br>也可以在.properties文件中定义name-value,再使用myCfg.setSetting()方法<br>(2).Template层也可以设置setting,但是template是可缓存的,所以必须在template第一次创建时就设置setting,而这比较难控制<br>(3).Environment层,<br>template对象可以得到freemarker.core.Environment这个对象,<br>再使用这个对象的setter进行设置,应该在执行template.process()之前就设置好<br>(4).还可以在template文件中进行设置,使用directive<br>&lt;#setting locale=”it_IT”&gt;<br>&lt;#setting number_format=”0.####”&gt;  </p>
+<h3 id="6-Template-loaders"><a href="#6-Template-loaders" class="headerlink" title="6.Template loaders"></a>6.Template loaders</h3><p>freemarker有三种loader：文件方式,classpath,servletContext<br>void setDirectoryForTemplateLoading(File dir);<br>void setClassForTemplateLoading(Class cl, String prefix);<br>void setServletContextForTemplateLoading(Object servletContext, String path); </p>
+<h3 id="7-Template-caching"><a href="#7-Template-caching" class="headerlink" title="7.Template caching"></a>7.Template caching</h3><p>当从configuration中getTemplate()时, configuration会缓存template,所以下次再拿相同的template就不会重新创建template和解释这个template. 如果修改template文件后,freemarker会重新读取和解释这个template,默认时间是5秒钟去判断文件是否修改.有一个”update delay”相关的设置可以修改这个值.<br>但是如果是使用classpath方式load模板的话,并不会提示说你已经修改了模板文件.因为在classpath的文件的默认是被认为不会被修改的. </p>
+<h3 id="8-freemarker会用本地locale格式化数字"><a href="#8-freemarker会用本地locale格式化数字" class="headerlink" title="8.freemarker会用本地locale格式化数字"></a>8.freemarker会用本地locale格式化数字</h3><p>比如10000会被输出10,000<br>这有时对后端程序是有害的.<br>我们可以使用<br>cfg.setNumberFormat(“0.######”);<br>也可以使用数字的build-in “c” 比如 ${userId?c}<br>也可以试试在模板文件中使用&lt;#number_format “0.######”&gt; </p>
+<h3 id="9-freemarker的properties配置文件"><a href="#9-freemarker的properties配置文件" class="headerlink" title="9.freemarker的properties配置文件"></a>9.freemarker的properties配置文件</h3><p>可以在classpath中定义freemarker.properties配置文件<br>配置模板:<br>template_update_delay = 30 #in seconds<br>default_encoding = utf-8<br>locale = utf-8<br>whitespace_stripping = true<br>auto_import=”/WEB-INF/content/index.ftl” as p, “/WEB-INF/content2/index.ftl” as cms<br>tag_syntax=auto_detect<br>url_escaping_charset=UTF-8<br>datetime_format=yyyy-MM-dd HH:mm:ss<br>date_format=yyyy-MM-dd<br>time_format=HH:mm:ss<br>number_format=0.######;<br>boolean_format=true,false </p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2021/06/28/architecture/FreeMarker%E7%B2%BE%E8%A6%81/" data-id="ckqg285tp001srcfphsho7jqe" data-title="" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-architecture/Dive into Python - 笔记" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2021/06/28/architecture/Dive%20into%20Python%20-%20%E7%AC%94%E8%AE%B0/" class="article-date">
+  <time class="dt-published" datetime="2021-06-28T03:26:10.779Z" itemprop="datePublished">2021-06-28</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>★ 字典keys, values 和 items 函数</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>params = {“server”:”mpilgrim”, “database”:”master”, “uid”:”sa”, “pwd”:”secret”}</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>params. keys ()</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>[‘server’, ‘uid’, ‘database’, ‘pwd’]</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>params. values ()</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>[‘mpilgrim’, ‘sa’, ‘master’, ‘secret’]</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>params. items ()</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>[(‘server’, ‘mpilgrim’), (‘uid’, ‘sa’), (‘database’, ‘master’), (‘pwd’, ‘secret’)]</p>
+<p>★ join 方法和type 方法</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>“;”. join ([“%s=%s” % (k, v) for k, v in params.items()])  # join连接一个列表</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>‘server=mpilgrim;uid=sa;database=master;pwd=secret’</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>type (odbchelper) == types .ModuleType         # 可以使用 types 模块中的常量来进行对象类型的比较</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>True</p>
+<p>★ str方法</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>horsemen = [‘war’, ‘pestilence’, ‘famine’]</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>horsemen. append (‘Powerbuilder’)</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>str (horsemen)</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>“[‘war’, ‘pestilence’, ‘famine’, ‘Powerbuilder’]”</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>str (odbchelper)</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>“&lt;module ‘odbchelper’ from ‘c:\docbook\dip\py\odbchelper.py’&gt;”</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>str (None)</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>‘None’</p>
+<p>★ callable 函数</p>
+<p>callable 函数接收任何对象作为参数， 如果参数对象是可调用的，返回 True；否则返回 False。 可调用对象包括函数、类方法，甚至类自身。</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>import string</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>string. punctuation</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>‘!”#$%&amp;&#39;()*+,-./:;&lt;=&gt;?@[\]^_`{|}~’</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>string.join</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>&lt;function join at 00C55A7C&gt;</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>callable (string.punctuation)</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>False</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>callable (string.join)       </p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>True</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>print string.join.<strong>doc</strong>      # 任何对象都有 doc string</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>join(list [,sep]) -&gt; string</p>
+<pre><code>Return a string composed of the words in list, with
+
+intervening occurrences of sep.  The default separator is a
+
+single space.
+
+(joinfields and join are synonymous)
+</code></pre>
+<p>★ getattr 函数介绍</p>
+<p>使用 函数，可以返回任何对象的任何属性，并且这个属性的名称可以是直到运行时才知道（即可以是字符串）。</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>li = [“Larry”, “Curly”]</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>li.pop                       # 获取列表的 pop 方法的引用。是引用(方法对象本身)，而不是调用( li.pop() ) 。</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>&lt;built-in method pop of list object at 010DF884&gt;</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>getattr(li, “pop”)            #   返回 pop 方法的引用，但是此时，方法名称是作为一个字符串参数传递给 函数的。</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>&lt;built-in method pop of list object at 010DF884&gt;</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>getattr (li, “append”)(“Moe”)</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>li</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>[“Larry”, “Curly”, “Moe”]</p>
+<p>例 4.12. 使用 创建分发者</p>
+<p>statsout 模块定义了三个函数：output_html、output_xml 和 output_text。然后主程序定义了唯一的输出函数，如下：</p>
+<p>import statsout</p>
+<p>def output(data, format=”text”):                             </p>
+<pre><code>output_function = getattr (statsout, &quot;output_%s&quot; % format)
+
+return output_function(data)                             
+</code></pre>
+<p>缺省值</p>
+<p>import statsout</p>
+<p>def output(data, format=”text”):</p>
+<pre><code># 下面的 第三个参数是一个缺省返回值，如果第二个参数指定的属性或者方法没能找到，则将返回这个缺省返回值 。  
+
+output_function = (statsout, &quot;output_%s&quot; % format, statsout.output_text )
+
+return output_function(data)  
+</code></pre>
+<p>★ 列表方法 count 的使用</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>li = [“a”, “mpilgrim”, “foo”, “b”, “c”, “b”, “d”, “d”]</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>[elem for elem in li if li. count (elem) == 1]          # count 返回某个值在列表中出现的次数 ，可以用来剔除列表中出现两次以上的值 (本例中的 b 和 d)。</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>[‘a’, ‘mpilgrim’, ‘foo’, ‘c’]</p>
+<p>★ filter方法的使用</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>def f(x): return x % 2 != 0 and x % 3 != 0</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>…</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>filter (f, range(2, 25))         # 对2-24之间的整数运用函数 f(x)， 如果 f(x) 的运行结果是真 ，那么 x 就加入返回列表</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p> [5, 7, 11, 13, 17, 19, 23]</p>
+<p> ★ map方法的使用</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>def cube(x): return x<em>x</em>x</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>…</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>map (cube, range(1, 11))        # 对应1-10之间的整数运用函数 cube(x)，并把 cube(x) 的运行结果加入返回列表</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>[1, 8, 27, 64, 125, 216, 343, 512, 729, 1000]</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>seq = range(8)</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>def add(x, y): return x+y</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>…</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>map (add, seq, seq)</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>[0, 2, 4, 6, 8, 10, 12, 14]</p>
+<p>★ reduce方法的使用  </p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>def add(x,y): return x+y</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>…</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>reduce (add, range(1, 11))         # 计算1-10的累加和</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>55</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>def sum(seq):</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>…     def add(x,y): return x+y</p>
+<p>…     return reduce (add, seq, 0 )          # 第三个参数 0 ，是表示列表seq的开始值</p>
+<p>…</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>sum(range(1, 11))</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>55</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>sum([])</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>0</p>
+<p>★ and 和 or 布尔逻辑演算符</p>
+<p>and 和 or  它们并不返回布尔值，而是返回它们实际进行比较的值之一 。 在布尔环境中从左到右演算表达式的值。0、’’、[]、()、{}、None 在布尔环境中为假；其它任何东西都为真 。</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>‘’ and ‘b’          # 如果布尔环境中的某个值为假，则 and 返回第一个假值</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>‘’</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>‘a’ and ‘b’ and ‘c’          # 所有值都为真，所以 and 返回最后一个真值，’c’</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>‘c’</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>‘a’ or ‘b’          # 如果有一个值为真，or 立刻返回该值</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>‘a’</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>‘’ or [] or {}      # 如果所有的值都为假，or 返回最后一个假值</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>{}</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>def sidefx():</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>…     print “in sidefx()”</p>
+<p>…     return 1</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>‘a’ or sidefx()             # 进行 or 运算时，会一直进行表达式演算直到找到第一个真值，然后就会忽略剩余的比较值。</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>‘a’</p>
+<p>★ 使用 and-or 技巧</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>a = “first”</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>b = “second”</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>1 and a or b         # 1 and ‘first’ 演算值为 ‘first’，然后 ‘first’ or ‘second’ 的演算值为 ‘first’。</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>‘first’</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>0 and a or b         # 0 and ‘first’ 演算值为 False，然后 0 or ‘second’ 演算值为 ‘second’。</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>‘second’</p>
+<p>如果 a 为假，and-or 技巧和 C 语言中的 bool ? a : b 语法非常重要的不同。</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>a = “”</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>b = “second”</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>1 and a or b        </p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>‘second’</p>
+<p>★ 安全使用 and-or 技巧</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>a = “”</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>b = “second”</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>(1 and [a] or [b])[0]          # 由于 [a] 是一个非空列表，所以它决不会为假。即使 a 是 0 或者 ‘’ 或者其它假值，列表 [a] 也为真，因为它有一个元素。</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>‘’ </p>
+<p>★ lambda方法</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>g = lambda x: x*2          # 定义单行的最小函数</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>g(3)</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>6</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>( lambda x: x*2)(3)</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>6</p>
+<p>processFunc = collapse and (lambda s: “ “.join(s.split())) or (lambda s: s)        # 这里使用了 and-or 技巧的简单形式</p>
+<p>processFunc 是一个函数的引用，但是它到底是哪一个函数还要取决于 collapse 变量。如果 collapse 为真，processFunc(string) 将压缩空白；否则 processFunc(string) 将返回未改变的参数。</p>
+<p>★ 为什么对一个 doc string 使用 str ？</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>def foo(): print 2</p>
+</blockquote>
+</blockquote>
+</blockquote>
+</blockquote>
+</blockquote>
+</blockquote>
+<blockquote>
+<blockquote>
+<blockquote>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>foo()</p>
+</blockquote>
+</blockquote>
+</blockquote>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>2</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>foo.<strong>doc</strong>    </p>
+</blockquote>
+</blockquote>
+</blockquote>
+</blockquote>
+</blockquote>
+</blockquote>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>foo.<strong>doc</strong> == None</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>True</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>str (foo.<strong>doc</strong>)   </p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>‘None’</p>
+<p>★ ljust 方法介绍</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>s = ‘buildConnectionString’</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>s. ljust (30)                 # ljust 用空格填充字符串以符合指定的长度</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>‘buildConnectionString         ‘</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>s. ljust (20)                 # 如果指定的长度小于字符串的长度，ljust 将简单地返回未变化的字符串，而不会截断字符串 。 </p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>‘buildConnectionString’  </p>
+<p>class FileInfo(UserDict):</p>
+<pre><code>&quot;store file metadata&quot;
+
+def __init__(self, filename=None):
+
+    UserDict.__init__(self)       
+
+    self[&quot;name&quot;] = filename
+</code></pre>
+<p>在类的实例创建后被立即调用。它不是构造函数</p>
+<p>是因为对象在调用 <strong>init</strong> 时已经被构造出来了，你已经有了一个对类的新实例的有效引用。</p>
+<p>必须显示地调用在父类中的合适方法。</p>
+<p><strong>init</strong> 方法从不返回一个值。</p>
+<p><strong>init</strong> 方法是可选的</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>import fileinfo</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>f = fileinfo.FileInfo(“/music/_singles/kairo.mp3”)</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>f.<strong>class</strong>                                       </p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>&lt;class fileinfo.FileInfo at 010EC204&gt;</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>f.<strong>doc</strong>                                         </p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>‘store file metadata’</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>f                                                 </p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>{‘name’: ‘/music/_singles/kairo.mp3’}</p>
+<p>每一个类的实例有一个内置属性，__class__，它是对象的类。(</p>
+<p>这类元数据可以直接通过对象本身的属性，像 <strong>class__、__name</strong> 和 <strong>bases</strong> 来得到。</p>
+<p>你可以像对函数或模块一样来访问实例的 doc string。</p>
+<p>class UserDict:                               </p>
+<pre><code>def __init__(self, dict=None):            
+
+    self.data = &#123;&#125;                        
+
+    if dict is not None: self.update(dict) 
+</code></pre>
+<p>update 方法是一个字典复制器：它把一个字典中的键和值全部拷贝到另一个字典。这个操作并不 事先清空目标字典，如果一些键在目标字典中已经存在，则它们将被覆盖，那些键名在目标字典中不存在的则不改变。应该把 update 看作是合并函数，而不是复制函数。</p>
+<p>例 5.11. 直接继承自内建数据类型 dict</p>
+<p>class FileInfo(dict):                 </p>
+<pre><code>&quot;store file metadata&quot;
+
+def __init__(self, filename=None):
+
+    self[&quot;name&quot;] = filename
+</code></pre>
+<p>  第一个区别是你不需要导入 UserDict 模块，因为 dict 是已经可以使用的内建数据类型。第二个区别是你不是继承自 UserDict.UserDict ，而是直接继承自 dict。 </p>
+<p>  第三个区别有些晦涩，但却很重要。UserDict 内部的工作方式要求你手工地调用它的 <strong>init</strong> 方法去正确初始化它的内部数据结构。dict 并不这样工作，它不是一个封装所以不需要明确的初始化。 </p>
+<p>专用类方法</p>
+<p><strong>getitem</strong> 专用方法</p>
+<pre><code>def __getitem__(self, key): return self.data[key]&gt;&gt;&gt; f = fileinfo.FileInfo(&quot;/music/_singles/kairo.mp3&quot;)
+</code></pre>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>f</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>{‘name’:’/music/_singles/kairo.mp3’}</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>f.<strong>getitem</strong>(“name”)</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>‘/music/_singles/kairo.mp3’</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>f[“name”]            </p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>‘/music/_singles/kairo.mp3’</p>
+<p>暗地里，Python 已经将这个语法转化为 f.<strong>getitem</strong>(“name”) 的方法调用。</p>
+<p><strong>setitem</strong> 专用方法</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>f[“genre”] = 32           </p>
+</blockquote>
+</blockquote>
+</blockquote>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>f</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>暗地里调用了 f.<strong>setitem</strong>(“genre”, 32)。</p>
+<p><strong>repr</strong></p>
+<p>在当调用 repr(instance) 时被调用。</p>
+<p>repr 函数是一个内置函数，它返回一个对象的字符串表示。</p>
+<p>它可以用在任何对象上，不仅仅是类的实例。</p>
+<p>相当于java的toString()方法</p>
+<p><strong>cmp</strong> 在比较类实例时被调用。通常，你可以通过使用 == 比较任意两个 Python 对象，不只是类实例。</p>
+<p>对于类实例，你可以定义 <strong>cmp</strong> 方法，自已编写比较逻辑，然后你可以使用 == 来比较你的类，Python 将会替你调用你的 <strong>cmp</strong> 专用方法。</p>
+<p>相当于java的equals()，需要重载来实现自己的逻辑</p>
+<p><strong>len</strong> 在调用 len(instance) 时被调用。</p>
+<p>对于类实例，定义 <strong>len</strong> 方法，接着自已编写长度的计算，然后调用 len(instance)，Python 将替你调用你的 <strong>len</strong> 专用方法。</p>
+<p><strong>delitem</strong> 在调用 del instance[key] 时调用</p>
+<p>当你在类实例中使用 del 时，Python 替你调用 <strong>delitem</strong> 专用方法。</p>
+<p>class MP3FileInfo(FileInfo):</p>
+<pre><code>&quot;store ID3v1.0 MP3 tags&quot;
+
+tagDataMap = &#123;&quot;title&quot;   : (  3,  33, stripnulls),
+
+              &quot;artist&quot;  : ( 33,  63, stripnulls),
+
+              &quot;album&quot;   : ( 63,  93, stripnulls),
+
+              &quot;year&quot;    : ( 93,  97, stripnulls),
+
+              &quot;comment&quot; : ( 97, 126, stripnulls),
+
+              &quot;genre&quot;   : (127, 128, ord)&#125;&gt;&gt;&gt; import fileinfo
+</code></pre>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>fileinfo.MP3FileInfo           </p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>&lt;class fileinfo.MP3FileInfo at 01257FDC&gt;</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>fileinfo.MP3FileInfo.tagDataMap</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>{‘title’: (3, 33, &lt;function stripnulls at 0260C8D4&gt;),</p>
+<p>‘genre’: (127, 128, <built-in function ord>),</p>
+<p>‘artist’: (33, 63, &lt;function stripnulls at 0260C8D4&gt;),</p>
+<p>‘year’: (93, 97, &lt;function stripnulls at 0260C8D4&gt;),</p>
+<p>‘comment’: (97, 126, &lt;function stripnulls at 0260C8D4&gt;),</p>
+<p>‘album’: (63, 93, &lt;function stripnulls at 0260C8D4&gt;)}</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>m = fileinfo.MP3FileInfo()     </p>
+</blockquote>
+</blockquote>
+</blockquote>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>m.tagDataMap</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>tagDataMap 是一个类属性：字面的意思，一个类的属性。它在创建任何类实例之前就有效了。 </p>
+<p>  类属性既可以通过直接对类的引用，也可以通过对类的任意实例的引用来使用。</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>f.seek(-128, 2)      </p>
+</blockquote>
+</blockquote>
+</blockquote>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>f.tell()             </p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>7542909</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>tagData = f.read(128)</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>文件对象的 seek 方法在被打开文件中移动到另一个位置。第二个参数指出第一个参数是什么意思：0 表示移动到一个绝对位置 (从文件起始处算起)，1 表示移到一个相对位置 (从当前位置算起)，还有 2 表示相对于文件尾的位置。</p>
+<p>tell 方法确认了当前位置已经移动了。</p>
+<p>可选参数指定了读取的最大字节数。如果没有指定参数，read 将读到文件末尾。</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>f.closed      </p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>False</p>
+<p>例 6.14. <strong>module</strong> 类属性</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>from fileinfo import MP3FileInfo</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>MP3FileInfo.<strong>module</strong>             </p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>‘fileinfo’</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>sys.modules[MP3FileInfo.<strong>module</strong>]</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>&lt;module ‘fileinfo’ from ‘fileinfo.pyc’&gt;  每个 Python 类都拥有一个内置的类属性 __module__，它定义了这个类的模块的名字。 </p>
+<p>  将它与 sys.modules 字典复合使用，你可以得到定义了某个类的模块的引用。</p>
+<p>hasattr 是一个补充性的函数，用来检查一个对象是否具有一个特定的属性；</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>import os</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>os.path.join(“c:\music\ap\“, “mahadeva.mp3”) </p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>‘c:\music\ap\mahadeva.mp3’</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>os.path.join(“c:\music\ap”, “mahadeva.mp3”)  </p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>‘c:\music\ap\mahadeva.mp3’</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>os.path.expanduser(“~”)                        </p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>‘c:\Documents and Settings\mpilgrim\My Documents’</p>
+<p>os.path 的 join 函数把一个或多个部分路径名连接成一个路径名。</p>
+<p>expanduser 将对使用 ~ 来表示当前用户根目录的路径名进行扩展。</p>
+<p>例 6.17. 分割路径名</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>os.path.split(“c:\music\ap\mahadeva.mp3”)                       </p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>(‘c:\music\ap’, ‘mahadeva.mp3’)</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>(filepath, filename) = os.path.split(“c:\music\ap\mahadeva.mp3”)</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>filepath                                                           </p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>‘c:\music\ap’</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>filename                                                           </p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>‘mahadeva.mp3’</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>(shortname, extension) = os.path.splitext(filename)                </p>
+</blockquote>
+</blockquote>
+</blockquote>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>shortname</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>‘mahadeva’</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>extension</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>‘.mp3’</p>
+<p>split 函数对一个全路径名进行分割，返回一个包含路径和文件名的 tuple。</p>
+<p>os.path 也包含了一个 splitext 函数，可以用来对文件名进行分割，并且返回一个包含了文件名和文件扩展名的 tuple。</p>
+<p>例 6.18. 列出目录</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>[f for f in os.listdir(dirname)</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>…     if os.path.isfile(os.path.join(dirname, f))]</p>
+<p>[‘AUTOEXEC.BAT’, ‘boot.ini’, ‘CONFIG.SYS’, ‘IO.SYS’, ‘MSDOS.SYS’,</p>
+<p>‘NTDETECT.COM’, ‘ntldr’, ‘pagefile.sys’]</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>[f for f in os.listdir(dirname)</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>…     if os.path.isdir(os.path.join(dirname, f))] </p>
+<p>[‘cygwin’, ‘docbook’, ‘Documents and Settings’, ‘Incoming’,</p>
+<p>‘Inetpub’, ‘Music’, ‘Program Files’, ‘Python20’, ‘RECYCLER’,</p>
+<p>‘System Volume Information’, ‘TEMP’, ‘WINNT’]</p>
+<p>listdir 同时返回文件和文件夹，并不指出哪个是文件，哪个是文件夹。</p>
+<p>我们使用 os.path.join 来确保得到一个全路径名，但 isfile 对部分路径 (相对于当前目录) 也是有效的。你可以使用 os.getcwd() 来得到当前目录。</p>
+<p>fileList = [os.path.normcase(f)</p>
+<pre><code>            for f in os.listdir(directory)]           
+</code></pre>
+<p>os.path.normcase(f) 根据操作系统的缺省值对大小写进行标准化处理。</p>
+<p>在 Windows 和 Mac OS 下，normcase 将把整个文件名转换为小写字母；而在 UNIX 兼容的系统下，它将返回未作修改的文件名。</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>import glob</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>glob.glob(‘c:\music\_singles\*.mp3’)          </p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>[‘c:\music\_singles\a_time_long_forgotten_con.mp3’,</p>
+<p>‘c:\music\_singles\hellraiser.mp3’,</p>
+<p>‘c:\music\_singles\kairo.mp3’,</p>
+<p>‘c:\music\_singles\long_way_home1.mp3’,</p>
+<p>‘c:\music\_singles\sidewinder.mp3’,</p>
+<p>‘c:\music\_singles\spinning.mp3’]</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>glob.glob(‘c:\music\_singles\s*.mp3’)         </p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>[‘c:\music\_singles\sidewinder.mp3’,</p>
+<p>‘c:\music\_singles\spinning.mp3’]</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>glob.glob(‘c:\music\*\*.mp3’)</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>glob 模块，另一方面，接受一个通配符并且返回文件的或目录的完整路径与之匹配。</p>
+<p>例 8.10. locals 介绍</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>def foo(arg):</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>…     x = 1</p>
+<p>…     print locals()</p>
+<pre><code>    locals()[&quot;x&quot;] = 2 
+
+    print &quot;x=&quot;,x  #这样会打印出 x= 1，而不是 x= 2。
+</code></pre>
+<p>…    </p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>foo(7)       </p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>{‘arg’: 7, ‘x’: 1}</p>
+<p>函数 foo 在它的局部名字空间中有两个变量：arg (它的值是被传入函数的) 和 x (它是在函数里定义的)。</p>
+<p>locals 实际上没有返回局部名字空间，它返回的是一个拷贝。所以对它进行改变对局部名字空间中的变量值并无影响。</p>
+<p>例 8.11. globals 介绍</p>
+<p>看看下面列出的在文件 BaseHTMLProcessor.py 尾部的代码块：</p>
+<p>if <strong>name</strong> == “<strong>main</strong>“:</p>
+<pre><code>for k, v in globals().items():            
+
+    print k, &quot;=&quot;, v
+</code></pre>
+<p>globals 函数返回一个 dictionary，</p>
+<p>globals 返回实际的全局名字空间，而不是一个拷贝：与 locals 的行为完全相反。所以对 globals 所返回的 dictionary 的任何的改动都会直接影响到全局变量。</p>
+<p>例 8.12. locals 是只读的，globals 不是</p>
+<p>def foo(arg):</p>
+<pre><code>x = 1
+
+print locals()   
+
+locals()[&quot;x&quot;] = 2
+
+print &quot;x=&quot;,x     
+</code></pre>
+<p>z = 7</p>
+<p>print “z=”,z</p>
+<p>foo(3)</p>
+<p>globals()[“z”] = 8   </p>
+<p>print “z=”,z         </p>
+<p>例 8.13. 基于 dictionary 的字符串格式化介绍</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>params = {“server”:”mpilgrim”, “database”:”master”, “uid”:”sa”, “pwd”:”secret”}</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>“%(pwd)s” % params                                   </p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>‘secret’</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>“%(pwd)s is not a good password for %(uid)s” % params</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>‘secret is not a good password for sa’</p>
+<p>XML 解析</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>from xml.dom import minidom                                         </p>
+</blockquote>
+</blockquote>
+</blockquote>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>xmldoc = minidom.parse(‘~/diveintopython/common/py/kgp/binary.xml’) </p>
+</blockquote>
+</blockquote>
+</blockquote>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>xmldoc                                                              </p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>&lt;xml.dom.minidom.Document instance at 010BE87C&gt;</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>print xmldoc.toxml()                                                </p>
+</blockquote>
+</blockquote>
+</blockquote>
+<?xml version="1.0" ?>
+
+<grammar>
+
+<ref id="bit">
+
+  <p>0</p>
+
+  <p>1</p>
+
+</ref>
+
+<ref id="byte">
+
+  <p><xref id="bit"/><xref id="bit"/><xref id="bit"/><xref id="bit"/>\
+
+<p><xref id="bit"/><xref id="bit"/><xref id="bit"/><xref id="bit"/></p></p>
+</ref>
+
+</grammar>
+
+
+<p>minidom.parse 接收一个参数</p>
+<p>本地磁盘上一个 XML 文档的文件名。(你需要将路径改为指向下载的例子所在的目录。) 但是你也可以传入一个文件对象，或甚至是一个类文件对象。</p>
+<p>从 minidom.parse 返回的对象是一个 Document 对象，它是 Node 类的一个子对象。</p>
+<p>toxml 是 Node 类的一个方法</p>
+<p>toxml 打印出了 Node 表示的 XML。对于 Document 节点，这样就会打印出整个 XML 文档。</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>xmldoc.childNodes   </p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>[&lt;DOM Element: grammar at 17538908&gt;]</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>xmldoc.childNodes[0]  #得到第一个 (在本例中，只有一个) 子节点</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>&lt;DOM Element: grammar at 17538908&gt;</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>xmldoc.firstChild   </p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>&lt;DOM Element: grammar at 17538908&gt;</p>
+<p>每个 Node 都有一个 childNodes 属性，它是一个 Node 对象的列表。一个 Document 只有一个子节点，即 XML 文档的根元素</p>
+<p>Node 类有一个 firstChild 属性，它和childNodes[0]具有相同的语义。(还有一个 lastChild 属性，它和childNodes[-1]具有相同的语义。)</p>
+<p>例 9.10. toxml 用于任何节点</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>grammarNode = xmldoc.firstChild</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>print grammarNode.toxml()</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<grammar>
+
+<ref id="bit">
+
+  <p>0</p>
+
+  <p>1</p>
+
+</ref>
+
+<ref id="byte">
+
+  <p><xref id="bit"/><xref id="bit"/><xref id="bit"/><xref id="bit"/>\
+
+<p><xref id="bit"/><xref id="bit"/><xref id="bit"/><xref id="bit"/></p></p>
+</ref>
+
+</grammar>
+
+<p>每一个 Node 类都有toxml()方法</p>
+<p>例 9.11. 子节点可以是文本</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>grammarNode.childNodes                 </p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>[&lt;DOM Text node “\n”&gt;, &lt;DOM Element: ref at 17533332&gt;, \</p>
+<p>&lt;DOM Text node “\n”&gt;, &lt;DOM Element: ref at 17549660&gt;, &lt;DOM Text node “\n”&gt;]</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>print grammarNode.firstChild.toxml()   </p>
+</blockquote>
+</blockquote>
+</blockquote>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>print grammarNode.childNodes[1].toxml()</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<ref id="bit">
+
+  <p>0</p>
+
+  <p>1</p>
+
+</ref>
+
+<blockquote>
+<blockquote>
+<blockquote>
+<p>print grammarNode.childNodes[3].toxml()</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<ref id="byte">
+
+  <p><xref id="bit"/><xref id="bit"/><xref id="bit"/><xref id="bit"/>\
+
+<p><xref id="bit"/><xref id="bit"/><xref id="bit"/><xref id="bit"/></p></p>
+</ref>
+
+<blockquote>
+<blockquote>
+<blockquote>
+<p>print grammarNode.lastChild.toxml()    </p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>  查看 binary.xml 中的 XML ，你可能会认为 grammar 只有两个子节点，即两个 ref 元素。但是你忘记了一些东西：硬回车！在’<grammar>‘之后，第一个’<ref>‘之前是一个硬回车，并且这个文本算作 grammar 元素的一个子节点。类似地，在每个’</ref>‘之后都有一个硬回车；它们都被当作子节点。所以grammar.childNodes实际上是一个有5个对象的列表：3个 Text 对象和两个 Element 对象。 </p>
+<p>  第一个子节点是一个 Text 对象，它表示在’<grammar>‘标记之后、第一个’<ref>‘标记之后的硬回车。 </p>
+<p>  第二个子节点是一个 Element 对象，表示了第一个 ref 元素。 </p>
+<p>  第四个子节点是一个 Element 对象，表示了第二个 ref 元素。 </p>
+<p>  最后一个子节点是一个 Text 对象，表示了在’</ref>‘结束标记之后、’</grammar>‘ 结束标记之前的硬回车。 </p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>reflist = xmldoc.getElementsByTagName(‘ref’)</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>reflist</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>[&lt;DOM Element: ref at 136138108&gt;, &lt;DOM Element: ref at 136144292&gt;]</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>print reflist[0].toxml()</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<ref id="bit">
+
+  <p>0</p>
+
+  <p>1</p>
+
+</ref>
+
+<blockquote>
+<blockquote>
+<blockquote>
+<p>print reflist[1].toxml()</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<ref id="byte">
+
+  <p><xref id="bit"/><xref id="bit"/><xref id="bit"/><xref id="bit"/>\
+
+<p><xref id="bit"/><xref id="bit"/><xref id="bit"/><xref id="bit"/></p></p>
+</ref>
+
+
+<p>例 9.22. 每个元素都是可搜索的</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>firstref = reflist[0]                     </p>
+</blockquote>
+</blockquote>
+</blockquote>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>print firstref.toxml()</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<ref id="bit">
+
+  <p>0</p>
+
+  <p>1</p>
+
+</ref>
+
+<blockquote>
+<blockquote>
+<blockquote>
+<p>plist = firstref.getElementsByTagName(“p”)</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>plist</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>[&lt;DOM Element: p at 136140116&gt;, &lt;DOM Element: p at 136142172&gt;]</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>print plist[0].toxml()                    </p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>0</p>
+
+<blockquote>
+<blockquote>
+<blockquote>
+<p>print plist[1].toxml()</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>1</p>
+
+<p>例 9.23. 搜索实际上是递归的</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>plist = xmldoc.getElementsByTagName(“p”)</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>plist</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>[&lt;DOM Element: p at 136140116&gt;, &lt;DOM Element: p at 136142172&gt;, &lt;DOM Element: p at 136146124&gt;]</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>plist[0].toxml()                        </p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>‘<p>0</p>‘</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>plist[1].toxml()</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>‘<p>1</p>‘</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>plist[2].toxml()                        </p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>‘<p><xref id="bit"/><xref id="bit"/><xref id="bit"/><xref id="bit"/>\</p>
+<p><xref id="bit"/><xref id="bit"/><xref id="bit"/><xref id="bit"/></p>‘</p>
+<p>例 9.24. 访问元素属性</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>xmldoc = minidom.parse(‘binary.xml’)</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>reflist = xmldoc.getElementsByTagName(‘ref’)</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>bitref = reflist[0]</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>print bitref.toxml()</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<ref id="bit">
+
+  <p>0</p>
+
+  <p>1</p>
+
+</ref>
+
+<blockquote>
+<blockquote>
+<blockquote>
+<p>bitref.attributes         </p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>&lt;xml.dom.minidom.NamedNodeMap instance at 0x81e0c9c&gt;</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>bitref.attributes.keys()   </p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>[u’id’]</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>bitref.attributes.values()</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>[&lt;xml.dom.minidom.Attr instance at 0x81d5044&gt;]</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>bitref.attributes[“id”]   </p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>&lt;xml.dom.minidom.Attr instance at 0x81d5044&gt;</p>
+<p>每个 Element 对象都有一个 attributes 属性，它是一个 NamedNodeMap 对象。</p>
+<p>NamedNodeMap 是一个行为像字典的对象</p>
+<p>再次将 NamedNodeMap 视为一个字典，你可以通过 attributes.values() 获取属性值的一个列表。这些值本身是 Attr 类型的对象。</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>a = bitref.attributes[“id”]</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>a</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>&lt;xml.dom.minidom.Attr instance at 0x81d5044&gt;</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>a.name </p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>u’id’</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>a.value</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>u’bit’</p>
+<p>Attr 对象完整代表了单个 XML 元素的单个 XML 属性。</p>
+<p>StringIO可以把字符串转换成类文件对象，那么你只要这个对象传递给 minidom.parse 就可以了。</p>
+<p>例 10.5. 解析字符串 XML (类文件对象方式)</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>contents = “<grammar><ref id='bit'><p>0</p><p>1</p></ref></grammar>“</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>ssock = StringIO.StringIO(contents)</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>xmldoc = minidom.parse(ssock)</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>ssock.close()</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>print xmldoc.toxml()</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<?xml version="1.0" ?>
+
+<p><grammar><ref id="bit"><p>0</p><p>1</p></ref></grammar></p>
+<p>#stdout.py</p>
+<p>import sys</p>
+<p>print ‘Dive in’                                         </p>
+<p>saveout = sys.stdout                                    </p>
+<p>fsock = open(‘out.log’, ‘w’)                            </p>
+<p>sys.stdout = fsock                                      </p>
+<p>print ‘This message will be logged instead of displayed’</p>
+<p>sys.stdout = saveout                                    </p>
+<p>fsock.close()                                           </p>
+<p>始终在重定向前保存 stdout，这样的话之后你还可以将其设回正常。</p>
+<p>所有后续的输出都会被重定向到刚才打开的新文件上。</p>
+<p>它设回原来的方式。</p>
+<p>#stderr.py</p>
+<p>import sys</p>
+<p>fsock = open(‘error.log’, ‘w’)              </p>
+<p>sys.stderr = fsock                          </p>
+<p>raise Exception, ‘this error will be logged’ </p>
+<p>引发一个异常。从屏幕输出上可以注意到这个行为没有 在屏幕上打印出任何东西。所有正常的跟踪信息已经写进 error.log。</p>
+<p>还要注意你既没有显式关闭日志文件，也没有将 stderr 设回最初的值。这样挺好，因为一旦程序崩溃 (由于引发的异常)，Python 将替我们清理并关闭文件，因此永远不恢复 stderr 不会造成什么影响。然而对于 stdout，恢复初始值相对更为重要――你可能会在后面再次操作标准输出。</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>import sys</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>print &gt;&gt; sys.stderr, ‘entering function’</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>entering function</p>
+<p>print 语句的快捷语法可以用于写入任何打开的文件 (或者是类文件对象)。在这里，你可以将单个 print 语句重定向到 stderr 而且不用影响后面的 print 语句。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2021/06/28/architecture/Dive%20into%20Python%20-%20%E7%AC%94%E8%AE%B0/" data-id="ckqg285w3005hrcfp5oyo36t1" data-title="" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-architecture/Consul学习" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2021/06/28/architecture/Consul%E5%AD%A6%E4%B9%A0/" class="article-date">
+  <time class="dt-published" datetime="2021-06-28T03:26:10.778Z" itemprop="datePublished">2021-06-28</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h2 id="Consul-原理和使用简介"><a href="#Consul-原理和使用简介" class="headerlink" title="Consul 原理和使用简介"></a>Consul 原理和使用简介</h2><p><a target="_blank" rel="noopener" href="https://blog.coding.net/blog/intro-consul">Consul 原理和使用简介</a></p>
+<ul>
+<li>Consul 是什么<br>Consul 是一个支持多数据中心分布式高可用的服务发现和配置共享的服务软件，由 HashiCorp 公司用 Go 语言开发，基于 Mozilla Public License 2.0 的协议进行开源。Consul 支持健康检查,并允许 HTTP 和 DNS 协议调用 API 存储键值对。<br>命令行超级好用的虚拟机管理软件 vgrant 也是 HashiCorp 公司开发的产品。<br>一致性协议采用 Raft 算法，用来保证服务的高可用。使用 GOSSIP 协议管理成员和广播消息，并且支持 ACL 访问控制。</li>
+</ul>
+<ul>
+<li>功能特点<ul>
+<li> 服务发现：Consul的客户端可以提供的服务，如api或mysql,其他的客户端可以使用Consul发现一个特定服务的提供者。使用DNS或HTTP，应用程序可以很容易地找到他们所依赖的服务。</li>
+<li> 健康检查：Consul客户端可以提供任何数量的健康检查,无论是与给定的服务(“Web服务器返回200 OK”),还是和本地节点相关联(“内存利用率低于90%”)。这些信息可以由操作员监控集群健康,它用于由服务发现组件将通信路由远离不健康的主机。</li>
+<li> 键/值存储：应用程序可以使用Consul的分层键/值存储任意数量的目标,包括动态配置,特征衰弱,leader选举,等等。简单的HTTP API使得它易于使用。</li>
+<li> 多数据中心：Consul支持多个数据中心,这意味着Consul的用户不用担心构建额外的抽象层增加到多个区域。</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li>Consul 的优势<ul>
+<li> 使用 Raft 算法来保证一致性，比复杂的 Paxos 算法更直接。相比较而言, zookeeper 采用的是 Paxos，而 etcd 使用的则是 Raft。</li>
+<li> 支持多数据中心，内外网的服务采用不同的端口进行监听。多数据中心集群可以避免单数据中心的单点故障，而其部署则需要考虑网络延迟、分片等情况等。zookeeper 和 etcd 均不提供多数据中心功能的支持。</li>
+<li> 支持健康检查。etcd 不提供此功能。</li>
+<li> 支持 http 和 dns 协议接口。zookeeper 的集成较为复杂，etcd 只支持 http 协议。</li>
+<li> 官方提供web管理界面，etcd 无此功能。</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li>Consul 的角色<ul>
+<li> client: 客户端，无状态，将 HTTP 和 DNS 接口请求转发给局域网内的服务端集群。</li>
+<li> server: 服务端，保存配置信息，高可用集群，在局域网内与本地客户端通讯，通过广域网与其他数据中心通讯。每个数据中心的 server 数量推荐为 3 个或是 5 个。</li>
+</ul>
+</li>
+</ul>
+<h2 id="Consul-架构"><a href="#Consul-架构" class="headerlink" title="Consul 架构"></a>Consul 架构</h2><p><a target="_blank" rel="noopener" href="http://devopsh.com/726.html">Consul 架构</a></p>
+<ul>
+<li>Agent 代理是长时间运行的守护进程在每个Consul集群的成员。它是由Consul代理运行。代理能够在客户机或服务器上运行模式。由于所有节点都必须运行一个代理,它是简单的参考节点作为一个客户端或服务器,但还有其他代理的实例。所有代理可以运行DNS或HTTP接口,并负责运行检查和保持服务同步。</li>
+<li>Client 客户端是转发所有的RPC到服务器的代理。客户端是相对无状态的。客户端执行的唯一背景活动是正在LAN八卦池(gossip pool)的一部分。这具有最小资源开销，仅消耗少量的网络带宽。</li>
+<li>Server 服务器是一套扩展的职责包括参与Raft仲裁，维护集群状态，响应RPC查询，WAN八卦(gossip)到其他数据中心，并转发查询的主导者或远程数据中心的代理人。</li>
+<li>Datacenter 数据中心似乎是显而易见的，但也有微妙的细节，如EC2多个可用区。 我们定义了一个数据中心是一个联网环境是私有的，低延迟和高带宽。 这不包括通信，将穿越公共互联网。</li>
+<li>Consensus 当我们的文档中使用，我们使用的共识，意味着在交易的订货经选举产生的领导人达成协议以及协议。 由于这些事务应用到FSM，我们隐含地包括一个复制的状态机的一致性。 共识进行了更详细的描述维基百科 ，和我们的实施进行说明此处。</li>
+<li>Gossip Consul是建立在之上Sref ，它提供了一个完整的gossip protocol是用于多种用途。 Sref实行会员制，故障检测和事件广播机制。我们使用这些描述更多的gossip documentation 。 这足以知道，gossip涉及随机节点到节点通信，主要是通过UDP。</li>
+<li>LAN Gossip 指LAN八卦池(Refers to the LAN gossip pool),它包含了所有位于同一局域网络或数据中心上的节点。</li>
+<li>WAN Gossip 指WAN八卦池(Refers to the WAN gossip pool)，其中只包含服务器。这些服务器主要位于不同的数据中心，并且通常通信通过互联网或广域网。</li>
+<li>RPC 远程过程调用。这是一个请求/响应机制，允许一个客户端，使一服务器的请求。</li>
+</ul>
+<p><img src="_v_images/2019-11-29-17-25-55.png"></p>
+<h2 id="如何用Consul打造弹性可扩展的PaaS平台"><a href="#如何用Consul打造弹性可扩展的PaaS平台" class="headerlink" title="如何用Consul打造弹性可扩展的PaaS平台"></a>如何用Consul打造弹性可扩展的PaaS平台</h2><p><a target="_blank" rel="noopener" href="http://os.51cto.com/art/201601/504856.htm">如何用Consul打造弹性可扩展的PaaS平台</a></p>
+<h2 id="Consul和ZooKeeper的区别"><a href="#Consul和ZooKeeper的区别" class="headerlink" title="Consul和ZooKeeper的区别"></a>Consul和ZooKeeper的区别</h2><p><a target="_blank" rel="noopener" href="http://dockone.io/article/300"> Consul和ZooKeeper的区别 </a></p>
+<p><a target="_blank" rel="noopener" href="http://it.dataguru.cn/article-8131-1.html"> 服务发现：Zookeeper vs etcd vs Consul </a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2021/06/28/architecture/Consul%E5%AD%A6%E4%B9%A0/" data-id="ckqg285to001qrcfp2go43kpj" data-title="" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-architecture/CAP理论" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2021/06/28/architecture/CAP%E7%90%86%E8%AE%BA/" class="article-date">
+  <time class="dt-published" datetime="2021-06-28T03:26:10.777Z" itemprop="datePublished">2021-06-28</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p><a target="_blank" rel="noopener" href="http://www.infoq.com/cn/articles/cap-twelve-years-later-how-the-rules-have-changed"> CAP理论十二年回顾：”规则”变了 </a></p>
+<p>CAP理论</p>
+<ul>
+<li>1、一致性：多个数据备份在同一时刻值是否一样</li>
+<li>2、可用性：机器中一些节点出故障，集群整体是否还能响应读写请求</li>
+<li>3、分区容忍性：集群中某些节点无法联系后，集群整体是否还能继续服务</li>
+</ul>
+<p>CAP两个方向</p>
+<ul>
+<li>Key-Value存储</li>
+<li>领域模型+分布式缓存+存储</li>
+</ul>
+<p>一般情况</p>
+<ul>
+<li>最多满足两个，分区容忍性必须满足</li>
+<li>对大型网站，可用性和分区容忍性优先级高于数据一致性</li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2021/06/28/architecture/CAP%E7%90%86%E8%AE%BA/" data-id="ckqg285tn001orcfpcojx0v5y" data-title="" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-architecture/25 移动网关设计" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2021/06/28/architecture/25%20%E7%A7%BB%E5%8A%A8%E7%BD%91%E5%85%B3%E8%AE%BE%E8%AE%A1/" class="article-date">
+  <time class="dt-published" datetime="2021-06-28T03:26:10.776Z" itemprop="datePublished">2021-06-28</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h2 id="Feature"><a href="#Feature" class="headerlink" title="Feature"></a>Feature</h2><ul>
+<li>app登录认证（可以供手机app或桌面程序登录使用）</li>
+<li>基于URL的权限校验控制（授权有平台的portal完成）</li>
+<li>服务转发（将dubbo服务转换为http-json服务）</li>
+</ul>
+<h3 id="待完成的功能"><a href="#待完成的功能" class="headerlink" title="待完成的功能"></a>待完成的功能</h3><ul>
+<li>服务反向路由，网关要负责将外部请求反向路由到内部具体的微服务，这样虽然企业内部是复杂的分布式微服务结构，但是外部系统从网关上看到的就像是一个统一的完整服务，网关屏蔽了后台服务的复杂性，同时也屏蔽了后台服务的升级和变化。</li>
+<li>安全认证和防爬虫，所有外部请求必须经过网关，网关可以集中对访问进行安全控制，比如用户认证和授权，同时还可以分析访问模式实现防爬虫功能，网关是连接企业内外系统的安全之门。</li>
+<li>限流和容错，在流量高峰期，网关可以限制流量，保护后台系统不被大流量冲垮，在内部系统出现故障时，网关可以集中做容错，保持外部良好的用户体验。</li>
+<li>监控，网关可以集中监控访问量，调用延迟，错误计数和访问模式，为后端的性能优化或者扩容提供数据支持。</li>
+<li>日志，网关可以收集所有的访问日志，进入后台系统做进一步分析。</li>
+</ul>
+<p>除以上基本能力外，网关还可以实现线上引流，线上压测，线上调试(Surgical debugging)，金丝雀测试(Canary Testing)，数据中心双活(Active-Active HA)等高级功能。</p>
+<p>网关通常工作在7层，有一定的计算逻辑，一般以集群方式部署，前置LB进行负载均衡。</p>
+<p>开源的网关组件有Netflix的Zuul，特点是动态可热部署的过滤器(filter)机制，其它如HAproxy，Nginx等都可以扩展作为网关使用。</p>
+<h2 id="设计原理"><a href="#设计原理" class="headerlink" title="设计原理"></a>设计原理</h2><h3 id="请求认证过程"><a href="#请求认证过程" class="headerlink" title="请求认证过程"></a>请求认证过程</h3><p><img src="_v_images/2019-11-29-17-11-28.png"></p>
+<ul>
+<li>login 获取AccessKey和SecretKey。AccessKey是有一定的时效性，过期后需要重新登录获取。</li>
+<li>请求http-json服务。所有的服务都需要进行header的签名校验。</li>
+</ul>
+<p>对应的程序调用过程如下：</p>
+<p><img src="_v_images/2019-11-29-17-11-37.png"></p>
+<h3 id="签名算法"><a href="#签名算法" class="headerlink" title="签名算法"></a>签名算法</h3><p>签名算法的原理如下图所示，用户登录后，获取AccessKey和SecretKey（这两个key都有一定的时效性），客户端和服务端各自保存同一个SecretKey， SecretKey不在请求中传递的；stringToSign是有客户端生成的，并要传递到服务端，客户端和服务端用SecretKey和stringToSign 生成签名Signature；客户端的Signature需要传递到服务端，服务端收到客户端的Signature后，和服务端自己生成的Signature进行比较，如果相等则认为是合法请求，否则不合法；这个签名Signature每次请求是不一样的。</p>
+<p><img src="_v_images/2019-11-29-17-12-02.png"></p>
+<p>移动网关中除了login之外，所有请求服务端 API 接口的请求均使用此签名算法进行校验。</p>
+<p><img src="_v_images/2019-11-29-17-12-07.png"></p>
+<p>算法如上图所示，对于客户端来说，AccessKey和SecretKey是用户登录后获得到的；HttpMethod、Content-Type、request-URI是HTTP的请求属性，可以统一设置；Content-MD5是用户请求内容的MD5后的字符串，date是当前时间的长整形值（毫秒）。</p>
+<h3 id="权限-校验-控制"><a href="#权限-校验-控制" class="headerlink" title="权限 校验 控制"></a>权限 校验 控制</h3><p>权限校验是采用基于URL的校验，即将用户可访问的URL放入用户权限缓存中，用户发出每次请求时，校验用户是否具有该URL的访问权限，如果有权限，则http的返回码是200，否则返回码为401。</p>
+<h3 id="服务转发"><a href="#服务转发" class="headerlink" title="服务转发"></a>服务转发</h3><p>系统所使用的所有服务接口是以dubbo服务的形式发布，移动网关将dubbo服务转换为http-json的API，网关只是做一个请求的转发，并将结果返回给客户端app。代码如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">String interfaceName = getPara(<span class="string">&quot;interface&quot;</span>);</span><br><span class="line">String methodName = getPara(<span class="string">&quot;method&quot;</span>);</span><br><span class="line">String[] paraValues = getParaValues(<span class="string">&quot;params&quot;</span>);</span><br><span class="line"> </span><br><span class="line">log.debug(<span class="string">&quot;Access API : &#123;&#125;#&#123;&#125;&quot;</span>, interfaceName, methodName);</span><br><span class="line"> </span><br><span class="line">Class&lt;?&gt; clazz = <span class="keyword">null</span>;</span><br><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">    clazz = Class.forName(interfaceName);</span><br><span class="line">&#125; <span class="keyword">catch</span> (ClassNotFoundException e) &#123;</span><br><span class="line">    <span class="keyword">throw</span> <span class="keyword">new</span> IllegalArgumentException(<span class="string">&quot;Could not find interface [&quot;</span> + interfaceName + <span class="string">&quot;]&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line">DubboReferenceFactory.init(PropertyHolder.get(<span class="string">&quot;dubbo.register.center&quot;</span>), <span class="string">&quot;API-GATEWAY&quot;</span>);</span><br><span class="line">Object obj = DubboReferenceFactory.createReference(clazz, <span class="string">&quot;dubbo&quot;</span>);</span><br><span class="line">Object result = ReflectionUtil.invokeMethodByName(obj, methodName, paraValues);</span><br><span class="line"> </span><br><span class="line"><span class="keyword">if</span> (result!=<span class="keyword">null</span>)&#123;</span><br><span class="line">    renderJson(result);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<h2 id="客户端调用"><a href="#客户端调用" class="headerlink" title="客户端调用"></a>客户端调用</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">URL url = <span class="keyword">new</span> URL(baseUrl + <span class="string">&quot;admin&quot;</span>);</span><br><span class="line">HttpPost method = <span class="keyword">new</span> HttpPost(url.toURI());</span><br><span class="line"> </span><br><span class="line">String contentType = <span class="string">&quot;application/json; charset=utf-8&quot;</span>;</span><br><span class="line">String entity = <span class="string">&quot;lady gaga&quot;</span>;</span><br><span class="line">Header[] headers = buildHeader(ApiKey.ADMIN2, method, contentType, entity);</span><br><span class="line"> </span><br><span class="line">method.setHeaders(headers);</span><br><span class="line">method.setEntity(<span class="keyword">new</span> StringEntity(entity, ContentType.create(contentType)));</span><br><span class="line"> </span><br><span class="line">HttpResponse execute = client.execute(method);</span><br><span class="line">StatusLine statusLine = execute.getStatusLine();</span><br></pre></td></tr></table></figure>
+
+
+<p>完整的调用过程参见测试用例HmacTest</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2021/06/28/architecture/25%20%E7%A7%BB%E5%8A%A8%E7%BD%91%E5%85%B3%E8%AE%BE%E8%AE%A1/" data-id="ckqg285to001prcfphru5d6qi" data-title="" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-architecture/09 秦仓面试总结" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2021/06/28/architecture/09%20%E7%A7%A6%E4%BB%93%E9%9D%A2%E8%AF%95%E6%80%BB%E7%BB%93/" class="article-date">
+  <time class="dt-published" datetime="2021-06-28T03:26:10.775Z" itemprop="datePublished">2021-06-28</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h3 id="主要技术问题"><a href="#主要技术问题" class="headerlink" title="主要技术问题"></a>主要技术问题</h3><ul>
+<li><p>jvm参数配置</p>
+</li>
+<li><p>hashmap实现原理</p>
+</li>
+<li><p>线程池缺点</p>
+</li>
+<li><p>rpc框架实现原理</p>
+</li>
+<li><p>微服务</p>
+</li>
+<li><p>内存回收</p>
+</li>
+<li><p>数据库隔离级别</p>
+</li>
+<li><p>kafka的原理</p>
+</li>
+</ul>
+<h3 id="我的思考"><a href="#我的思考" class="headerlink" title="我的思考"></a>我的思考</h3><p>这份工作虽然薪水比我现在高很多，但是我不准备跳。原因有：</p>
+<ul>
+<li>这次面试的确没有准备，不是最佳状态，需要搞清楚上面的技术问题，就这样状态都能达到40w，提升自己才有更好结果。</li>
+<li>这次是一个试水，看看自己离互联网公司的架构大拿有多少差距，以后没隔一段时间要去互联网公司面试，称称自己。</li>
+<li><strong>架构能做到50岁吗？以后怎样转管理？是否还有人要我这种技术人员，后路在何方？</strong>（必须在3年内达到架构顶点，再看看接下来的路怎么走）</li>
+<li>最近也有一些创业机会，我这边也想尝试一下，即使不成功，也要从现在开始准备创业需要的技术。</li>
+</ul>
+<h3 id="我的目标"><a href="#我的目标" class="headerlink" title="我的目标"></a>我的目标</h3><p>我3年内的目标有以下几个：</p>
+<ul>
+<li> <strong>技术加深，关注高薪职位</strong>。 3年内达到架构大牛的级别（站在高处看看43岁以后的路怎么走）</li>
+<li> <strong>积累部件， 关注创业机会</strong>。 准备创业需要的技术、行业知识、人脉</li>
+<li>学习财务、理财知识，以后即便不做软件也要能财务自由</li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2021/06/28/architecture/09%20%E7%A7%A6%E4%BB%93%E9%9D%A2%E8%AF%95%E6%80%BB%E7%BB%93/" data-id="ckqg285tm001nrcfpf59ta0m5" data-title="" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-architecture/06 分布式事务" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2021/06/28/architecture/06%20%E5%88%86%E5%B8%83%E5%BC%8F%E4%BA%8B%E5%8A%A1/" class="article-date">
+  <time class="dt-published" datetime="2021-06-28T03:26:10.774Z" itemprop="datePublished">2021-06-28</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>spring cloud<br>微服务</p>
+<p><a target="_blank" rel="noopener" href="http://www.roncoo.com/article/detail/124243">微服务架构的分布式事务解决方案</a></p>
+<p><a target="_blank" rel="noopener" href="http://kaimingwan.com/post/fen-bu-shi/fen-bu-shi-shi-wu-de-dian-xing-chu-li-fang-shi-2pc-tcc-yi-bu-que-bao-he-zui-da-nu-li-xing">分布式事务的典型处理方式:2PC、TCC、异步确保和最大努力型</a></p>
+<h1 id="ACID"><a href="#ACID" class="headerlink" title="ACID"></a>ACID</h1><ul>
+<li><a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/ACID">https://zh.wikipedia.org/wiki/ACID</a></li>
+<li>Atomicity（原子性）：一个事务（transaction）中的所有操作，或者全部完成，或者全部不完成，不会结束在中间某个环节。即，事务不可分割、不可约简。</li>
+<li>Consistency（一致性）：在事务开始之前和事务结束以后，数据库的完整性没有被破坏。这表示写入的资料必须完全符合所有的预设约束、触发器、级联回滚等。</li>
+<li>Isolation（隔离性）：数据库允许多个并发事务同时对其数据进行读写和修改的能力，隔离性可以防止多个事务并发执行时由于交叉执行而导致数据的不一致。事务隔离分为不同级别，包括未提交读（Read uncommitted）、提交读（read committed）、可重复读（repeatable read）和串行化（Serializable）。</li>
+<li>Durability（持久性）：事务处理结束后，对数据的修改就是永久的，即便系统故障也不会丢失。</li>
+</ul>
+<h1 id="RDBMS-事务隔离级别"><a href="#RDBMS-事务隔离级别" class="headerlink" title="RDBMS 事务隔离级别"></a>RDBMS 事务隔离级别</h1><ul>
+<li>并发问题几个场景<ul>
+<li>脏读：一个事务读取了另一个事务操作但未提交的数据。<ul>
+<li>比如 A、B 两个事务，都操作同一张表，A 刚刚对数据进行了操作（插入、修改等）但还没有提交，这时 B 读取到了 A 刚刚操作的数据，因为 A 有可能回滚，所以这部分数据有可能只是临时的、无效的，即脏数据。</li>
+</ul>
+</li>
+<li>不可重复读：一个事务中的多个相同的查询返回了不同数据。<br>比如 A、B 两个事务，A 中先后有两次查询相同数据的操作，第一次查询完之后，B 对相关数据进行了修改，造成 A 事务第二次查询出的数据与第一次不一致。</li>
+<li>幻读：事务并发执行时，其中一个事务对另一个事务中操作的结果集的影响。<ul>
+<li>比如 A、B 两个事务，事务 A 操作表中符合条件的若干行。事务 B 插入符合 A 操作条件的数据行，然后再提交。后来发现事务 A 并没有如愿对“所有”符合条件的数据行做了修改。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>四个事务隔离级别<ul>
+<li>Read uncommitted (读未提交)：如果设置了该隔离级别，则当前事务可以读取到其他事务已经修改但还没有提交的数据。这种隔离级别是最低的，会导致上面所说的脏读</li>
+<li>Read committed (读已提交)：如果设置了该隔离级别，当前事务只可以读取到其他事务已经提交后的数据，这种隔离级别可以防止脏读，但是会导致不可重复读和幻读。这种隔离级别最效率较高，并且不可重复读和幻读在一般情况下是可以接受的，所以这种隔离级别最为常用。</li>
+<li>Repeatable read (可重复读)：如果设置了该隔离级别，可以保证当前事务中多次读取特定记录的结果相同。可以防止脏读、不可重复读，但是会导致幻读。</li>
+<li>Serializable (串行化)：如果设置了该隔离级别，所有的事务会放在一个队列中执行，当前事务开启后，其他事务将不能执行，即同一个时间点只能有一个事务操作数据库对象。这种隔离级别对于保证数据完整性的能力是最高的，但因为同一时刻只允许一个事务操作数据库，所以大大降低了系统的并发能力。</li>
+</ul>
+</li>
+</ul>
+<h1 id="CAP-定理"><a href="#CAP-定理" class="headerlink" title="CAP 定理"></a>CAP 定理</h1><pre><code>- 一致性（Consistency） （等同于所有节点访问同一份最新的数据副本）
+- 可用性（Availability）（每次请求都能获取到非错的响应——但是不保证获取的数据为最新数据）
+- 分区容错性（Partition tolerance）（以实际效果而言，分区相当于对通信的时限要求。系统如果不能在时限内达成数据一致性，就意味着发生了分区的情况，必须就当前操作在C和A之间做出选择[3]。）
+- 根据定理，分布式系统只能满足三项中的两项而不可能满足全部三项[4]。理解CAP理论的最简单方式是想象两个节点分处分区两侧。允许至少一个节点更新状态会导致数据不一致，即丧失了C性质。如果为了保证数据一致性，将分区一侧的节点设置为不可用，那么又丧失了A性质。除非两个节点可以互相通信，才能既保证C又保证A，这又会导致丧失P性质。
+</code></pre>
+<h1 id="BASE-理论（在微服务下的事务管理必然要遵循新的法则）"><a href="#BASE-理论（在微服务下的事务管理必然要遵循新的法则）" class="headerlink" title="BASE 理论（在微服务下的事务管理必然要遵循新的法则）"></a>BASE 理论（在微服务下的事务管理必然要遵循新的法则）</h1><ul>
+<li>BASE 理论是对 CAP 理论的延伸，核心思想是即使无法做到强一致性，应用应该可以采用合适的方式达到最终一致性。</li>
+<li>BASE 是指基本可用（Basically Available）、软状态（ Soft State）、最终一致性（ Eventual Consistency）。<ul>
+<li>基本可用：指分布式系统在出现故障的时候，允许损失部分可用性，即保证核心可用。</li>
+<li>软状态：允许系统存在中间状态，而该中间状态不会影响系统整体可用性。分布式存储中一般一份数据至少会有三个副本，允许不同节点间副本同步的延时就是软状态的体现。</li>
+<li>最终一致性：最终一致性是指系统中的所有数据副本经过一定时间后，最终能够达到一致的状态。弱一致性和强一致性相反，最终一致性是弱一致性的一种特殊情况。</li>
+</ul>
+</li>
+</ul>
+<h1 id="参考："><a href="#参考：" class="headerlink" title="参考："></a>参考：</h1><ul>
+<li>[对比 5 种分布式事务方案，还是宠幸了阿里的 Seata（原理 + 实战）]<a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s?__biz=MzU0OTE4MzYzMw==&amp;mid=2247497767&amp;idx=3&amp;sn=727bff63c4598e93f6f6e4a67e780e37&amp;chksm=fbb171d9ccc6f8cff428ec385babf069fc4d3bce9a5258446cd0e1763d4e80f886c1ea14fbec&amp;&amp;xtrack=1&amp;scene=90&amp;subscene=93&amp;sessionid=1606710118&amp;clicktime=1606710436&amp;enterid=1606710436#rd">https://mp.weixin.qq.com/s?__biz=MzU0OTE4MzYzMw==&amp;mid=2247497767&amp;idx=3&amp;sn=727bff63c4598e93f6f6e4a67e780e37&amp;chksm=fbb171d9ccc6f8cff428ec385babf069fc4d3bce9a5258446cd0e1763d4e80f886c1ea14fbec&amp;&amp;xtrack=1&amp;scene=90&amp;subscene=93&amp;sessionid=1606710118&amp;clicktime=1606710436&amp;enterid=1606710436#rd</a></li>
+<li>[分布式事务，这一篇就够了]<a target="_blank" rel="noopener" href="https://xiaomi-info.github.io/2020/01/02/distributed-transaction/">https://xiaomi-info.github.io/2020/01/02/distributed-transaction/</a></li>
+<li>[分布式事务的典型处理方式：2PC、TCC、异步确保和最大努力型]<a target="_blank" rel="noopener" href="http://kaimingwan.com/post/fen-bu-shi/fen-bu-shi-shi-wu-de-dian-xing-chu-li-fang-shi-2pc-tcc-yi-bu-que-bao-he-zui-da-nu-li-xing">http://kaimingwan.com/post/fen-bu-shi/fen-bu-shi-shi-wu-de-dian-xing-chu-li-fang-shi-2pc-tcc-yi-bu-que-bao-he-zui-da-nu-li-xing</a></li>
+</ul>
+<h1 id="分布式事务有哪-5-中方案"><a href="#分布式事务有哪-5-中方案" class="headerlink" title="分布式事务有哪 5 中方案"></a>分布式事务有哪 5 中方案</h1><ul>
+<li>常见的比如基于 XA 协议的 2PC、3PC，基于业务层的 TCC，还有应用消息队列 + 消息表实现的最终一致性方案，还有今天要说的 Seata 中间件</li>
+<li>开发中幂等性是极为重要的。 简单来说，对于同一个系统，在同样条件下，一次请求和重复多次请求对资源的影响是一致的，就称该操作为幂等的。</li>
+</ul>
+<h1 id="2PC"><a href="#2PC" class="headerlink" title="2PC"></a>2PC</h1><ul>
+<li>XA 协议中分为两部分：事务管理器和本地资源管理器。<ul>
+<li>其中本地资源管理器往往由数据库实现，比如 Oracle、MYSQL 这些数据库都实现了 XA 接口，而事务管理器则作为一个全局的调度者。</li>
+</ul>
+</li>
+<li>优点：<ul>
+<li>严格保障事务 ACID 特性；</li>
+<li>想使用本地事务一样透明；</li>
+<li>对业务侵⼊很小。</li>
+</ul>
+</li>
+<li>缺点：<ul>
+<li>强一致性的同步阻塞协议，锁定全部资源。</li>
+</ul>
+</li>
+</ul>
+<h1 id="3PC"><a href="#3PC" class="headerlink" title="3PC"></a>3PC</h1><ul>
+<li>是 2PC 的一种改进版本。</li>
+<li>CanCommit、PreCommit、DoCommit 三个阶段。</li>
+<li>在第一阶段，只是询问所有参与者是否可可以执行事务操作，并不在本阶段执行事务操作。当协调者收到所有的参与者都返回 YES 时，在第二阶段才执行事务操作，然后在第三阶段在执行 commit 或者 rollback。</li>
+<li>2PC 中只有协调者有超时机制，3PC 在协调者和参与者中都引入了超时机制，协调者出现故障后，参与者就不会一直阻塞。</li>
+<li>多了一次网络通信，性能上反而变得更差</li>
+</ul>
+<h1 id="TCC"><a href="#TCC" class="headerlink" title="TCC"></a>TCC</h1><ul>
+<li>TCC 为在业务层编写代码实现的两阶段提交。</li>
+<li>TCC 分别指 Try、Confirm、Cancel ，一个业务操作要对应的写这三个方法。以下单扣库存为例，Try 阶段去占库存，Confirm 阶段则实际扣库存，如果库存扣减失败 Cancel 阶段进行回滚，释放库存。</li>
+<li>TCC 不存在资源阻塞的问题，因为每个方法都直接进行事务的提交，一旦出现异常通过则 Cancel 来进行回滚补偿，这也就是常说的补偿性事务。</li>
+<li>TCC 对业务的侵入性很强。</li>
+</ul>
+<h1 id="消息事务（最终一致性）"><a href="#消息事务（最终一致性）" class="headerlink" title="消息事务（最终一致性）"></a>消息事务（最终一致性）</h1><ul>
+<li>消息事务其实就是基于消息中间件的两阶段提交，将本地事务和发消息放在同一个事务里，保证本地操作和发送消息同时成功。<br><img src="_v_images/20210625094850448_27262.png" alt="消息事务（最终一致性）"></li>
+</ul>
+<h1 id="Seata"><a href="#Seata" class="headerlink" title="Seata"></a>Seata</h1><ul>
+<li><p>Seata 也是从两段提交演变而来的一种分布式事务解决方案，提供了 AT、TCC、SAGA 和 XA 等事务模式，这里重点介绍 AT 模式。</p>
+</li>
+<li><p>几种角色</p>
+<ul>
+<li>Transaction Coordinator(TC): 全局事务协调者，用来协调全局事务和各个分支事务（不同服务）的状态， 驱动全局事务和各个分支事务的回滚或提交。</li>
+<li>Transaction Manager™: 事务管理者，业务层中用来开启/提交/回滚一个整体事务（在调用服务的方法中用注解开启事务）。</li>
+<li>Resource Manager(RM): 资源管理者，一般指业务数据库代表了一个分支事务（Branch Transaction），管理分支事务与 TC 进行协调注册分支事务并且汇报分支事务的状态，驱动分支事务的提交或回滚。<br><img src="_v_images/20210625094929103_13071.png" alt="Seata角色"></li>
+</ul>
+</li>
+<li><p>Seata 实现分布式事务，设计了一个关键角色 UNDO_LOG （回滚日志记录表），我们在每个应用分布式事务的业务库中创建这张表，这个表的核心作用就是，将业务数据在更新前后的数据镜像组织成回滚日志，备份在 UNDO_LOG 表中，以便业务异常能随时回滚。</p>
+</li>
+<li><p>Seata 执行的两个阶段</p>
+<ul>
+<li>第一个阶段：本地事务提交，业务数据的更新和前面生成的 UNDO LOG 数据一并提交，并将本地事务提交的结果上报给全局事务协调者 TC。</li>
+<li>第二阶段：根据各分支的决议做提交或回滚。</li>
+</ul>
+</li>
+<li><p>Seata 实践</p>
+<ul>
+<li>file.conf 文件用于配置持久化事务日志的模式，目前提供 file、db、redis 三种方式。</li>
+<li>registry.conf 文件设置 注册中心 和 配置中心：目前注册中心支持 nacos 、eureka、redis、zk、consul、etcd3、sofa 七种。</li>
+<li>Seata Client<ul>
+<li>注册服务：新建三个服务 order-server（下单服务）、storage-server（扣减库存服务）、account-server（账户金额服务），分别服务注册到注册中心。</li>
+<li>用 @GlobalTransactional 注解开启一个全局事务即可。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2021/06/28/architecture/06%20%E5%88%86%E5%B8%83%E5%BC%8F%E4%BA%8B%E5%8A%A1/" data-id="ckqg285tm001mrcfpczxp14qe" data-title="" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+
+
+  <nav id="page-nav">
+    
+    <a class="extend prev" rel="prev" href="/page/19/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/18/">18</a><a class="page-number" href="/page/19/">19</a><span class="page-number current">20</span><a class="page-number" href="/page/21/">21</a><a class="extend next" rel="next" href="/page/21/">Next &raquo;</a>
+  </nav>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/06/">June 2021</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2021/06/28/product/%E9%9C%80%E6%B1%82%E8%B0%83%E7%A0%94%E7%9A%84%E5%86%85%E5%AE%B9%E5%92%8C%E5%B7%A5%E4%BD%9C%E6%8C%87%E5%BC%95/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2021/06/28/product/%E9%93%81%E8%B7%AF6C%E4%B8%9A%E5%8A%A1%E7%BB%93%E6%9E%84/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2021/06/28/product/%E9%9C%80%E6%B1%82%E8%B0%83%E7%A0%94%E5%8F%8A%E5%88%86%E6%9E%90%E6%96%B9%E6%B3%95/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2021/06/28/product/%E6%B0%B4%E7%94%B5%E7%AB%99%E7%94%9F%E4%BA%A7%E8%BF%90%E8%A1%8C%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2021/06/28/product/%E6%B0%B4%E7%94%B5%E5%8E%82%E8%BF%90%E8%A1%8C%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F/">(no title)</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2021 John Doe<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.4.1.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

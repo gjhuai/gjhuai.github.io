@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="需求三个层次： 业务需求、用户需求、软件需求，对应：业务架构、业务流程、工作细节 基于SERU的面向对象需求分析：1、确定业务边界 确定业务范围 《前景》文档：项目背景调查、业务前景分析、业务和技术的可行性  2、大卸八块（识别业务的主题域Subject） 系统切分为子系统、分层划分 采用 组件图、包图来表示，形成系统的High-level的设计 确定子系统间的接口（即信息交换）  3、块中找流（">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Hexo">
+<meta property="og:url" content="http://example.com/2021/06/28/product/%E3%80%90%E6%9E%B6%E6%9E%84%E3%80%91%E9%9C%80%E6%B1%82%E5%88%86%E6%9E%90/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="需求三个层次： 业务需求、用户需求、软件需求，对应：业务架构、业务流程、工作细节 基于SERU的面向对象需求分析：1、确定业务边界 确定业务范围 《前景》文档：项目背景调查、业务前景分析、业务和技术的可行性  2、大卸八块（识别业务的主题域Subject） 系统切分为子系统、分层划分 采用 组件图、包图来表示，形成系统的High-level的设计 确定子系统间的接口（即信息交换）  3、块中找流（">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2021-06-28T03:26:11.313Z">
+<meta property="article:modified_time" content="2021-06-02T01:40:21.859Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-product/【架构】需求分析" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2021/06/28/product/%E3%80%90%E6%9E%B6%E6%9E%84%E3%80%91%E9%9C%80%E6%B1%82%E5%88%86%E6%9E%90/" class="article-date">
+  <time class="dt-published" datetime="2021-06-28T03:26:11.313Z" itemprop="datePublished">2021-06-28</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>需求三个层次： 业务需求、用户需求、软件需求，对应：业务架构、业务流程、工作细节</p>
+<h1 id="基于SERU的面向对象需求分析："><a href="#基于SERU的面向对象需求分析：" class="headerlink" title="基于SERU的面向对象需求分析："></a>基于SERU的面向对象需求分析：</h1><h2 id="1、确定业务边界"><a href="#1、确定业务边界" class="headerlink" title="1、确定业务边界"></a>1、确定业务边界</h2><ul>
+<li>确定业务范围</li>
+<li>《前景》文档：项目背景调查、业务前景分析、业务和技术的可行性</li>
+</ul>
+<h2 id="2、大卸八块（识别业务的主题域Subject）"><a href="#2、大卸八块（识别业务的主题域Subject）" class="headerlink" title="2、大卸八块（识别业务的主题域Subject）"></a>2、大卸八块（识别业务的主题域Subject）</h2><ul>
+<li>系统切分为子系统、分层划分</li>
+<li>采用 组件图、包图来表示，形成系统的High-level的设计</li>
+<li>确定子系统间的接口（即信息交换）</li>
+</ul>
+<h2 id="3、块中找流（找出主题域中的业务事件Event，即流程，和报表Report）"><a href="#3、块中找流（找出主题域中的业务事件Event，即流程，和报表Report）" class="headerlink" title="3、块中找流（找出主题域中的业务事件Event，即流程，和报表Report）"></a>3、块中找流（找出主题域中的业务事件Event，即流程，和报表Report）</h2><ul>
+<li>每一个主题域相当于一个子系统</li>
+<li>按照Role确定主题域中主要的业务流程，即Event， 采用活动图来描述这些业务流程</li>
+<li>活动图中节点即是关键用例</li>
+<li>找出需要输出的报表</li>
+</ul>
+<h2 id="4、流中找点（对业务事件流程进行分析，找出其中的主要业务活动点，DFD）"><a href="#4、流中找点（对业务事件流程进行分析，找出其中的主要业务活动点，DFD）" class="headerlink" title="4、流中找点（对业务事件流程进行分析，找出其中的主要业务活动点，DFD）"></a>4、流中找点（对业务事件流程进行分析，找出其中的主要业务活动点，DFD）</h2><ul>
+<li>找出业务流程上的主要业务活动点，即关键用例，输出关键用例图</li>
+<li>此点是业务用例</li>
+<li>用鲁棒图（分析类图）、DFD、时序图等来分析关键用例</li>
+<li>用于确定系统的概要设计</li>
+</ul>
+<h2 id="5、点的分解（精化关键业务用例，找实体）"><a href="#5、点的分解（精化关键业务用例，找实体）" class="headerlink" title="5、点的分解（精化关键业务用例，找实体）"></a>5、点的分解（精化关键业务用例，找实体）</h2><ul>
+<li>精化用例 ：对关键用例进行分析，分解成系统用例，输出系统用例图</li>
+<li>找实体（找出主题域、业务事件中业务实体，以及实体之间的关系） </li>
+<li>在精化用例过程中，找出系统的领域模型（E-R），为数据建模作准备</li>
+</ul>
+<h2 id="6、用例分析（可以采用事件流、时序图等）"><a href="#6、用例分析（可以采用事件流、时序图等）" class="headerlink" title="6、用例分析（可以采用事件流、时序图等）"></a>6、用例分析（可以采用事件流、时序图等）</h2><ul>
+<li>即用例场景分析</li>
+<li>采用事件流（文字+时序图）、用例规约来描述用例场景</li>
+</ul>
+<h2 id="7、非功能需求的识别"><a href="#7、非功能需求的识别" class="headerlink" title="7、非功能需求的识别"></a>7、非功能需求的识别</h2><ul>
+<li>约束性需求</li>
+<li>质量需求</li>
+</ul>
+<h1 id="BA的产出物："><a href="#BA的产出物：" class="headerlink" title="BA的产出物："></a>BA的产出物：</h1><ul>
+<li>软件需求规格说明书</li>
+<li>界面原型Demo</li>
+<li>E-R 实体关系图</li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2021/06/28/product/%E3%80%90%E6%9E%B6%E6%9E%84%E3%80%91%E9%9C%80%E6%B1%82%E5%88%86%E6%9E%90/" data-id="ckqg285uw0049rcfp61474olt" data-title="" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2021/06/28/product/%E4%B8%AD%E7%A7%91%E8%BD%AF%E5%BA%94%E6%80%A5%E6%8C%87%E6%8C%A5%E7%B3%BB%E7%BB%9F%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          (no title)
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2021/06/28/product/GM%E7%B3%BB%E7%BB%9F%E9%9B%86%E6%88%90%E8%B5%84%E8%B4%A8%E7%94%B3%E6%8A%A5/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title"></div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/06/">June 2021</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2021/06/28/product/%E9%9C%80%E6%B1%82%E8%B0%83%E7%A0%94%E7%9A%84%E5%86%85%E5%AE%B9%E5%92%8C%E5%B7%A5%E4%BD%9C%E6%8C%87%E5%BC%95/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2021/06/28/product/%E9%93%81%E8%B7%AF6C%E4%B8%9A%E5%8A%A1%E7%BB%93%E6%9E%84/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2021/06/28/product/%E9%9C%80%E6%B1%82%E8%B0%83%E7%A0%94%E5%8F%8A%E5%88%86%E6%9E%90%E6%96%B9%E6%B3%95/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2021/06/28/product/%E6%B0%B4%E7%94%B5%E7%AB%99%E7%94%9F%E4%BA%A7%E8%BF%90%E8%A1%8C%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2021/06/28/product/%E6%B0%B4%E7%94%B5%E5%8E%82%E8%BF%90%E8%A1%8C%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F/">(no title)</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2021 John Doe<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.4.1.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

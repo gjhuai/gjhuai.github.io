@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="Add国内yum源12345678# cd &#x2F;etc&#x2F;yum.repos.d# wget http:&#x2F;&#x2F;mirrors.163.com&#x2F;.help&#x2F;fedora-163.repo# wget http:&#x2F;&#x2F;mirrors.163.com&#x2F;.help&#x2F;fedora-updates-163.repo# yum makecache  增加FZUG 源 一、安装 FZUG 源FZUG 源安装指南dnf i">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Hexo">
+<meta property="og:url" content="http://example.com/2021/06/28/backend/Linux/Fedora%E4%BD%BF%E7%94%A8%E8%AE%B0%E5%BD%95/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="Add国内yum源12345678# cd &#x2F;etc&#x2F;yum.repos.d# wget http:&#x2F;&#x2F;mirrors.163.com&#x2F;.help&#x2F;fedora-163.repo# wget http:&#x2F;&#x2F;mirrors.163.com&#x2F;.help&#x2F;fedora-updates-163.repo# yum makecache  增加FZUG 源 一、安装 FZUG 源FZUG 源安装指南dnf i">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2021-06-28T03:26:11.081Z">
+<meta property="article:modified_time" content="2021-06-24T12:32:22.554Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-backend/Linux/Fedora使用记录" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2021/06/28/backend/Linux/Fedora%E4%BD%BF%E7%94%A8%E8%AE%B0%E5%BD%95/" class="article-date">
+  <time class="dt-published" datetime="2021-06-28T03:26:11.081Z" itemprop="datePublished">2021-06-28</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="Add国内yum源"><a href="#Add国内yum源" class="headerlink" title="Add国内yum源"></a>Add国内yum源</h1><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> <span class="built_in">cd</span> /etc/yum.repos.d</span></span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> wget http://mirrors.163.com/.<span class="built_in">help</span>/fedora-163.repo</span></span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> wget http://mirrors.163.com/.<span class="built_in">help</span>/fedora-updates-163.repo</span></span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> yum makecache</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h1 id="增加FZUG-源"><a href="#增加FZUG-源" class="headerlink" title="增加FZUG 源"></a>增加FZUG 源</h1><ul>
+<li>一、安装 FZUG 源<br><a target="_blank" rel="noopener" href="https://github.com/FZUG/repo/wiki/%E6%B7%BB%E5%8A%A0-FZUG-%E6%BA%90">FZUG 源安装指南</a><br><code>dnf install https://mirrors.tuna.tsinghua.edu.cn/fzug/free/30/x86_64/fzug-release-30-0.1.noarch.rpm</code><br>Fedora 31 用户，暂时可用以上链接。虽然版本叫 30, 但是在 31 的系统上是能够正确选择 Fedora 31 的仓库的。</li>
+</ul>
+<ul>
+<li>二、Fedora安装rpmfusion源方法</li>
+</ul>
+<p>1、下载两个文件：</p>
+<p>　　1）<a target="_blank" rel="noopener" href="http://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-stable.noarch.rpm">http://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-stable.noarch.rpm</a></p>
+<p>　　2）<a target="_blank" rel="noopener" href="http://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-stable.noarch.rpm">http://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-stable.noarch.rpm</a></p>
+<p>2、安装这两个文件</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">yum install rpmfusion-free-release-stable.noarch.rpm</span><br><span class="line">yum install rpmfusion-nonfree-release-stable.noarch.rpm</span><br></pre></td></tr></table></figure>
+
+<p>3、生成缓存: yum makecache</p>
+<h1 id="安装JDK"><a href="#安装JDK" class="headerlink" title="安装JDK"></a>安装JDK</h1><p>打开dnfdragora，搜索 JDK，安装 java-1.8.0-openjdk-devel 即可</p>
+<h1 id="安装Amazon-Corretto-JDK"><a href="#安装Amazon-Corretto-JDK" class="headerlink" title="安装Amazon Corretto JDK"></a>安装Amazon Corretto JDK</h1><p><a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/corretto/latest/corretto-8-ug/downloads-list.html">https://docs.aws.amazon.com/corretto/latest/corretto-8-ug/downloads-list.html</a></p>
+<p>sudo yum install -y java-1.8.0-amazon-corretto*.rpm</p>
+<h1 id="Fedora27-安装输入法"><a href="#Fedora27-安装输入法" class="headerlink" title="Fedora27 安装输入法"></a>Fedora27 安装输入法</h1><ul>
+<li>安装fcitx<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo dnf install fcitx fcitx-libpinyin fcitx-qt4 kcm-fcitx</span><br><span class="line">dnf install fcitx-configtool</span><br></pre></td></tr></table></figure>
+安装好以后，运行fcitx，再运行fcitx-configtool。在配置选项里加入输入法。如果系统语言为英文，记得勾选掉下面的“Only Show Current Language”选项。然后点击应用。</li>
+</ul>
+<p>运行一下命令来切换系统默认输入法至fcitx： <code>imsettings-switch fcitx</code></p>
+<p>此处会有报错，请忽略，然后重启电脑。安装完成。</p>
+<h1 id="修改home下的中文目录为英文目录"><a href="#修改home下的中文目录为英文目录" class="headerlink" title="修改home下的中文目录为英文目录"></a>修改home下的中文目录为英文目录</h1><ul>
+<li><p>安装 <code>xdg-user-dirs-gtk</code><br><code>yum install -y xdg-user-dirs-gtk</code></p>
+</li>
+<li><p>切换英文Lang</p>
+</li>
+</ul>
+<p>打开终端，在终端下输入命令：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">export LANG=en_US</span><br><span class="line">xdg-user-dirs-gtk-update</span><br></pre></td></tr></table></figure>
+
+<p>这个时候会弹出一个配置界面，提示是否将中文目录切换为英文目录。选中不再提示，确定。系统会删除没有内容的中文目录，而有内容的目录会保持。并创建8个 相应的英文目录。<br>此时，您在“位置”里看到的常用中文目录已经变成英文目录。只需要将原中文目录的内容拷贝到相应英文目录，并删 除中文目录即可。</p>
+<ul>
+<li>恢复中文Lang</li>
+</ul>
+<p><code>export LANG=zh_CN.UTF-8</code></p>
+<h1 id="删除多余内核"><a href="#删除多余内核" class="headerlink" title="删除多余内核"></a>删除多余内核</h1><p>删除旧内核</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> rpm -qa | grep kernel</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> yum remove kernel-core-4.18.0 kernel-devel-4.18.0 kernel-tools-libs-4.18.0 kernel-headers-4.18.0</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="安装wechat"><a href="#安装wechat" class="headerlink" title="安装wechat"></a>安装wechat</h1><p>使用FZUG源，打开dnfdragora，搜索 wechat，安装即可</p>
+<h1 id="安装wps"><a href="#安装wps" class="headerlink" title="安装wps"></a>安装wps</h1><p>下载wps： <a target="_blank" rel="noopener" href="https://linux.wps.cn/">https://linux.wps.cn/</a><br>安装： <code>yum install wps-office-11.1.0.9662-1.x86_64.rpm</code></p>
+<h1 id="安装qq"><a href="#安装qq" class="headerlink" title="安装qq"></a>安装qq</h1><p>下载： <a target="_blank" rel="noopener" href="https://im.qq.com/linuxqq/download.html">https://im.qq.com/linuxqq/download.html</a></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo yum install gtk2.x86_64 # centos</span><br><span class="line">sudo rpm -ivh linuxqq_1.0.1-b1-100_mips64el.rpm</span><br></pre></td></tr></table></figure>
+
+<h1 id="FTP客户端-FileZilla"><a href="#FTP客户端-FileZilla" class="headerlink" title="FTP客户端-FileZilla"></a>FTP客户端-FileZilla</h1><p>在dnfdragora中安装</p>
+<h1 id="SSH客户端EasySSH"><a href="#SSH客户端EasySSH" class="headerlink" title="SSH客户端EasySSH"></a>SSH客户端EasySSH</h1><ul>
+<li>方法1</li>
+</ul>
+<p>1、下载easyssh*.rpm版本<br><a target="_blank" rel="noopener" href="https://download.copr.fedorainfracloud.org/results/deadmozay/easyssh/fedora-32-x86_64/00865362-easyssh/">https://download.copr.fedorainfracloud.org/results/deadmozay/easyssh/fedora-32-x86_64/00865362-easyssh/</a><br>2、安装： <code>yum install -y easyssh*.rpm</code></p>
+<ul>
+<li>方法2</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cd /etc/yum.repo.d/</span><br><span class="line">wget https://copr.fedorainfracloud.org/coprs/deadmozay/easyssh/repo/fedora-32/deadmozay-easyssh-fedora-32.repo</span><br><span class="line">yum install -y easyssh</span><br></pre></td></tr></table></figure>
+
+<h1 id="openbox分屏"><a href="#openbox分屏" class="headerlink" title="openbox分屏"></a>openbox分屏</h1><p>lxqt默认使用openbox窗口管理器。openbox可以通过配置keybind实现分屏。</p>
+<p><a target="_blank" rel="noopener" href="https://askubuntu.com/questions/1182097/lubuntu-19-10-20-04-how-to-tile-windows-the-window-tiling-section-is-missing">https://askubuntu.com/questions/1182097/lubuntu-19-10-20-04-how-to-tile-windows-the-window-tiling-section-is-missing</a><br><a target="_blank" rel="noopener" href="https://www.allartsoftworks.com/it/articles/howto-resize-split-windows-lxde-lubuntu-openbox-how-to-resize-windows-with-hotkeys-under-lubuntu-lxde/">https://www.allartsoftworks.com/it/articles/howto-resize-split-windows-lxde-lubuntu-openbox-how-to-resize-windows-with-hotkeys-under-lubuntu-lxde/</a></p>
+<p>编辑<code>~/.config/openbox/lxqt-rc.xml</code>，加入以下内容。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">  <span class="comment">&lt;!-- Lubuntu specific. Keybindings for window tiling   --&gt;</span></span><br><span class="line">  <span class="comment">&lt;!--  # HalfLeftScreen  --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">keybind</span> <span class="attr">key</span>=<span class="string">&quot;C-W-Left&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">action</span> <span class="attr">name</span>=<span class="string">&quot;UnmaximizeFull&quot;</span>/&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">action</span> <span class="attr">name</span>=<span class="string">&quot;MoveResizeTo&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">x</span>&gt;</span>0<span class="tag">&lt;/<span class="name">x</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">y</span>&gt;</span>0<span class="tag">&lt;/<span class="name">y</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">height</span>&gt;</span>100%<span class="tag">&lt;/<span class="name">height</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">width</span>&gt;</span>50%<span class="tag">&lt;/<span class="name">width</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">action</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">keybind</span>&gt;</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">&lt;!-- # HalfRightScreen  --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">keybind</span> <span class="attr">key</span>=<span class="string">&quot;C-W-Right&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">action</span> <span class="attr">name</span>=<span class="string">&quot;UnmaximizeFull&quot;</span>/&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">action</span> <span class="attr">name</span>=<span class="string">&quot;MoveResizeTo&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">x</span>&gt;</span>-0<span class="tag">&lt;/<span class="name">x</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">y</span>&gt;</span>0<span class="tag">&lt;/<span class="name">y</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">height</span>&gt;</span>100%<span class="tag">&lt;/<span class="name">height</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">width</span>&gt;</span>50%<span class="tag">&lt;/<span class="name">width</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">action</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">keybind</span>&gt;</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">&lt;!-- # HalfUpperScreen  --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">keybind</span> <span class="attr">key</span>=<span class="string">&quot;C-W-Up&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">action</span> <span class="attr">name</span>=<span class="string">&quot;UnmaximizeFull&quot;</span>/&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">action</span> <span class="attr">name</span>=<span class="string">&quot;MoveResizeTo&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">x</span>&gt;</span>0<span class="tag">&lt;/<span class="name">x</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">y</span>&gt;</span>0<span class="tag">&lt;/<span class="name">y</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">width</span>&gt;</span>100%<span class="tag">&lt;/<span class="name">width</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">height</span>&gt;</span>50%<span class="tag">&lt;/<span class="name">height</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">action</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">keybind</span>&gt;</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">&lt;!-- # HalfLowerScreen --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">keybind</span> <span class="attr">key</span>=<span class="string">&quot;C-W-Down&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">action</span> <span class="attr">name</span>=<span class="string">&quot;UnmaximizeFull&quot;</span>/&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">action</span> <span class="attr">name</span>=<span class="string">&quot;MoveResizeTo&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">x</span>&gt;</span>0<span class="tag">&lt;/<span class="name">x</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">y</span>&gt;</span>-0<span class="tag">&lt;/<span class="name">y</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">width</span>&gt;</span>100%<span class="tag">&lt;/<span class="name">width</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">height</span>&gt;</span>50%<span class="tag">&lt;/<span class="name">height</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">action</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">keybind</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>配置完后，在终端执行<code>openbox --reconfigure</code> 是配置生效。</p>
+<h1 id="IDEA显示Run-Dashboard窗口"><a href="#IDEA显示Run-Dashboard窗口" class="headerlink" title="IDEA显示Run Dashboard窗口"></a>IDEA显示Run Dashboard窗口</h1><p>在Settings -&gt; Plugins 中增加Spring Boot支持</p>
+<p>在.idea下的workspace.xml中，找到 <code>&lt;component name=&quot;RunDashboard&quot;&gt;</code>，加入：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;option name=&quot;configurationTypes&quot;&gt;  </span><br><span class="line">     &lt;set&gt;  </span><br><span class="line">       &lt;option value=&quot;SpringBootApplicationConfigurationType&quot; /&gt;  </span><br><span class="line">     &lt;/set&gt;  </span><br><span class="line">&lt;/option&gt; </span><br></pre></td></tr></table></figure>
+
+<p>重新打开项目，在View -&gt; Tools Windows下，可以看到<code>Run Dashboard</code>，运行SpringBoot程序就可以看到这个窗口了。</p>
+<h1 id="yum-install-redis"><a href="#yum-install-redis" class="headerlink" title="yum install redis"></a>yum install redis</h1><ul>
+<li><p>安装<br><code>yum install redis</code></p>
+</li>
+<li><p>启动<br><code>service redis start</code> 或 <code>systemctl start redis</code></p>
+</li>
+<li><p>查看redis安装时创建的文件<br><code>rpm -qa |grep redis</code><br><code>rpm -ql redis</code></p>
+</li>
+<li><p>查看redis版本：<br><code>redis-cli --version</code></p>
+</li>
+<li><p>设置为开机自动启动<br><code>chkconfig redis on</code> 或 <code>systemctl enable redis.service</code></p>
+</li>
+<li><p>开启Redis远程登录连接</p>
+</li>
+</ul>
+<p>redis默认只能localhost访问，所以需要开启远程登录。解决方法如下：<br>在redis的配置文件/etc/redis.conf中<br>将bind 127.0.0.1 改成了 bind 0.0.0.0<br>然后要配置防火墙 开放端口6379</p>
+<ul>
+<li>连接redis</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[gjh@localhost nacos]$ redis-cli</span><br><span class="line">127.0.0.1:6379&gt; set key1 &quot;hello world&quot;</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:6379&gt; get key1</span><br><span class="line">&quot;hello world&quot;</span><br><span class="line">127.0.0.1:6379&gt; del key1</span><br><span class="line">(integer) 1</span><br><span class="line">127.0.0.1:6379&gt; get key1</span><br><span class="line">(nil)</span><br></pre></td></tr></table></figure>
+
+<h1 id="yum用法"><a href="#yum用法" class="headerlink" title="yum用法"></a>yum用法</h1><ul>
+<li><p>查询<br>使用 yum search <term> [more_terms] 命令，能够在已启用的软件包仓库中，对所有软件包的名称、描述和概述中进行搜索，最后，yum 会以显示符合合条件的搜索结果列表。<br>yum list 以及相关的一些命令则能够为你提供有关软件包、软件包集和软件仓库的信息。<br>所有的 yum list 命令都能够使用 glob 表达式作为参数，对输出结果进行过滤。在 glob 表达式中，你可以使用 * 代表任何数量个字符，使用 ? 代表任何一个字符。通过后面的示例，你可以对 glob 表达式有些简单的认识。<br>yum list <glob_expr> [more_glob_exprs] ── 列出所有符合 glob 表达式的软件包<br>yum list all ── 列出所有已安装的和可用的软件包<br>yum list installed ── 列出所有已经安装在系统中的软件包。输出结果的最右边一列是取得该软件包的软件仓库。标识为 installed 的软件包则说明它是做为系统基本组件而预安装的。<br>yum list available ── 列出所有启用的软件仓库中可用的软件包<br>yum grouplist ── 列出所有软件包组<br>yum repolist ── 列出所有启用的软件仓库的 ID，名称 及其包含的软件包的数量<br>yum info <package_name> [more_names] 命令可查看一个或多个软件包的信息 (此处同样可以应用 glob 表达式)。</p>
+</li>
+<li><p>install &amp; uninstall<br>yum install softwarename  #安装<br>yum remove softwarename #卸载软件<br>yum reinstall softwarename #重新安装<br>yum clean all #清空yum缓存</p>
+</li>
+<li><p>升级<br>yum check-update: 可以了解系统中哪些已安装的包当前有更新<br>yum update：升级所有包同时也升级软件和系统内核<br>yum upgrade：只升级所有包，不升级软件和系统内核<br>yum history #查看系统软件改变历史</p>
+</li>
+</ul>
+<p>yum使用upgrade选项，等价于打开obsoletes配置的yum update。而默认中/etc/yum.conf配置文件obsoletes是打开的，因此这两个指令选项是等价的。<br>这是一个yum缓存配置文件的示例，obsoletes定义了更新时处理软件包的取代关系，简单来讲，1表示更新旧的rpm包的同时会删除旧包，0表示更新的时候不会删除旧包，</p>
+<p>因此，yum update和yum upgrade的功能都是一样的，都是将需要更新的package更新到源中的最新版。唯一不同的是，yum upgrade会删除旧版本的package，而yum update则会保留(obsoletes=0)。</p>
+<p>生产环境中建议使用yum update，防止因为替换，导致旧的软件包依赖出现问题。</p>
+<h1 id="npm错误"><a href="#npm错误" class="headerlink" title="npm错误"></a>npm错误</h1><p><code>使用 npm start 影响项目出现 Error: ENOSPC: System limit for number of file watchers reached, watch</code></p>
+<p>原来在 fedorac，entos，ubuntu 等系统中，由于 gulp serve 跟踪项目的文件数有限制，必须要设置一下，解除设置才可以继续跟踪。还有可能是因为 gulp 的 watch 需要监听很多文件的改动，但是 fedora，ubuntu 系统的文件句柄其实是有限制的，因此可以使用下面的命令解除</p>
+<p><code>echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf &amp;&amp; sudo sysctl -p</code></p>
+<h1 id="挂载VMWare的共享目录"><a href="#挂载VMWare的共享目录" class="headerlink" title="挂载VMWare的共享目录"></a>挂载VMWare的共享目录</h1><p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/skyheaving/p/12286513.html">https://www.cnblogs.com/skyheaving/p/12286513.html</a></p>
+<ul>
+<li>打开<code>/etc/fuse.conf</code> 的 <code>user_allow_other</code> 注释</li>
+<li>在<code>/etc/fstab</code>文件中，添加 <code>.host:/D /home/gjh/dd fuse.vmhgfs-fuse    allow_other,max_write=61440,defaults   0 0</code><br>  PS: <code>max_write=61440</code> 的作用是防止不能写入稍大文件。</li>
+<li>立即生效： <code>mount -a</code></li>
+<li>卸载 <code>umount /mnt/hgfs</code></li>
+</ul>
+<h1 id="安装sublime"><a href="#安装sublime" class="headerlink" title="安装sublime"></a>安装sublime</h1><p>按照官网的指导安装。<a target="_blank" rel="noopener" href="https://www.sublimetext.com/docs/3/linux_repositories.html#dnf">https://www.sublimetext.com/docs/3/linux_repositories.html#dnf</a></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> Install the GPG key:</span></span><br><span class="line">sudo rpm -v --import https://download.sublimetext.com/sublimehq-rpm-pub.gpg</span><br><span class="line"><span class="meta">#</span><span class="bash"> Select the Stable channel to use:</span></span><br><span class="line">sudo dnf config-manager --add-repo https://download.sublimetext.com/rpm/stable/x86_64/sublime-text.repo</span><br><span class="line"><span class="meta">#</span><span class="bash"> Update dnf and install Sublime Text</span></span><br><span class="line">sudo dnf install sublime-text</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>破解<br><a target="_blank" rel="noopener" href="https://www.codenong.com/js65a10209118f/">sublime text Build 3211最详细的安装方法</a></li>
+</ul>
+<h1 id="保存-git账号密码"><a href="#保存-git账号密码" class="headerlink" title="保存 git账号密码"></a>保存 git账号密码</h1><p>1.在~/下， touch创建文件 .git-credentials, 用vim编辑此文件，输入内容格式：</p>
+<p>touch .git-credentials<br>vim .git-credentials<br>在里面按“i”然后输入： https://{username}:{password}@github.com </p>
+<p>比如 <a target="_blank" rel="noopener" href="https://account:password@github.com/">https://account:password@github.com</a></p>
+<ol start="2">
+<li>在终端下执行</li>
+</ol>
+<p>git config –global credential.helper store<br>3. 可以看到~/.gitconfig文件，会多了一项：</p>
+<p>[credential]<br>helper = store</p>
+<h1 id="Fedora使用"><a href="#Fedora使用" class="headerlink" title="Fedora使用"></a>Fedora使用</h1><p>PCManFM无法启动xterm： <code>sudo ln -s /usr/bin/lxterminal /usr/bin/xterm</code></p>
+<h1 id="maven私服不能下载snapshots依赖"><a href="#maven私服不能下载snapshots依赖" class="headerlink" title="maven私服不能下载snapshots依赖"></a>maven私服不能下载snapshots依赖</h1><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">profiles</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">profile</span>&gt;</span></span><br><span class="line">    <span class="comment">&lt;!-- 根据仓库id激活下面的配置 --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">id</span>&gt;</span>xx-nexus<span class="tag">&lt;/<span class="name">id</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">activation</span>&gt;</span><span class="tag">&lt;<span class="name">activeByDefault</span>&gt;</span>true<span class="tag">&lt;/<span class="name">activeByDefault</span>&gt;</span><span class="tag">&lt;/<span class="name">activation</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">repositories</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">repository</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">id</span>&gt;</span>xx-nexus<span class="tag">&lt;/<span class="name">id</span>&gt;</span></span><br><span class="line">        <span class="comment">&lt;!-- 私服地址 --&gt;</span> </span><br><span class="line">        <span class="tag">&lt;<span class="name">url</span>&gt;</span>http://xx.xx.xx.xx:8081/repository/xx_group/<span class="tag">&lt;/<span class="name">url</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">releases</span>&gt;</span><span class="tag">&lt;<span class="name">enabled</span>&gt;</span>true<span class="tag">&lt;/<span class="name">enabled</span>&gt;</span><span class="tag">&lt;/<span class="name">releases</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">snapshots</span>&gt;</span><span class="tag">&lt;<span class="name">enabled</span>&gt;</span>true<span class="tag">&lt;/<span class="name">enabled</span>&gt;</span><span class="tag">&lt;/<span class="name">snapshots</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;/<span class="name">repository</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">repositories</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">profile</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">profiles</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="开始菜单修改"><a href="#开始菜单修改" class="headerlink" title="开始菜单修改"></a>开始菜单修改</h1><p>注意几个目录和文件。</p>
+<ul>
+<li><code>/usr/share/applications/</code>下的<code>.desktop</code>文件和 <code>mimeinfo.cache</code>文件</li>
+<li><code>~/.local/share/applications/</code>下的<code>.desktop</code>文件和<code>mimeinfo.cache</code>文·件 </li>
+<li><code>/etc/gnome/defaults.list</code>和<code>~/.local/share/applications/default.list</code> 文件保存的是文件的打开方式。</li>
+</ul>
+<h1 id="find的用法"><a href="#find的用法" class="headerlink" title="find的用法"></a>find的用法</h1><p>实例<br>将目前目录及其子目录下所有延伸档名是 c 的文件列出来。<br><code># find . -name &quot;*.c&quot;</code></p>
+<p>将目前目录其其下子目录中所有一般文件列出<br><code># find . -type f</code></p>
+<p>将目前目录及其子目录下所有最近 20 天内更新过的文件列出·<br><code># find . -ctime -20</code></p>
+<p>查找/var/log目录中更改时间在7日以前的普通文件，并在删除之前询问它们：<br><code># find /var/log -type f -mtime +7 -ok rm &#123;&#125; \;</code></p>
+<p>查找前目录中文件属主具有读、写权限，并且文件所属组的用户和其他用户具有读权限的文件：<br><code># find . -type f -perm 644 -exec ls -l &#123;&#125; \;</code></p>
+<p>为了查找系统中所有文件长度为0的普通文件，并列出它们的完整路径：<br><code># find / -type f -size 0 -exec ls -l &#123;&#125; \;</code></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2021/06/28/backend/Linux/Fedora%E4%BD%BF%E7%94%A8%E8%AE%B0%E5%BD%95/" data-id="ckqg285v3004rrcfp0123fg85" data-title="" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2021/06/28/backend/Linux/lubuntu%E7%89%88%E6%9C%AC%EF%BC%9ADesktop%E4%B8%8EAlternate%E5%8C%BA%E5%88%AB/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          (no title)
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2021/06/28/backend/Linux/CentOS7%E5%AE%89%E8%A3%85MySQL5.7/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title"></div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/06/">June 2021</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2021/06/28/product/%E9%9C%80%E6%B1%82%E8%B0%83%E7%A0%94%E7%9A%84%E5%86%85%E5%AE%B9%E5%92%8C%E5%B7%A5%E4%BD%9C%E6%8C%87%E5%BC%95/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2021/06/28/product/%E9%93%81%E8%B7%AF6C%E4%B8%9A%E5%8A%A1%E7%BB%93%E6%9E%84/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2021/06/28/product/%E9%9C%80%E6%B1%82%E8%B0%83%E7%A0%94%E5%8F%8A%E5%88%86%E6%9E%90%E6%96%B9%E6%B3%95/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2021/06/28/product/%E6%B0%B4%E7%94%B5%E7%AB%99%E7%94%9F%E4%BA%A7%E8%BF%90%E8%A1%8C%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2021/06/28/product/%E6%B0%B4%E7%94%B5%E5%8E%82%E8%BF%90%E8%A1%8C%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F/">(no title)</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2021 John Doe<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.4.1.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

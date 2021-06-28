@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="[TOC] Filecoin的终极指南：深挖Filecoin白皮书https:&#x2F;&#x2F;zhuanlan.zhihu.com&#x2F;p&#x2F;87632601 Filecoin网络如何运作？ 在Filecoin中有3组用户：客户、存储矿工以及检索矿工。  什么是客户、存储矿工以及检索矿工？  什么是碎片？  What’s 扇区？  What’s 分配表？  什么是订单  什么是订单簿？  什么是保证？  存储市场的">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Hexo">
+<meta property="og:url" content="http://example.com/2021/06/28/Doing/IPFS/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="[TOC] Filecoin的终极指南：深挖Filecoin白皮书https:&#x2F;&#x2F;zhuanlan.zhihu.com&#x2F;p&#x2F;87632601 Filecoin网络如何运作？ 在Filecoin中有3组用户：客户、存储矿工以及检索矿工。  什么是客户、存储矿工以及检索矿工？  什么是碎片？  What’s 扇区？  What’s 分配表？  什么是订单  什么是订单簿？  什么是保证？  存储市场的">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/2021/06/28/Doing/IPFS/_v_images/20200709161327521_9951.png">
+<meta property="og:image" content="http://example.com/2021/06/28/Doing/IPFS/_v_images/20200709165423472_14025.png">
+<meta property="og:image" content="http://example.com/2021/06/28/Doing/IPFS/_v_images/20200709170111900_23514.png">
+<meta property="article:published_time" content="2021-06-28T03:26:11.104Z">
+<meta property="article:modified_time" content="2021-06-02T01:40:21.551Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2021/06/28/Doing/IPFS/_v_images/20200709161327521_9951.png">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-Doing/IPFS" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2021/06/28/Doing/IPFS/" class="article-date">
+  <time class="dt-published" datetime="2021-06-28T03:26:11.104Z" itemprop="datePublished">2021-06-28</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>[TOC]</p>
+<h1 id="Filecoin的终极指南：深挖Filecoin白皮书"><a href="#Filecoin的终极指南：深挖Filecoin白皮书" class="headerlink" title="Filecoin的终极指南：深挖Filecoin白皮书"></a>Filecoin的终极指南：深挖Filecoin白皮书</h1><p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/87632601">https://zhuanlan.zhihu.com/p/87632601</a></p>
+<h2 id="Filecoin网络如何运作？"><a href="#Filecoin网络如何运作？" class="headerlink" title="Filecoin网络如何运作？"></a>Filecoin网络如何运作？</h2><ul>
+<li><p>在Filecoin中有3组用户：客户、存储矿工以及检索矿工。</p>
+</li>
+<li><p>什么是客户、存储矿工以及检索矿工？</p>
+</li>
+<li><p>什么是碎片？</p>
+</li>
+<li><p>What’s 扇区？</p>
+</li>
+<li><p>What’s 分配表？</p>
+</li>
+<li><p>什么是订单</p>
+</li>
+<li><p>什么是订单簿？</p>
+</li>
+<li><p>什么是保证？</p>
+</li>
+<li><p>存储市场的买盘、卖盘如何运作的？</p>
+<ul>
+<li>Manage.PledgeSector</li>
+<li>Put.AddOrders</li>
+<li>Put.MatchOrders</li>
+<li>Put.ReceivePiece</li>
+<li>Manage.AssignOrders</li>
+<li>Manage.SealSector</li>
+<li>Manage.ProveSector</li>
+<li>Manage.RepairOrders</li>
+</ul>
+</li>
+<li><p>检索市场的买盘、卖盘如何运作的？</p>
+<ul>
+<li>Get.AddOrders</li>
+<li>Get.MatchOrders</li>
+<li>Put.SendPiece</li>
+</ul>
+</li>
+</ul>
+<p>下图显示发生在网络上的所有活动</p>
+<p><img src="_v_images/20200709161327521_9951.png" alt="发生在网络上的所有活动"></p>
+<h2 id="对Filecoin协议的深入研究"><a href="#对Filecoin协议的深入研究" class="headerlink" title="对Filecoin协议的深入研究"></a>对Filecoin协议的深入研究</h2><ul>
+<li>什么是DSN?</li>
+<li>DSN安全操作协调协议有哪些？</li>
+<li>DSN对两种错误进行容错：管理容错、存储容错。什么是管理容错？什么是存储容错？</li>
+<li>以往的共识算法有哪些弊端？</li>
+<li>Filecoin的共识算法是什么？什么是PoST（Proof-of-Spacetime）？</li>
+</ul>
+<h2 id="其他一些问题"><a href="#其他一些问题" class="headerlink" title="其他一些问题"></a>其他一些问题</h2><h2 id="Filecoin协议改进的可能性"><a href="#Filecoin协议改进的可能性" class="headerlink" title="Filecoin协议改进的可能性"></a>Filecoin协议改进的可能性</h2><h1 id="Filecoin-矿工是怎么赚取FIL的"><a href="#Filecoin-矿工是怎么赚取FIL的" class="headerlink" title="Filecoin: 矿工是怎么赚取FIL的"></a>Filecoin: 矿工是怎么赚取FIL的</h1><ul>
+<li><p>Filecoin系统的参与者有哪些？<br><img src="_v_images/20200709165423472_14025.png" alt="Filecoin体系里面价值和代币是如何转移的"></p>
+</li>
+<li><p>Filecoin的挖矿与BTC有什么不同？</p>
+</li>
+<li><p>存储矿工收益来自哪3个方面？</p>
+</li>
+<li><p>检索矿工收益来自哪个方面？</p>
+</li>
+</ul>
+<p><img src="_v_images/20200709170111900_23514.png" alt="供需曲线"></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2021/06/28/Doing/IPFS/" data-id="ckqg285sn0003rcfpbpkx0wqe" data-title="" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2021/06/28/Doing/wankoko/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          (no title)
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2021/06/28/Doing/01-HowToStudy/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title"></div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/06/">June 2021</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2021/06/28/product/%E9%9C%80%E6%B1%82%E8%B0%83%E7%A0%94%E7%9A%84%E5%86%85%E5%AE%B9%E5%92%8C%E5%B7%A5%E4%BD%9C%E6%8C%87%E5%BC%95/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2021/06/28/product/%E9%93%81%E8%B7%AF6C%E4%B8%9A%E5%8A%A1%E7%BB%93%E6%9E%84/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2021/06/28/product/%E9%9C%80%E6%B1%82%E8%B0%83%E7%A0%94%E5%8F%8A%E5%88%86%E6%9E%90%E6%96%B9%E6%B3%95/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2021/06/28/product/%E6%B0%B4%E7%94%B5%E7%AB%99%E7%94%9F%E4%BA%A7%E8%BF%90%E8%A1%8C%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2021/06/28/product/%E6%B0%B4%E7%94%B5%E5%8E%82%E8%BF%90%E8%A1%8C%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F/">(no title)</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2021 John Doe<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.4.1.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="spring cloud微服务 微服务架构的分布式事务解决方案 分布式事务的典型处理方式:2PC、TCC、异步确保和最大努力型 ACID https:&#x2F;&#x2F;zh.wikipedia.org&#x2F;wiki&#x2F;ACID Atomicity（原子性）：一个事务（transaction）中的所有操作，或者全部完成，或者全部不完成，不会结束在中间某个环节。即，事务不可分割、不可约简。 Consistency（一致性">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Hexo">
+<meta property="og:url" content="http://example.com/2021/06/28/architecture/06%20%E5%88%86%E5%B8%83%E5%BC%8F%E4%BA%8B%E5%8A%A1/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="spring cloud微服务 微服务架构的分布式事务解决方案 分布式事务的典型处理方式:2PC、TCC、异步确保和最大努力型 ACID https:&#x2F;&#x2F;zh.wikipedia.org&#x2F;wiki&#x2F;ACID Atomicity（原子性）：一个事务（transaction）中的所有操作，或者全部完成，或者全部不完成，不会结束在中间某个环节。即，事务不可分割、不可约简。 Consistency（一致性">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/2021/06/28/architecture/06%20%E5%88%86%E5%B8%83%E5%BC%8F%E4%BA%8B%E5%8A%A1/_v_images/20210625094850448_27262.png">
+<meta property="og:image" content="http://example.com/2021/06/28/architecture/06%20%E5%88%86%E5%B8%83%E5%BC%8F%E4%BA%8B%E5%8A%A1/_v_images/20210625094929103_13071.png">
+<meta property="article:published_time" content="2021-06-28T03:26:10.774Z">
+<meta property="article:modified_time" content="2021-06-25T03:21:28.514Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2021/06/28/architecture/06%20%E5%88%86%E5%B8%83%E5%BC%8F%E4%BA%8B%E5%8A%A1/_v_images/20210625094850448_27262.png">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-architecture/06 分布式事务" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2021/06/28/architecture/06%20%E5%88%86%E5%B8%83%E5%BC%8F%E4%BA%8B%E5%8A%A1/" class="article-date">
+  <time class="dt-published" datetime="2021-06-28T03:26:10.774Z" itemprop="datePublished">2021-06-28</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>spring cloud<br>微服务</p>
+<p><a target="_blank" rel="noopener" href="http://www.roncoo.com/article/detail/124243">微服务架构的分布式事务解决方案</a></p>
+<p><a target="_blank" rel="noopener" href="http://kaimingwan.com/post/fen-bu-shi/fen-bu-shi-shi-wu-de-dian-xing-chu-li-fang-shi-2pc-tcc-yi-bu-que-bao-he-zui-da-nu-li-xing">分布式事务的典型处理方式:2PC、TCC、异步确保和最大努力型</a></p>
+<h1 id="ACID"><a href="#ACID" class="headerlink" title="ACID"></a>ACID</h1><ul>
+<li><a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/ACID">https://zh.wikipedia.org/wiki/ACID</a></li>
+<li>Atomicity（原子性）：一个事务（transaction）中的所有操作，或者全部完成，或者全部不完成，不会结束在中间某个环节。即，事务不可分割、不可约简。</li>
+<li>Consistency（一致性）：在事务开始之前和事务结束以后，数据库的完整性没有被破坏。这表示写入的资料必须完全符合所有的预设约束、触发器、级联回滚等。</li>
+<li>Isolation（隔离性）：数据库允许多个并发事务同时对其数据进行读写和修改的能力，隔离性可以防止多个事务并发执行时由于交叉执行而导致数据的不一致。事务隔离分为不同级别，包括未提交读（Read uncommitted）、提交读（read committed）、可重复读（repeatable read）和串行化（Serializable）。</li>
+<li>Durability（持久性）：事务处理结束后，对数据的修改就是永久的，即便系统故障也不会丢失。</li>
+</ul>
+<h1 id="RDBMS-事务隔离级别"><a href="#RDBMS-事务隔离级别" class="headerlink" title="RDBMS 事务隔离级别"></a>RDBMS 事务隔离级别</h1><ul>
+<li>并发问题几个场景<ul>
+<li>脏读：一个事务读取了另一个事务操作但未提交的数据。<ul>
+<li>比如 A、B 两个事务，都操作同一张表，A 刚刚对数据进行了操作（插入、修改等）但还没有提交，这时 B 读取到了 A 刚刚操作的数据，因为 A 有可能回滚，所以这部分数据有可能只是临时的、无效的，即脏数据。</li>
+</ul>
+</li>
+<li>不可重复读：一个事务中的多个相同的查询返回了不同数据。<br>比如 A、B 两个事务，A 中先后有两次查询相同数据的操作，第一次查询完之后，B 对相关数据进行了修改，造成 A 事务第二次查询出的数据与第一次不一致。</li>
+<li>幻读：事务并发执行时，其中一个事务对另一个事务中操作的结果集的影响。<ul>
+<li>比如 A、B 两个事务，事务 A 操作表中符合条件的若干行。事务 B 插入符合 A 操作条件的数据行，然后再提交。后来发现事务 A 并没有如愿对“所有”符合条件的数据行做了修改。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>四个事务隔离级别<ul>
+<li>Read uncommitted (读未提交)：如果设置了该隔离级别，则当前事务可以读取到其他事务已经修改但还没有提交的数据。这种隔离级别是最低的，会导致上面所说的脏读</li>
+<li>Read committed (读已提交)：如果设置了该隔离级别，当前事务只可以读取到其他事务已经提交后的数据，这种隔离级别可以防止脏读，但是会导致不可重复读和幻读。这种隔离级别最效率较高，并且不可重复读和幻读在一般情况下是可以接受的，所以这种隔离级别最为常用。</li>
+<li>Repeatable read (可重复读)：如果设置了该隔离级别，可以保证当前事务中多次读取特定记录的结果相同。可以防止脏读、不可重复读，但是会导致幻读。</li>
+<li>Serializable (串行化)：如果设置了该隔离级别，所有的事务会放在一个队列中执行，当前事务开启后，其他事务将不能执行，即同一个时间点只能有一个事务操作数据库对象。这种隔离级别对于保证数据完整性的能力是最高的，但因为同一时刻只允许一个事务操作数据库，所以大大降低了系统的并发能力。</li>
+</ul>
+</li>
+</ul>
+<h1 id="CAP-定理"><a href="#CAP-定理" class="headerlink" title="CAP 定理"></a>CAP 定理</h1><pre><code>- 一致性（Consistency） （等同于所有节点访问同一份最新的数据副本）
+- 可用性（Availability）（每次请求都能获取到非错的响应——但是不保证获取的数据为最新数据）
+- 分区容错性（Partition tolerance）（以实际效果而言，分区相当于对通信的时限要求。系统如果不能在时限内达成数据一致性，就意味着发生了分区的情况，必须就当前操作在C和A之间做出选择[3]。）
+- 根据定理，分布式系统只能满足三项中的两项而不可能满足全部三项[4]。理解CAP理论的最简单方式是想象两个节点分处分区两侧。允许至少一个节点更新状态会导致数据不一致，即丧失了C性质。如果为了保证数据一致性，将分区一侧的节点设置为不可用，那么又丧失了A性质。除非两个节点可以互相通信，才能既保证C又保证A，这又会导致丧失P性质。
+</code></pre>
+<h1 id="BASE-理论（在微服务下的事务管理必然要遵循新的法则）"><a href="#BASE-理论（在微服务下的事务管理必然要遵循新的法则）" class="headerlink" title="BASE 理论（在微服务下的事务管理必然要遵循新的法则）"></a>BASE 理论（在微服务下的事务管理必然要遵循新的法则）</h1><ul>
+<li>BASE 理论是对 CAP 理论的延伸，核心思想是即使无法做到强一致性，应用应该可以采用合适的方式达到最终一致性。</li>
+<li>BASE 是指基本可用（Basically Available）、软状态（ Soft State）、最终一致性（ Eventual Consistency）。<ul>
+<li>基本可用：指分布式系统在出现故障的时候，允许损失部分可用性，即保证核心可用。</li>
+<li>软状态：允许系统存在中间状态，而该中间状态不会影响系统整体可用性。分布式存储中一般一份数据至少会有三个副本，允许不同节点间副本同步的延时就是软状态的体现。</li>
+<li>最终一致性：最终一致性是指系统中的所有数据副本经过一定时间后，最终能够达到一致的状态。弱一致性和强一致性相反，最终一致性是弱一致性的一种特殊情况。</li>
+</ul>
+</li>
+</ul>
+<h1 id="参考："><a href="#参考：" class="headerlink" title="参考："></a>参考：</h1><ul>
+<li>[对比 5 种分布式事务方案，还是宠幸了阿里的 Seata（原理 + 实战）]<a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s?__biz=MzU0OTE4MzYzMw==&amp;mid=2247497767&amp;idx=3&amp;sn=727bff63c4598e93f6f6e4a67e780e37&amp;chksm=fbb171d9ccc6f8cff428ec385babf069fc4d3bce9a5258446cd0e1763d4e80f886c1ea14fbec&amp;&amp;xtrack=1&amp;scene=90&amp;subscene=93&amp;sessionid=1606710118&amp;clicktime=1606710436&amp;enterid=1606710436#rd">https://mp.weixin.qq.com/s?__biz=MzU0OTE4MzYzMw==&amp;mid=2247497767&amp;idx=3&amp;sn=727bff63c4598e93f6f6e4a67e780e37&amp;chksm=fbb171d9ccc6f8cff428ec385babf069fc4d3bce9a5258446cd0e1763d4e80f886c1ea14fbec&amp;&amp;xtrack=1&amp;scene=90&amp;subscene=93&amp;sessionid=1606710118&amp;clicktime=1606710436&amp;enterid=1606710436#rd</a></li>
+<li>[分布式事务，这一篇就够了]<a target="_blank" rel="noopener" href="https://xiaomi-info.github.io/2020/01/02/distributed-transaction/">https://xiaomi-info.github.io/2020/01/02/distributed-transaction/</a></li>
+<li>[分布式事务的典型处理方式：2PC、TCC、异步确保和最大努力型]<a target="_blank" rel="noopener" href="http://kaimingwan.com/post/fen-bu-shi/fen-bu-shi-shi-wu-de-dian-xing-chu-li-fang-shi-2pc-tcc-yi-bu-que-bao-he-zui-da-nu-li-xing">http://kaimingwan.com/post/fen-bu-shi/fen-bu-shi-shi-wu-de-dian-xing-chu-li-fang-shi-2pc-tcc-yi-bu-que-bao-he-zui-da-nu-li-xing</a></li>
+</ul>
+<h1 id="分布式事务有哪-5-中方案"><a href="#分布式事务有哪-5-中方案" class="headerlink" title="分布式事务有哪 5 中方案"></a>分布式事务有哪 5 中方案</h1><ul>
+<li>常见的比如基于 XA 协议的 2PC、3PC，基于业务层的 TCC，还有应用消息队列 + 消息表实现的最终一致性方案，还有今天要说的 Seata 中间件</li>
+<li>开发中幂等性是极为重要的。 简单来说，对于同一个系统，在同样条件下，一次请求和重复多次请求对资源的影响是一致的，就称该操作为幂等的。</li>
+</ul>
+<h1 id="2PC"><a href="#2PC" class="headerlink" title="2PC"></a>2PC</h1><ul>
+<li>XA 协议中分为两部分：事务管理器和本地资源管理器。<ul>
+<li>其中本地资源管理器往往由数据库实现，比如 Oracle、MYSQL 这些数据库都实现了 XA 接口，而事务管理器则作为一个全局的调度者。</li>
+</ul>
+</li>
+<li>优点：<ul>
+<li>严格保障事务 ACID 特性；</li>
+<li>想使用本地事务一样透明；</li>
+<li>对业务侵⼊很小。</li>
+</ul>
+</li>
+<li>缺点：<ul>
+<li>强一致性的同步阻塞协议，锁定全部资源。</li>
+</ul>
+</li>
+</ul>
+<h1 id="3PC"><a href="#3PC" class="headerlink" title="3PC"></a>3PC</h1><ul>
+<li>是 2PC 的一种改进版本。</li>
+<li>CanCommit、PreCommit、DoCommit 三个阶段。</li>
+<li>在第一阶段，只是询问所有参与者是否可可以执行事务操作，并不在本阶段执行事务操作。当协调者收到所有的参与者都返回 YES 时，在第二阶段才执行事务操作，然后在第三阶段在执行 commit 或者 rollback。</li>
+<li>2PC 中只有协调者有超时机制，3PC 在协调者和参与者中都引入了超时机制，协调者出现故障后，参与者就不会一直阻塞。</li>
+<li>多了一次网络通信，性能上反而变得更差</li>
+</ul>
+<h1 id="TCC"><a href="#TCC" class="headerlink" title="TCC"></a>TCC</h1><ul>
+<li>TCC 为在业务层编写代码实现的两阶段提交。</li>
+<li>TCC 分别指 Try、Confirm、Cancel ，一个业务操作要对应的写这三个方法。以下单扣库存为例，Try 阶段去占库存，Confirm 阶段则实际扣库存，如果库存扣减失败 Cancel 阶段进行回滚，释放库存。</li>
+<li>TCC 不存在资源阻塞的问题，因为每个方法都直接进行事务的提交，一旦出现异常通过则 Cancel 来进行回滚补偿，这也就是常说的补偿性事务。</li>
+<li>TCC 对业务的侵入性很强。</li>
+</ul>
+<h1 id="消息事务（最终一致性）"><a href="#消息事务（最终一致性）" class="headerlink" title="消息事务（最终一致性）"></a>消息事务（最终一致性）</h1><ul>
+<li>消息事务其实就是基于消息中间件的两阶段提交，将本地事务和发消息放在同一个事务里，保证本地操作和发送消息同时成功。<br><img src="_v_images/20210625094850448_27262.png" alt="消息事务（最终一致性）"></li>
+</ul>
+<h1 id="Seata"><a href="#Seata" class="headerlink" title="Seata"></a>Seata</h1><ul>
+<li><p>Seata 也是从两段提交演变而来的一种分布式事务解决方案，提供了 AT、TCC、SAGA 和 XA 等事务模式，这里重点介绍 AT 模式。</p>
+</li>
+<li><p>几种角色</p>
+<ul>
+<li>Transaction Coordinator(TC): 全局事务协调者，用来协调全局事务和各个分支事务（不同服务）的状态， 驱动全局事务和各个分支事务的回滚或提交。</li>
+<li>Transaction Manager™: 事务管理者，业务层中用来开启/提交/回滚一个整体事务（在调用服务的方法中用注解开启事务）。</li>
+<li>Resource Manager(RM): 资源管理者，一般指业务数据库代表了一个分支事务（Branch Transaction），管理分支事务与 TC 进行协调注册分支事务并且汇报分支事务的状态，驱动分支事务的提交或回滚。<br><img src="_v_images/20210625094929103_13071.png" alt="Seata角色"></li>
+</ul>
+</li>
+<li><p>Seata 实现分布式事务，设计了一个关键角色 UNDO_LOG （回滚日志记录表），我们在每个应用分布式事务的业务库中创建这张表，这个表的核心作用就是，将业务数据在更新前后的数据镜像组织成回滚日志，备份在 UNDO_LOG 表中，以便业务异常能随时回滚。</p>
+</li>
+<li><p>Seata 执行的两个阶段</p>
+<ul>
+<li>第一个阶段：本地事务提交，业务数据的更新和前面生成的 UNDO LOG 数据一并提交，并将本地事务提交的结果上报给全局事务协调者 TC。</li>
+<li>第二阶段：根据各分支的决议做提交或回滚。</li>
+</ul>
+</li>
+<li><p>Seata 实践</p>
+<ul>
+<li>file.conf 文件用于配置持久化事务日志的模式，目前提供 file、db、redis 三种方式。</li>
+<li>registry.conf 文件设置 注册中心 和 配置中心：目前注册中心支持 nacos 、eureka、redis、zk、consul、etcd3、sofa 七种。</li>
+<li>Seata Client<ul>
+<li>注册服务：新建三个服务 order-server（下单服务）、storage-server（扣减库存服务）、account-server（账户金额服务），分别服务注册到注册中心。</li>
+<li>用 @GlobalTransactional 注解开启一个全局事务即可。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2021/06/28/architecture/06%20%E5%88%86%E5%B8%83%E5%BC%8F%E4%BA%8B%E5%8A%A1/" data-id="ckqg285tm001mrcfpczxp14qe" data-title="" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2021/06/28/architecture/09%20%E7%A7%A6%E4%BB%93%E9%9D%A2%E8%AF%95%E6%80%BB%E7%BB%93/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          (no title)
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2021/06/28/architecture/03_Groovy%E7%BC%96%E7%A8%8B/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title"></div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/06/">June 2021</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2021/06/28/product/%E9%9C%80%E6%B1%82%E8%B0%83%E7%A0%94%E7%9A%84%E5%86%85%E5%AE%B9%E5%92%8C%E5%B7%A5%E4%BD%9C%E6%8C%87%E5%BC%95/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2021/06/28/product/%E9%93%81%E8%B7%AF6C%E4%B8%9A%E5%8A%A1%E7%BB%93%E6%9E%84/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2021/06/28/product/%E9%9C%80%E6%B1%82%E8%B0%83%E7%A0%94%E5%8F%8A%E5%88%86%E6%9E%90%E6%96%B9%E6%B3%95/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2021/06/28/product/%E6%B0%B4%E7%94%B5%E7%AB%99%E7%94%9F%E4%BA%A7%E8%BF%90%E8%A1%8C%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2021/06/28/product/%E6%B0%B4%E7%94%B5%E5%8E%82%E8%BF%90%E8%A1%8C%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F/">(no title)</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2021 John Doe<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.4.1.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

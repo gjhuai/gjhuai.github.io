@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="[TOC] 微服务架构https:&#x2F;&#x2F;github.com&#x2F;alibaba&#x2F;spring-cloud-alibaba&#x2F;blob&#x2F;master&#x2F;README-zh.md ![亿级流量电商网络微服务架构](_v_images&#x2F;20200917161031675_7588.png &#x3D;1024x) Nacos注册中心 增加减少机器需要频繁修改配置  基于Ribbon算法的负载均衡 ![完整的微服务架构](">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Hexo">
+<meta property="og:url" content="http://example.com/2021/06/28/architecture/%E8%AF%B8%E8%91%9B-SpringCloudAlibaba-Nacos%E5%85%A5%E9%97%A8/SpringCloudAlibaba-Nacos%E5%85%A5%E9%97%A8/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="[TOC] 微服务架构https:&#x2F;&#x2F;github.com&#x2F;alibaba&#x2F;spring-cloud-alibaba&#x2F;blob&#x2F;master&#x2F;README-zh.md ![亿级流量电商网络微服务架构](_v_images&#x2F;20200917161031675_7588.png &#x3D;1024x) Nacos注册中心 增加减少机器需要频繁修改配置  基于Ribbon算法的负载均衡 ![完整的微服务架构](">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/2021/06/28/architecture/%E8%AF%B8%E8%91%9B-SpringCloudAlibaba-Nacos%E5%85%A5%E9%97%A8/SpringCloudAlibaba-Nacos%E5%85%A5%E9%97%A8/_v_images/20200917161526033_6220.png">
+<meta property="og:image" content="http://example.com/2021/06/28/architecture/%E8%AF%B8%E8%91%9B-SpringCloudAlibaba-Nacos%E5%85%A5%E9%97%A8/SpringCloudAlibaba-Nacos%E5%85%A5%E9%97%A8/_v_images/20200917162815662_2365.png">
+<meta property="og:image" content="http://example.com/2021/06/28/architecture/%E8%AF%B8%E8%91%9B-SpringCloudAlibaba-Nacos%E5%85%A5%E9%97%A8/SpringCloudAlibaba-Nacos%E5%85%A5%E9%97%A8/_v_images/20200917174512999_3323.png">
+<meta property="article:published_time" content="2021-06-28T03:26:11.058Z">
+<meta property="article:modified_time" content="2020-10-12T06:58:02.531Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2021/06/28/architecture/%E8%AF%B8%E8%91%9B-SpringCloudAlibaba-Nacos%E5%85%A5%E9%97%A8/SpringCloudAlibaba-Nacos%E5%85%A5%E9%97%A8/_v_images/20200917161526033_6220.png">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-architecture/诸葛-SpringCloudAlibaba-Nacos入门/SpringCloudAlibaba-Nacos入门" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2021/06/28/architecture/%E8%AF%B8%E8%91%9B-SpringCloudAlibaba-Nacos%E5%85%A5%E9%97%A8/SpringCloudAlibaba-Nacos%E5%85%A5%E9%97%A8/" class="article-date">
+  <time class="dt-published" datetime="2021-06-28T03:26:11.058Z" itemprop="datePublished">2021-06-28</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>[TOC]</p>
+<h1 id="微服务架构"><a href="#微服务架构" class="headerlink" title="微服务架构"></a>微服务架构</h1><p><a target="_blank" rel="noopener" href="https://github.com/alibaba/spring-cloud-alibaba/blob/master/README-zh.md">https://github.com/alibaba/spring-cloud-alibaba/blob/master/README-zh.md</a></p>
+<p>![亿级流量电商网络微服务架构](_v_images/20200917161031675_7588.png =1024x)</p>
+<h1 id="Nacos注册中心"><a href="#Nacos注册中心" class="headerlink" title="Nacos注册中心"></a>Nacos注册中心</h1><p><img src="_v_images/20200917161526033_6220.png" alt="基于Nginx的负载均衡"></p>
+<p>增加减少机器需要频繁修改配置</p>
+<p><img src="_v_images/20200917162815662_2365.png" alt="Nacos服务注册中心"></p>
+<p>基于Ribbon算法的负载均衡</p>
+<p>![完整的微服务架构](_v_images/20200917164823949_25307.png =1200x)</p>
+<p>Feign：通过动态代理，实现对远程服务的调用。</p>
+<h1 id="P6-Sentinel-限流熔断降级"><a href="#P6-Sentinel-限流熔断降级" class="headerlink" title="P6 Sentinel 限流熔断降级"></a>P6 Sentinel 限流熔断降级</h1><p>Sentinel 切入点，从流量控制、熔断降级、系统负载保护等多个维度保护服务的稳定性。</p>
+<h2 id="Sentinel教程"><a href="#Sentinel教程" class="headerlink" title="Sentinel教程"></a>Sentinel教程</h2><p><a target="_blank" rel="noopener" href="https://github.com/alibaba/Sentinel/wiki/%E4%BB%8B%E7%BB%8D">Sentinel介绍 Quick Start</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/noaman_wgs/article/details/103328793%0Ahttps://blog.csdn.net/noaman_wgs/article/details/103328793">【Sentinel（一）】Sentinel介绍与使用</a><br><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/c47dfd25eeee%0Ahttps://www.jianshu.com/p/c47dfd25eeee">Sentinel 实战-控制台篇</a><br><a target="_blank" rel="noopener" href="https://gitee.com/all_4_you/sentinel-tutorial%0Ahttps://gitee.com/all_4_you/sentinel-tutorial">Sentinel教程</a><br><a target="_blank" rel="noopener" href="https://github.com/alibaba/Sentinel/tree/master/sentinel-demo">https://github.com/alibaba/Sentinel/tree/master/sentinel-demo</a></p>
+<p>![Sentinel主要特性](<a target="_blank" rel="noopener" href="https://img-blog.csdnimg.cn/20191130203727708.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L25vYW1hbl93Z3M=,size_16,color_FFFFFF,t_70">https://img-blog.csdnimg.cn/20191130203727708.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L25vYW1hbl93Z3M=,size_16,color_FFFFFF,t_70</a> =800x)</p>
+<h2 id="Sentinel与Hystrix的区别"><a href="#Sentinel与Hystrix的区别" class="headerlink" title="Sentinel与Hystrix的区别"></a>Sentinel与Hystrix的区别</h2><p>关于Sentinel与Hystrix的区别见：<a target="_blank" rel="noopener" href="https://yq.aliyun.com/articles/633786/">技术选型：Sentinel vs Hystrix</a></p>
+<p>总体来说：</p>
+<p>Hystrix常用的线程池隔离会造成线程上下切换的overhead比较大；Hystrix使用的信号量隔离对某个资源调用的并发数进行控制，效果不错，但是无法对慢调用进行自动降级；Sentinel通过并发线程数的流量控制提供信号量隔离的功能；</p>
+<p>此外，Sentinel支持的熔断降级维度更多，可对多种指标进行流控、熔断，且提供了实时监控和控制面板，功能更为强大。</p>
+<h2 id="Spring-Cloud-Alibaba：Sentinel实现熔断与限流"><a href="#Spring-Cloud-Alibaba：Sentinel实现熔断与限流" class="headerlink" title="Spring Cloud Alibaba：Sentinel实现熔断与限流"></a>Spring Cloud Alibaba：Sentinel实现熔断与限流</h2><p><a target="_blank" rel="noopener" href="https://juejin.im/post/6844903999876022279%0Ahttps://juejin.im/post/6844903999876022279">Spring Cloud Alibaba：Sentinel实现熔断与限流</a></p>
+<h3 id="与Feign结合使用"><a href="#与Feign结合使用" class="headerlink" title="与Feign结合使用"></a>与Feign结合使用</h3><ul>
+<li><p>引入依赖 <code>spring-cloud-starter-alibaba-sentinel</code></p>
+</li>
+<li><p>在application.yml中打开Sentinel对Feign的支持： <code>feign.sentinel.enabled: true</code></p>
+</li>
+<li><p>在应用启动类上添加@EnableFeignClients启动Feign的功能；</p>
+</li>
+<li><p>定义对nacos-user-service服务的调用</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@FeignClient(value = &quot;nacos-user-service&quot;,fallback = UserFallbackService.class)</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">UserService</span> </span>&#123;</span><br><span class="line">    <span class="meta">@PostMapping(&quot;/user/create&quot;)</span></span><br><span class="line">    <span class="function">CommonResult <span class="title">create</span><span class="params">(<span class="meta">@RequestBody</span> User user)</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li><p>创建UserFallbackService类实现UserService接口，用于处理服务降级逻辑：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">UserFallbackService</span> <span class="keyword">implements</span> <span class="title">UserService</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> CommonResult <span class="title">create</span><span class="params">(User user)</span> </span>&#123;</span><br><span class="line">        User defaultUser = <span class="keyword">new</span> User(-<span class="number">1L</span>, <span class="string">&quot;defaultUser&quot;</span>, <span class="string">&quot;123456&quot;</span>);</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> CommonResult&lt;&gt;(defaultUser,<span class="string">&quot;服务降级返回&quot;</span>,<span class="number">200</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li><p>通过Feign调用nacos-user-service服务中的接口：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RestController</span></span><br><span class="line"><span class="meta">@RequestMapping(&quot;/user&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">UserFeignController</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> UserService userService;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@PostMapping(&quot;/create&quot;)</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> CommonResult <span class="title">create</span><span class="params">(<span class="meta">@RequestBody</span> User user)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> userService.create(user);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></li>
+<li><p>调用如下接口会发生服务降级，返回服务降级处理信息：<a target="_blank" rel="noopener" href="http://localhost:8401/user/4">http://localhost:8401/user/4</a></p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">	<span class="attr">&quot;data&quot;</span>: &#123;</span><br><span class="line">		<span class="attr">&quot;id&quot;</span>: <span class="number">-1</span>,</span><br><span class="line">		<span class="attr">&quot;username&quot;</span>: <span class="string">&quot;defaultUser&quot;</span>,</span><br><span class="line">		<span class="attr">&quot;password&quot;</span>: <span class="string">&quot;123456&quot;</span></span><br><span class="line">	&#125;,</span><br><span class="line">	<span class="attr">&quot;message&quot;</span>: <span class="string">&quot;服务降级返回&quot;</span>,</span><br><span class="line">	<span class="attr">&quot;code&quot;</span>: <span class="number">200</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Transactional</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> String <span class="title">createOrder</span><span class="params">(Long productId，Long userId，Integer stockCount，Integer creditCount)</span> </span>&#123;</span><br><span class="line">    System.out.println(<span class="string">&quot;创建订单成功&quot;</span>); <span class="comment">//T0D0</span></span><br><span class="line">    stockService.deductStock(productId，stockCount);</span><br><span class="line">    creditService.addCredit(userId，creditCount); <span class="comment">// DE<span class="doctag">BUG:</span> 停掉积分系统，不能报错</span></span><br><span class="line">    wmsService.delivery(userId，productId);</span><br><span class="line">    <span class="keyword">return</span><span class="string">&quot;success&quot;</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="Seata-分布式事务"><a href="#Seata-分布式事务" class="headerlink" title="Seata 分布式事务"></a>Seata 分布式事务</h1><p>seata.io/zh-cn/</p>
+<p>@GlobalTransactional</p>
+<h2 id="Seata-AT-模式"><a href="#Seata-AT-模式" class="headerlink" title="Seata AT 模式"></a>Seata AT 模式</h2><p>整体机制：两阶段提交协议的演变：</p>
+<ul>
+<li>一阶段：业务数据和回滚日志记录在同一个本地事务中提交，释放本地锁和连接资源。</li>
+<li>二阶段：<ul>
+<li>提交异步化，非常快速地完成。</li>
+<li>回滚通过一阶段的回滚日志进行反向补偿。</li>
+</ul>
+</li>
+</ul>
+<p>对数据一致性的及时性要求不高的业务场景，尽量不适用分布式事务，因为Seata底层是加锁，降低了系统性能。</p>
+<h1 id="电商业务中台整体微服务架构"><a href="#电商业务中台整体微服务架构" class="headerlink" title="电商业务中台整体微服务架构"></a>电商业务中台整体微服务架构</h1><p><a target="_blank" rel="noopener" href="https://www.processon.com/view/link/5e69e768e4b07fc7a6841488">https://www.processon.com/view/link/5e69e768e4b07fc7a6841488</a></p>
+<p>![电商业务中台整体微服务架构](_v_images/20200917182324982_14617.png =1200x)</p>
+<h2 id="Gateway的作用"><a href="#Gateway的作用" class="headerlink" title="Gateway的作用"></a>Gateway的作用</h2><p>SpringCloud Gateway ：</p>
+<ul>
+<li>路由（服务转发）</li>
+<li>限流</li>
+<li>安全认证（对请求统一校验权限）</li>
+</ul>
+<p><img src="_v_images/20200917174512999_3323.png" alt="Gateway配置"></p>
+<h1 id="分布式调用链路追踪Pinpoint"><a href="#分布式调用链路追踪Pinpoint" class="headerlink" title="分布式调用链路追踪Pinpoint"></a>分布式调用链路追踪Pinpoint</h1><h1 id="微服务自动化监控-Prometheus-amp-Grafana"><a href="#微服务自动化监控-Prometheus-amp-Grafana" class="headerlink" title="微服务自动化监控 Prometheus &amp; Grafana"></a>微服务自动化监控 Prometheus &amp; Grafana</h1>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2021/06/28/architecture/%E8%AF%B8%E8%91%9B-SpringCloudAlibaba-Nacos%E5%85%A5%E9%97%A8/SpringCloudAlibaba-Nacos%E5%85%A5%E9%97%A8/" data-id="ckqg285v8004zrcfpccez7xli" data-title="" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2021/06/28/backend/Docker%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8D%97/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          (no title)
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2021/06/28/architecture/%E6%9E%B6%E6%9E%84%E5%B8%88%E5%A4%A7%E5%9E%8B%E9%A1%B9%E7%9B%AE%E5%AE%9E%E6%88%98/%E7%AC%AC%E4%B8%83%E5%A5%97/001-%E9%9B%86%E7%BE%A4%E5%9F%BA%E7%A1%80%E6%A6%82%E5%BF%B5/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title"></div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/06/">June 2021</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2021/06/28/product/%E9%9C%80%E6%B1%82%E8%B0%83%E7%A0%94%E7%9A%84%E5%86%85%E5%AE%B9%E5%92%8C%E5%B7%A5%E4%BD%9C%E6%8C%87%E5%BC%95/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2021/06/28/product/%E9%93%81%E8%B7%AF6C%E4%B8%9A%E5%8A%A1%E7%BB%93%E6%9E%84/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2021/06/28/product/%E9%9C%80%E6%B1%82%E8%B0%83%E7%A0%94%E5%8F%8A%E5%88%86%E6%9E%90%E6%96%B9%E6%B3%95/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2021/06/28/product/%E6%B0%B4%E7%94%B5%E7%AB%99%E7%94%9F%E4%BA%A7%E8%BF%90%E8%A1%8C%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2021/06/28/product/%E6%B0%B4%E7%94%B5%E5%8E%82%E8%BF%90%E8%A1%8C%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F/">(no title)</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2021 John Doe<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.4.1.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

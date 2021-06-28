@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="[toc] 开发环境CentOS7 安装 node参考：https:&#x2F;&#x2F;www.jianshu.com&#x2F;p&#x2F;d4a78b27fe83  下载wget https:&#x2F;&#x2F;nodejs.org&#x2F;dist&#x2F;latest-v13.x&#x2F;node-v13.14.0-linux-x64.tar.xz  解压   1234# xz -d node-v13.14.0-linux-x64.tar.xz得到 一个包 no">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Hexo">
+<meta property="og:url" content="http://example.com/2021/06/28/architecture/Vue%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="[toc] 开发环境CentOS7 安装 node参考：https:&#x2F;&#x2F;www.jianshu.com&#x2F;p&#x2F;d4a78b27fe83  下载wget https:&#x2F;&#x2F;nodejs.org&#x2F;dist&#x2F;latest-v13.x&#x2F;node-v13.14.0-linux-x64.tar.xz  解压   1234# xz -d node-v13.14.0-linux-x64.tar.xz得到 一个包 no">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2021-06-28T03:26:10.819Z">
+<meta property="article:modified_time" content="2021-06-23T02:26:18.897Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-architecture/Vue学习记录" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2021/06/28/architecture/Vue%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/" class="article-date">
+  <time class="dt-published" datetime="2021-06-28T03:26:10.819Z" itemprop="datePublished">2021-06-28</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>[toc]</p>
+<h1 id="开发环境"><a href="#开发环境" class="headerlink" title="开发环境"></a>开发环境</h1><h2 id="CentOS7-安装-node"><a href="#CentOS7-安装-node" class="headerlink" title="CentOS7 安装 node"></a>CentOS7 安装 node</h2><p>参考：<a target="_blank" rel="noopener" href="https://www.jianshu.com/p/d4a78b27fe83">https://www.jianshu.com/p/d4a78b27fe83</a></p>
+<ul>
+<li><p>下载<br><code>wget https://nodejs.org/dist/latest-v13.x/node-v13.14.0-linux-x64.tar.xz</code></p>
+</li>
+<li><p>解压</p>
+</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> xz -d node-v13.14.0-linux-x64.tar.xz</span></span><br><span class="line">得到 一个包 node-v13.14.0-linux-x64.tar</span><br><span class="line"><span class="meta">#</span><span class="bash"> tar -xvf node-v13.14.0-linux-x64.tar</span></span><br><span class="line">得到一个目录 node-v13.14.0-linux-x64</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>做软链<br>ln -s /opt/devel/node/bin/node /usr/bin/node<br>ln -s /opt/devel/node/bin/npm /usr/bin/npm<br>ln -s /opt/devel/node/bin/npx /usr/bin/npx</li>
+</ul>
+<h2 id="npm-使用"><a href="#npm-使用" class="headerlink" title="npm 使用"></a>npm 使用</h2><h3 id="加速-npm"><a href="#加速-npm" class="headerlink" title="加速 npm"></a>加速 npm</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">npm config set registry https://registry.npm.taobao.org --global</span><br><span class="line">npm config set disturl https://npm.taobao.org/dist --global</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>下载 node v10.23 安装</p>
+</li>
+<li><p>升级 npm： <code>npm install npm -g</code></p>
+</li>
+<li><p>安装 cnpm：<code>npm install -g cnpm --registry=https://registry.npm.taobao.org</code></p>
+</li>
+<li><p>安装 VS 编译工具： <code>npm i -g windows-build-tools</code><br>i 表示 install<br>-g 表示 global 全局</p>
+</li>
+<li><p>安装 node-gyp： <code>npm install -g node-gyp</code><br><a target="_blank" rel="noopener" href="https://www.cnblogs.com/wangyuxue/p/11218113.html">安装 node-gyp</a></p>
+</li>
+</ul>
+<h2 id="VSCode-开发环境"><a href="#VSCode-开发环境" class="headerlink" title="VSCode 开发环境"></a>VSCode 开发环境</h2><h3 id="集成-Cmder-终端"><a href="#集成-Cmder-终端" class="headerlink" title="集成 Cmder 终端"></a>集成 Cmder 终端</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&quot;terminal.integrated.shell.windows&quot;: &quot;cmd.exe&quot;,</span><br><span class="line">&quot;terminal.integrated.shellArgs.windows&quot;: [</span><br><span class="line">    &quot;/k D:\\Dev\\cmder\\vendor\\init.bat&quot;</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+
+<p>此模式下不支持 TS 自动编译，不建议使用。</p>
+<h3 id="TypeScript-安装"><a href="#TypeScript-安装" class="headerlink" title="TypeScript 安装"></a>TypeScript 安装</h3><ul>
+<li><code>npm install -g typescript</code> 全局安装</li>
+<li><code>tsc -v</code> 查看安装版本</li>
+</ul>
+<h3 id="TS-自动编译"><a href="#TS-自动编译" class="headerlink" title="TS 自动编译"></a>TS 自动编译</h3><ul>
+<li><code>tsc --init </code> 生成 <code>tsconfig.json</code> 文件</li>
+<li>修改 <code>tsconfig.json</code> 文件中的<code>outDir</code> 和 <code>rootDir</code></li>
+<li>设置编译监控： 按 <code>Ctrl + Shift + B</code>，选择 <code>tsc watch</code> 是自动监听，下次保存文件就自动编译。<code>tsc build</code> 是编译一次。</li>
+</ul>
+<h2 id="pm2"><a href="#pm2" class="headerlink" title="pm2"></a>pm2</h2><p>PM2 是 node 进程管理工具，可以利用它来简化很多 node 应用管理的繁琐任务，如性能监控、自动重启、负载均衡等，而且使用非常简单。</p>
+<p>安装： <code>npm install -g pm2</code><br>express 应用来举例。<br>通过<code>npm start</code>启动应用，其实就是调用<code>node ./bin/www</code><br><code>pm2 start ./bin/www --watch</code> 这里用了–watch 参数，意味着当你的 express 应用代码发生变化时，pm2 会帮你重启服务，多贴心。</p>
+<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/chyingp/p/pm2-documentation.html">PM2 实用入门指南</a></p>
+<h1 id="Vue-知识"><a href="#Vue-知识" class="headerlink" title="Vue 知识"></a>Vue 知识</h1><h2 id="ref、reactive、toRef、toRefs-的区别"><a href="#ref、reactive、toRef、toRefs-的区别" class="headerlink" title="ref、reactive、toRef、toRefs 的区别"></a>ref、reactive、toRef、toRefs 的区别</h2><ul>
+<li><p>vue3 reactive 函数<br><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/ba1169fa2c97">https://www.jianshu.com/p/ba1169fa2c97</a></p>
+<ul>
+<li>reactive 的用法与 ref 的用法相似，也是将数据变成响应式数据，当数据发生变化时 UI 也会自动更新。不同的是 ref 用于基本数据类型，而 reactive 是用于复杂数据类型，比如对象和数组。</li>
+</ul>
+</li>
+<li><p>vue3 toRef 函数和 toRefs 函数<br><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/0c6ad50a9055">https://www.jianshu.com/p/0c6ad50a9055</a></p>
+<ul>
+<li>ref 本质是拷贝，修改响应式数据不会影响原始数据；toRef 的本质是引用关系，修改响应式数据会影响原始数据。</li>
+<li>ref 数据发生改变，界面会自动更新；toRef 当数据发生改变是，界面不会自动更新。</li>
+<li>toRef 传参与 ref 不同；toRef 接收两个参数，第一个参数是哪个对象，第二个参数是对象的哪个属性。</li>
+<li>toRefs 接收一个对象作为参数，它会遍历对象身上的所有属性，然后挨个调用 toRef 执行。</li>
+</ul>
+</li>
+</ul>
+<h1 id="no-bin-links"><a href="#no-bin-links" class="headerlink" title="no-bin-links"></a>no-bin-links</h1><p><a target="_blank" rel="noopener" href="https://cloud.tencent.com/developer/article/1440562">https://cloud.tencent.com/developer/article/1440562</a><br><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/36223413">https://zhuanlan.zhihu.com/p/36223413</a></p>
+<p><code>npm install --no-bin-links</code></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">npm ERR! nospc ENOTSUP: operation not supported on socket, symlink &#x27;../acorn/bin/acorn&#x27; -&gt; &#x27;/home/baoguoxiao/windows/food/node_modules/.bin/acorn&#x27;</span><br><span class="line">npm ERR! nospc This is most likely not a problem with npm itself</span><br><span class="line">npm ERR! nospc and is related to insufficient space on your system.</span><br></pre></td></tr></table></figure>
+
+<h1 id="webpack-command-not-found-的解决方法"><a href="#webpack-command-not-found-的解决方法" class="headerlink" title="webpack command not found 的解决方法"></a>webpack command not found 的解决方法</h1><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_38111015/article/details/79013475">webpack command not found 的解决方法</a></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">npm install webpack -g</span><br><span class="line">npm install -D webpack-cli -no-bin-links</span><br></pre></td></tr></table></figure>
+
+<h1 id="通过-ps、grep-和-kill-批量杀死进程"><a href="#通过-ps、grep-和-kill-批量杀死进程" class="headerlink" title="通过 ps、grep 和 kill 批量杀死进程"></a>通过 ps、grep 和 kill 批量杀死进程</h1><p><code>ps aux|grep qemu|awk &#39;&#123;print $2&#125;&#39;|xargs kill -9</code></p>
+<h1 id="npm-run-dev-错误"><a href="#npm-run-dev-错误" class="headerlink" title="npm run dev 错误"></a>npm run dev 错误</h1><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">script&#123;</span><br><span class="line"><span class="string">&quot;dev&quot;</span>: <span class="string">&quot;export NODE_ENV=development; webpack --watch --config webpack.config.js --mode development &amp; ./bin/www&quot;</span>,</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>要成功运行<code>npm run dev</code>，需要安装 webpack, webpack-cli, node-gyp, node-gyp-build；并链接到/usr/local/bin/目录下。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">npm install -g webpack</span><br><span class="line">npm install -g webpack-cli</span><br><span class="line"><span class="meta">#</span><span class="bash"> 用来编译多语言支持</span></span><br><span class="line">npm install -g node-gyp</span><br><span class="line">npm install -g node-gyp-build</span><br><span class="line">sudo ln -s /opt/node10/bin/webpack* /usr/local/bin/</span><br><span class="line">sudo ln -s /opt/node10/bin/node-gyp* /usr/local/bin/</span><br></pre></td></tr></table></figure>
+
+<h1 id="express"><a href="#express" class="headerlink" title="express"></a>express</h1><ul>
+<li><code>morgan</code>是 express 默认的日志中间件，也可以脱离 express，作为 node.js 的日志组件单独使用。<br><a target="_blank" rel="noopener" href="https://www.cnblogs.com/chyingp/p/node-learning-guide-express-morgan.html">https://www.cnblogs.com/chyingp/p/node-learning-guide-express-morgan.html</a></li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//使用app.use(logger(&#x27;dev&#x27;))可以将请求信息打印在控制台</span></span><br><span class="line">app.use(logger(<span class="string">&quot;dev&quot;</span>));</span><br><span class="line"><span class="comment">// morgan支持stream配置项，可以通过它来实现将日志落地的效果</span></span><br><span class="line"><span class="comment">// 日志写入文件</span></span><br><span class="line"><span class="keyword">var</span> accessLogStream = fs.createWriteStream(path.join(__dirname, <span class="string">&quot;access.log&quot;</span>), &#123;</span><br><span class="line">  <span class="attr">flags</span>: <span class="string">&quot;a&quot;</span>,</span><br><span class="line">&#125;);</span><br><span class="line">app.use(morgan(<span class="string">&quot;short&quot;</span>, &#123; <span class="attr">stream</span>: accessLogStream &#125;));</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>body-parser</code>作用是对 post 请求的请求体进行解析。<br><a target="_blank" rel="noopener" href="https://www.cnblogs.com/chyingp/p/nodejs-learning-express-body-parser.html">https://www.cnblogs.com/chyingp/p/nodejs-learning-express-body-parser.html</a></li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">app.use(bodyParser.json());</span><br><span class="line">app.use(bodyParser.urlencoded(&#123; <span class="attr">extended</span>: <span class="literal">false</span> &#125;));</span><br></pre></td></tr></table></figure>
+
+<p><code>body-parser</code> 实现的要点如下： - 处理不同类型的请求体：比如 text、json、urlencoded 等，对应的报文主体的格式  不同。 - 处理不同的编码：比如 utf8、gbk 等。 - 处理不同的压缩类型：比如 gzip、deflare 等。 - 其他边界、异常的处理。</p>
+<ul>
+<li><code>cookie-parser</code>是 Express 的中间件，用来实现 cookie 的解析<br><a target="_blank" rel="noopener" href="https://www.cnblogs.com/chyingp/p/express-cookie-parser-deep-in.html">https://www.cnblogs.com/chyingp/p/express-cookie-parser-deep-in.html</a></li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> express = <span class="built_in">require</span>(<span class="string">&quot;express&quot;</span>);</span><br><span class="line"><span class="keyword">var</span> cookieParser = <span class="built_in">require</span>(<span class="string">&quot;cookie-parser&quot;</span>);</span><br><span class="line"><span class="keyword">var</span> app = express();</span><br><span class="line"></span><br><span class="line">app.use(cookieParser());</span><br><span class="line"></span><br><span class="line">app.use(<span class="function"><span class="keyword">function</span> (<span class="params">req, res, next</span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(req.cookies.nick); <span class="comment">// 第二次访问，输出chyingp</span></span><br><span class="line">  next();</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">app.use(<span class="function"><span class="keyword">function</span> (<span class="params">req, res, next</span>) </span>&#123;</span><br><span class="line">  res.cookie(<span class="string">&quot;nick&quot;</span>, <span class="string">&quot;chyingp&quot;</span>);</span><br><span class="line">  res.end(<span class="string">&quot;ok&quot;</span>);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">app.listen(<span class="number">3000</span>);</span><br></pre></td></tr></table></figure>
+
+<h1 id="webpack"><a href="#webpack" class="headerlink" title="webpack"></a>webpack</h1><p>版本&gt;v4，需要安装<code>webpack-cli</code>。</p>
+<p>一般和自定义的<code>webpack.config.js</code>文件一起使用。例如，将<code>src/index.js</code>及其引用文件打包到<code>dist/bundle.js</code>文件中。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> path = <span class="built_in">require</span>(<span class="string">&quot;path&quot;</span>);</span><br><span class="line"></span><br><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">  <span class="attr">entry</span>: <span class="string">&quot;./src/index.js&quot;</span>,</span><br><span class="line">  <span class="attr">output</span>: &#123;</span><br><span class="line">    <span class="attr">path</span>: path.resolve(__dirname, <span class="string">&quot;dist&quot;</span>),</span><br><span class="line">    <span class="attr">filename</span>: <span class="string">&quot;bundle.js&quot;</span>,</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<h1 id="nodemon"><a href="#nodemon" class="headerlink" title="nodemon"></a>nodemon</h1><p>nodemon 用来监视 node.js 应用程序中的任何更改并自动重启服务,非常适合用在开发环境中。</p>
+<p>nodemon 不需要对代码或开发方式进行任何更改。 nodemon 只是简单的包装你的 node 应用程序，并监控任何已经改变的文件。nodemon 只是 node 的替换包，只是在运行脚本时将其替换命令行上的 node。</p>
+<h1 id="npm-ERR-code-ELIFECYCLE"><a href="#npm-ERR-code-ELIFECYCLE" class="headerlink" title="npm ERR! code ELIFECYCLE"></a>npm ERR! code ELIFECYCLE</h1><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">npm cache clean --force</span><br><span class="line"><span class="keyword">delete</span> node_modules folder</span><br><span class="line"><span class="keyword">delete</span> package-lock.json file</span><br><span class="line">npm install</span><br></pre></td></tr></table></figure>
+
+<h1 id="安装-vue-支持"><a href="#安装-vue-支持" class="headerlink" title="安装 vue 支持"></a>安装 vue 支持</h1><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">npm install vue-cli -g</span><br><span class="line"><span class="comment"># cross-env 是用来接近linux、windows环境变量设置不一致的问题。</span></span><br><span class="line"><span class="comment"># cross-env NODE_ENV=production webpack --config webpack.config.js --mode production</span></span><br><span class="line"><span class="comment"># cross-env NODE_ENV=production 在linux、windows都能认识</span></span><br><span class="line">npm install -g cross-env</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h1 id="解决-npm-安装速度慢的方法"><a href="#解决-npm-安装速度慢的方法" class="headerlink" title="解决 npm 安装速度慢的方法"></a>解决 npm 安装速度慢的方法</h1><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">onfig <span class="built_in">set</span> registry https://registry.npm.taobao.org</span><br><span class="line">npm config <span class="built_in">set</span> sass_binary_site https://npm.taobao.org/mirrors/node-sass</span><br><span class="line">npm config <span class="built_in">set</span> phantomjs_cdnurl https://npm.taobao.org/mirrors/phantomjs</span><br><span class="line">npm config <span class="built_in">set</span> electron_mirror https://npm.taobao.org/mirrors/electron</span><br><span class="line">npm config <span class="built_in">set</span> sqlite3_binary_host_mirror https://npm.taobao.org/mirrors/sqlite3</span><br><span class="line">npm config <span class="built_in">set</span> profiler_binary_host_mirror https://npm.taobao.org/mirrors/node-inspector</span><br><span class="line">npm config <span class="built_in">set</span> chromedriver_cdnurl https://npm.taobao.org/mirrors/chromedriver</span><br></pre></td></tr></table></figure>
+
+<p>make 提示：g++命令未找到：<code>yum install gcc-c++</code></p>
+<h1 id="style-loader-与-vue-style-loader-区别"><a href="#style-loader-与-vue-style-loader-区别" class="headerlink" title="style-loader 与 vue-style-loader 区别"></a>style-loader 与 vue-style-loader 区别</h1><p><code>vue-style-loader</code>跟 <code>style-loader</code> 基本用法跟功能是一样的，都是往 dom 里面插入一个 style 标签去让样式生效的，但是 <code>vue-style-loader</code> 支持 vue 中的 ssr（服务端渲染），所以如果需要支持服务端渲染的 vue 项目，就需要用到 <code>vue-style-loader</code> 了，如果一般的 vue 项目的话，推荐使用 <code>style-loader</code>，毕竟 <code>style-loader</code> 支持的功能还是丰富些，比如可以懒注入、可以指定位置插入标签等等。</p>
+<h1 id="vue-resource"><a href="#vue-resource" class="headerlink" title="vue-resource"></a>vue-resource</h1><p>vue-resource 是 Vue.js 的一款插件，它可以通过 XMLHttpRequest 或 JSONP 发起请求并处理响应。也就是说，$.ajax 能做的事情，vue-resource 插件一样也能做到，而且 vue-resource 的 API 更为简洁。另外，vue-resource 还提供了非常有用的 inteceptor 功能，使用 inteceptor 可以在请求前和请求后附加一些行为，比如使用 inteceptor 在 ajax 请求时显示 loading 界面。</p>
+<ul>
+<li>get 请求</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> params = &#123; <span class="attr">params</span>: &#123; <span class="attr">id</span>: id &#125; &#125;;</span><br><span class="line"><span class="built_in">this</span>.$http.get(url, params).then(</span><br><span class="line">  <span class="function"><span class="keyword">function</span> (<span class="params">res</span>) </span>&#123;</span><br><span class="line">    <span class="comment">// 响应成功回调</span></span><br><span class="line">    <span class="keyword">var</span> data = res.body;</span><br><span class="line">    <span class="comment">//数据在res.body里面</span></span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="function"><span class="keyword">function</span> (<span class="params">res</span>) </span>&#123;</span><br><span class="line">    <span class="comment">// 响应错误回调</span></span><br><span class="line">  &#125;</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>post 请求</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//启用&#123;emulateJSON : true&#125;选项后，请求会以application/x-www-form-urlencoded作为content-type,像HTML表单一样。</span></span><br><span class="line"><span class="keyword">var</span> params = &#123; <span class="attr">params</span>: &#123; <span class="attr">id</span>: id &#125; &#125;;</span><br><span class="line"><span class="built_in">this</span>.$http.post(url, params, &#123; <span class="attr">emulateJSON</span>: <span class="literal">true</span> &#125;).then(</span><br><span class="line">  <span class="function"><span class="keyword">function</span> (<span class="params">res</span>) </span>&#123;</span><br><span class="line">    <span class="comment">// 响应成功回调</span></span><br><span class="line">    <span class="keyword">var</span> data = res.body;</span><br><span class="line">    <span class="comment">//数据在res.body里面</span></span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="function"><span class="keyword">function</span> (<span class="params">res</span>) </span>&#123;</span><br><span class="line">    <span class="comment">// 响应错误回调</span></span><br><span class="line">  &#125;</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>JSONP 请求</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> JSONparams =&#123;</span><br><span class="line">    <span class="attr">params</span>: &#123;<span class="attr">id</span>: id&#125;</span><br><span class="line">    <span class="attr">jsonp</span>: <span class="string">&#x27;callback&#x27;</span> <span class="comment">// 设置回调函数的参数的一个名字，默认是话是callback,</span></span><br><span class="line">&#125;</span><br><span class="line"> <span class="built_in">this</span>.$http.jsonp(url, JSONparams).then( <span class="function">(<span class="params">res</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(res);</span><br><span class="line">&#125;, <span class="function">(<span class="params">err</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(err);</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2021/06/28/architecture/Vue%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/" data-id="ckqg285u1002hrcfphwcl01ii" data-title="" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2021/06/28/architecture/WonderWare/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          (no title)
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2021/06/28/architecture/Unicode%E8%A7%A3%E6%9E%90/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title"></div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/06/">June 2021</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2021/06/28/product/%E9%9C%80%E6%B1%82%E8%B0%83%E7%A0%94%E7%9A%84%E5%86%85%E5%AE%B9%E5%92%8C%E5%B7%A5%E4%BD%9C%E6%8C%87%E5%BC%95/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2021/06/28/product/%E9%93%81%E8%B7%AF6C%E4%B8%9A%E5%8A%A1%E7%BB%93%E6%9E%84/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2021/06/28/product/%E9%9C%80%E6%B1%82%E8%B0%83%E7%A0%94%E5%8F%8A%E5%88%86%E6%9E%90%E6%96%B9%E6%B3%95/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2021/06/28/product/%E6%B0%B4%E7%94%B5%E7%AB%99%E7%94%9F%E4%BA%A7%E8%BF%90%E8%A1%8C%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2021/06/28/product/%E6%B0%B4%E7%94%B5%E5%8E%82%E8%BF%90%E8%A1%8C%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F/">(no title)</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2021 John Doe<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.4.1.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

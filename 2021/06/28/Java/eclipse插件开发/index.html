@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="[TOC] Eclipse平台介绍 SWT&#x2F;JFace 和SWT相似的技术是什么？ JFace与SWT的关系？ swt工具箱   插件技术和OSGI 插件延迟加载怎么实现的？ 扩展的声明和实现分离 eclipse3.0做了什么重构？ OSGI实现 新的框架名为Equinox   OSGI的优点？ 分解为小的可重用组件 动态的增删模块     RCP技术 什么是RCP？ 富客户端开发平台   RCP">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Hexo">
+<meta property="og:url" content="http://example.com/2021/06/28/Java/eclipse%E6%8F%92%E4%BB%B6%E5%BC%80%E5%8F%91/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="[TOC] Eclipse平台介绍 SWT&#x2F;JFace 和SWT相似的技术是什么？ JFace与SWT的关系？ swt工具箱   插件技术和OSGI 插件延迟加载怎么实现的？ 扩展的声明和实现分离 eclipse3.0做了什么重构？ OSGI实现 新的框架名为Equinox   OSGI的优点？ 分解为小的可重用组件 动态的增删模块     RCP技术 什么是RCP？ 富客户端开发平台   RCP">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/2021/06/28/Java/eclipse%E6%8F%92%E4%BB%B6%E5%BC%80%E5%8F%91/_v_images/2019-11-21-20-45-42.png">
+<meta property="og:image" content="http://example.com/2021/06/28/Java/eclipse%E6%8F%92%E4%BB%B6%E5%BC%80%E5%8F%91/_v_images/2019-11-21-20-46-00.png">
+<meta property="article:published_time" content="2021-06-28T03:26:11.120Z">
+<meta property="article:modified_time" content="2021-06-24T12:32:22.545Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2021/06/28/Java/eclipse%E6%8F%92%E4%BB%B6%E5%BC%80%E5%8F%91/_v_images/2019-11-21-20-45-42.png">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-Java/eclipse插件开发" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2021/06/28/Java/eclipse%E6%8F%92%E4%BB%B6%E5%BC%80%E5%8F%91/" class="article-date">
+  <time class="dt-published" datetime="2021-06-28T03:26:11.120Z" itemprop="datePublished">2021-06-28</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>[TOC]</p>
+<h2 id="Eclipse平台介绍"><a href="#Eclipse平台介绍" class="headerlink" title="Eclipse平台介绍"></a>Eclipse平台介绍</h2><ul>
+<li>SWT/JFace<ul>
+<li>和SWT相似的技术是什么？</li>
+<li>JFace与SWT的关系？ swt工具箱</li>
+</ul>
+</li>
+<li>插件技术和OSGI<ul>
+<li>插件延迟加载怎么实现的？ 扩展的声明和实现分离</li>
+<li>eclipse3.0做了什么重构？<ul>
+<li>OSGI实现</li>
+<li>新的框架名为Equinox</li>
+</ul>
+</li>
+<li>OSGI的优点？<ul>
+<li>分解为小的可重用组件</li>
+<li>动态的增删模块</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>RCP技术<ul>
+<li>什么是RCP？<ul>
+<li>富客户端开发平台</li>
+</ul>
+</li>
+<li>RCP优点？<ul>
+<li>继承Eclipse的UI和Runtime模块</li>
+<li>基于OSGI</li>
+<li>基于SWT/JFace</li>
+<li>可以添加其他插件</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>EMF技术<ul>
+<li>EMF是什么？解决什么问题？<ul>
+<li>帮用户实现UML建模，并辅助实现代码。</li>
+<li>适用于模型驱动的程序</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>GEF技术<ul>
+<li>GEF是什么？<ul>
+<li>基于SWT的轻量级绘图系统</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="插件探测器（Plug-in-Spy）"><a href="#插件探测器（Plug-in-Spy）" class="headerlink" title="插件探测器（Plug-in Spy）"></a>插件探测器（Plug-in Spy）</h2><ul>
+<li>Shift+Alt+F1   查看eclipse各个视图的源码</li>
+<li> 按下Shift+Alt+F2键，此时 鼠标 再点击工具栏按钮或菜单项，同样可以调出插件探测器主界面。</li>
+</ul>
+<h2 id="eclipse源码使用指南"><a href="#eclipse源码使用指南" class="headerlink" title="eclipse源码使用指南"></a>eclipse源码使用指南</h2><h3 id="模板概览"><a href="#模板概览" class="headerlink" title="模板概览"></a>模板概览</h3><p>“Templates”向导页包含11个典型示例模板，清单如下：<br>1.Hello，World<br>2.Hello，World Command<br>3.ODA Data Source Designer（ODA数据源设计器示例）<br>4.ODA Data Source Runtime Driver（ODA数据源运行时驱动示例）<br>5.Plug-in with a multi-page editor多页编辑器示例）<br>6.Plug-in with a popup menu（弹出菜单示例）<br>7.Plug-in with a property page（属性页示例）<br>8.Plug-in with a view（自定义视图示例）<br>9.Plug-in with an editor（编辑器示例）<br>10.Plug-in with an incremental project builder（工程项目编译器示例）<br>11.Plug-in with sample help content（上下文帮助示例）</p>
+<p>“Template Selection”向导页包含17典型示例模板（涉及16个扩展点），扩展点清单如下：<br>1.org.eclipse.core.resources.builders<br>2.org.eclipse.ui.navigator.CommonNavigator<br>3.org.eclipse.ui.decorators<br>4.org.eclipse.ui.editors<br>5.org.eclipse.ui.commands<br>6.org.eclipse.ui.actionSets<br>7.org.eclipse.help.toc<br>8.org.eclipse.ui.importWizards<br>9.org.eclipse.ui.newWizards<br>10.org.eclipse.ui.perspectives<br>11.org.eclipse.ui.popupMenus<br>12.org.eclipse.ui.PreferencePages<br>13.org.eclipse.ui.propertyPages<br>14.org.eclipse.ui.splashHandlers<br>15.org.eclipse.ui.intro.configExtension<br>16.org.eclipse.ui.views</p>
+<h3 id="扩展项（Extension）"><a href="#扩展项（Extension）" class="headerlink" title="扩展项（Extension）"></a>扩展项（Extension）</h3><p>“Extension Wizards”</p>
+<h3 id="插件源码导入"><a href="#插件源码导入" class="headerlink" title="插件源码导入"></a>插件源码导入</h3><p>在插件开发透视图中（Plug-in Development），默认有一个插件视图（Plug-ins），该视图用于呈现当前Eclipse开发环境下的插件清单，清单包含当前工作区（workspace）中已打开的插件工程项目。</p>
+<p><img src="_v_images/2019-11-21-20-45-42.png"></p>
+<p>启动Eclipse，通过File菜单的“Import…”菜单项调出导入向导。</p>
+<p>Ctrl+Shift+A</p>
+<p><img src="_v_images/2019-11-21-20-46-00.png"></p>
+<h2 id="tycho使用"><a href="#tycho使用" class="headerlink" title="tycho使用"></a>tycho使用</h2><p>flowable-designer 导入eclipse，eclipse必须安装 graphiti的0.13.2版本：   <a target="_blank" rel="noopener" href="http://archive.eclipse.org/graphiti/updates/0.13.2">http://archive.eclipse.org/graphiti/updates/0.13.2</a></p>
+<h3 id="https-blog-csdn-net-soszou-article-details-12775101"><a href="#https-blog-csdn-net-soszou-article-details-12775101" class="headerlink" title="https://blog.csdn.net/soszou/article/details/12775101"></a><a target="_blank" rel="noopener" href="https://blog.csdn.net/soszou/article/details/12775101">https://blog.csdn.net/soszou/article/details/12775101</a></h3><p>Tycho则是一群Eclipse、OSGi插件开发人员受不了重复地配置类似的Maven pom.xml而创造出来的。Tycho大大简化了Eclipse、OSGi插件中的pom.xml，它实际上是一系列专用于build Eclipse插件和OSGi模块的maven插件的集合。</p>
+<p>Tycho牛逼之处就在于它可以读懂这些metadata，这样程序员就不需要在pom文件里面重新定义一遍。不止如此，为了避免程序员乌龙地在MANIFEST文件和pom文件里面定义的依赖出现冲突，Tycho甚至规定所有的依赖必须定义于MANIFEST文件中（不然没法编译），出现在pom文件中的依赖一律直接被忽略。</p>
+<p>为了优化对Eclipse插件和OSGi模块的build，Tycho提供了专门的packaging，用来处理专门的模块生命周期，最典型的比如eclipse-repository，配合tycho-p2-director-plugin，直接就可以读懂product文件，build整个Eclipse RCP的product。<br>PS: feature是插件的集合，我们在给Eclipse安装插件的时候往往安装的是feature，而不是安装一个个的plugin jar</p>
+<h3 id="官方文档：-https-www-eclipse-org-tycho-documentation-php"><a href="#官方文档：-https-www-eclipse-org-tycho-documentation-php" class="headerlink" title="官方文档： https://www.eclipse.org/tycho/documentation.php"></a>官方文档： <a target="_blank" rel="noopener" href="https://www.eclipse.org/tycho/documentation.php">https://www.eclipse.org/tycho/documentation.php</a></h3><p>例子：  <a target="_blank" rel="noopener" href="https://github.com/jsievers/tycho-demo">https://github.com/jsievers/tycho-demo</a></p>
+<h3 id="eclipse插件开发-tycho使用-http-ju-outofmemory-cn-entry-260944"><a href="#eclipse插件开发-tycho使用-http-ju-outofmemory-cn-entry-260944" class="headerlink" title="eclipse插件开发-tycho使用: http://ju.outofmemory.cn/entry/260944"></a>eclipse插件开发-tycho使用: <a target="_blank" rel="noopener" href="http://ju.outofmemory.cn/entry/260944">http://ju.outofmemory.cn/entry/260944</a></h3><ul>
+<li>升级版本号： 在根目录执行 mvn -Dtycho.mode=maven org.eclipse.tycho:tycho-versions-plugin:set-version -DnewVersion=1.6.0 即可全部替换pom和plugin的版本号</li>
+<li>如果项目导入后在eclipse中报错，一般是因为缺少了上面说的那个依赖。可以直接复制到eclipse的plugin依赖目录。或者在mvn clean install之后，通过安装 依赖feature的方式解决。</li>
+</ul>
+<h3 id="教程"><a href="#教程" class="headerlink" title="教程"></a>教程</h3><p><a target="_blank" rel="noopener" href="https://o7planning.org/en/10137/building-java-osgi-project-with-maven-and-tycho">Building Java OSGi Project with Maven and Tycho</a><br>[Eclipse Tycho for building plug-ins, OSGi bundles and Eclipse applications - Tutorial](http ://<a target="_blank" rel="noopener" href="http://www.vogella.com/tutorials/EclipseTycho/article.html">www.vogella.com/tutorials/EclipseTycho/article.html</a>)</p>
+<ul>
+<li><p>eclipse插件开发教程</p>
+<ul>
+<li><p><a target="_blank" rel="noopener" href="https://www.vogella.com/tutorials/EclipsePlugin/article.html">Eclipse IDE Plug-in Development: Plug-ins, Features, Update Sites and IDE Extensions</a></p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://www.vogella.com/tutorials/EclipseRCP/article.html">Eclipse RCP (Rich Client Platform) - Tutorial</a></p>
+</li>
+</ul>
+</li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2021/06/28/Java/eclipse%E6%8F%92%E4%BB%B6%E5%BC%80%E5%8F%91/" data-id="ckqg285sx000frcfpc64b0tx6" data-title="" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2021/06/28/Java/Git%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          (no title)
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2021/06/28/Java/02-Maven%E5%B8%B8%E7%94%A8/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title"></div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/06/">June 2021</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2021/06/28/product/%E9%9C%80%E6%B1%82%E8%B0%83%E7%A0%94%E7%9A%84%E5%86%85%E5%AE%B9%E5%92%8C%E5%B7%A5%E4%BD%9C%E6%8C%87%E5%BC%95/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2021/06/28/product/%E9%93%81%E8%B7%AF6C%E4%B8%9A%E5%8A%A1%E7%BB%93%E6%9E%84/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2021/06/28/product/%E9%9C%80%E6%B1%82%E8%B0%83%E7%A0%94%E5%8F%8A%E5%88%86%E6%9E%90%E6%96%B9%E6%B3%95/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2021/06/28/product/%E6%B0%B4%E7%94%B5%E7%AB%99%E7%94%9F%E4%BA%A7%E8%BF%90%E8%A1%8C%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2021/06/28/product/%E6%B0%B4%E7%94%B5%E5%8E%82%E8%BF%90%E8%A1%8C%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F/">(no title)</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2021 John Doe<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.4.1.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

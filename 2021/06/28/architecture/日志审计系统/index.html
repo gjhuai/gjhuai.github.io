@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="[toc] https:&#x2F;&#x2F;blog.csdn.net&#x2F;cheng_fangang&#x2F;article&#x2F;details&#x2F;42418017https:&#x2F;&#x2F;blog.csdn.net&#x2F;qq_38265137&#x2F;article&#x2F;details&#x2F;106790419http:&#x2F;&#x2F;www.youxia.org&#x2F;2015&#x2F;01&#x2F;13547.html 日志审计系统简介什么是日志审计？综合日志审计平台，通过集中采集信息系">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Hexo">
+<meta property="og:url" content="http://example.com/2021/06/28/architecture/%E6%97%A5%E5%BF%97%E5%AE%A1%E8%AE%A1%E7%B3%BB%E7%BB%9F/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="[toc] https:&#x2F;&#x2F;blog.csdn.net&#x2F;cheng_fangang&#x2F;article&#x2F;details&#x2F;42418017https:&#x2F;&#x2F;blog.csdn.net&#x2F;qq_38265137&#x2F;article&#x2F;details&#x2F;106790419http:&#x2F;&#x2F;www.youxia.org&#x2F;2015&#x2F;01&#x2F;13547.html 日志审计系统简介什么是日志审计？综合日志审计平台，通过集中采集信息系">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/2021/06/28/architecture/%E6%97%A5%E5%BF%97%E5%AE%A1%E8%AE%A1%E7%B3%BB%E7%BB%9F/_v_images/20200731161608676_3747.png">
+<meta property="article:published_time" content="2021-06-28T03:26:10.857Z">
+<meta property="article:modified_time" content="2020-07-31T17:07:59.000Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2021/06/28/architecture/%E6%97%A5%E5%BF%97%E5%AE%A1%E8%AE%A1%E7%B3%BB%E7%BB%9F/_v_images/20200731161608676_3747.png">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-architecture/日志审计系统" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2021/06/28/architecture/%E6%97%A5%E5%BF%97%E5%AE%A1%E8%AE%A1%E7%B3%BB%E7%BB%9F/" class="article-date">
+  <time class="dt-published" datetime="2021-06-28T03:26:10.857Z" itemprop="datePublished">2021-06-28</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>[toc]</p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/cheng_fangang/article/details/42418017">https://blog.csdn.net/cheng_fangang/article/details/42418017</a><br><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_38265137/article/details/106790419">https://blog.csdn.net/qq_38265137/article/details/106790419</a><br><a target="_blank" rel="noopener" href="http://www.youxia.org/2015/01/13547.html">http://www.youxia.org/2015/01/13547.html</a></p>
+<h1 id="日志审计系统简介"><a href="#日志审计系统简介" class="headerlink" title="日志审计系统简介"></a>日志审计系统简介</h1><h2 id="什么是日志审计？"><a href="#什么是日志审计？" class="headerlink" title="什么是日志审计？"></a>什么是日志审计？</h2><p>综合日志审计平台，通过集中采集信息系统中的系统安全事件、用户访问记录、系统运行日志、系统运行状态等各类信息，经过规范化、过滤、归并和告警分析等处理后，以统一格式的日志形式进行集中存储和管理，结合丰富的日志统计汇总及关联分析功能，实现对信息系统日志的全面审计。</p>
+<p>通过日志审计系统，企业管理员随时了解整个IT系统的运行情况，及时发现系统异常事件；另一方面，通过事后分析和丰富的报表系统，管理员可以方便高效地对信息系统进行有针对性的安全审计。遇到特殊安全事件和系统故障，日志审计系统可以帮助管理员进行故障快速定位，并提供客观依据进行追查和恢复。</p>
+<h2 id="为什么需要日志审计平台？"><a href="#为什么需要日志审计平台？" class="headerlink" title="为什么需要日志审计平台？"></a>为什么需要日志审计平台？</h2><ol>
+<li><p>日志审计的合规要求，由于网络安全法的颁布实施，由原先的不合规转变成了不合法。如果不对要求的相关日志不做留存6个月以上，一旦追查，将面临法律责任。</p>
+</li>
+<li><p>安全运营的挑战。随着网络设备的增多，以及服务器数量的增多，如果没有统一的综合日志审计平台，那么需要登录到每台设备上查看日志，不利于运维人员管理。而且众多设备会产生海量的日志，无法有效管理。多种设备形成信息孤岛，日志无法关联分析。通过统一的日志审计平台，将所有设备日志都收集到日志平台进行统一管理，统一分析。</p>
+</li>
+</ol>
+<h2 id="日志审计的核心目标："><a href="#日志审计的核心目标：" class="headerlink" title="日志审计的核心目标："></a>日志审计的核心目标：</h2><ul>
+<li>多源数据归一化</li>
+<li>日志存储集中化</li>
+<li>关联分析自动化</li>
+<li>安全态势立体化</li>
+</ul>
+<h1 id="需求背景"><a href="#需求背景" class="headerlink" title="需求背景"></a>需求背景</h1><p>但是随着信息安全系统的部署和发展，该银行的信息安全工作面临如下的需求：</p>
+<ul>
+<li><p>需要建设全面的日志采集需求：需要将接入网络、网站范围内的安全日志及主机系统日志，统一采取日志，集中管理分析。</p>
+</li>
+<li><p>日志规范化需求：由于全网设备种类繁多，各设备日志信息存储格式、字段含义、通信协议差异较大。需要对采集到的各种设备日志进行归一化处理，提取审计记录完整信息，为后续审计分析提供依据。</p>
+</li>
+<li><p>基于策略的日志过滤、归并：面对海量原始日志，需要按照相关策略进行过滤和归并，减轻日志数据传输压力和存储压力。</p>
+</li>
+<li><p>关联分析及审计需求：对于来自各个资源的日志信息，提供多维的关联分析功能。面向系统用户，将一个用户在多个设备上的操作进行横向关联分析，形成以用户为主题的操作行为审计；面向特定安全事件，对于发生在多个设备上的事件痕迹进行关联分析，形成一个完整的事件相关操作过程的审计；从设备角度，形成本设备全部访问情况的安全审计报告。</p>
+</li>
+<li><p>日志存储需求：原始日志信息是来自网络的第一手数据，需要长期存储，并确保它们的完整性、保密性，不得随意访问、修改和删除。同时，由于日志量较大，应提供压缩存储机制。</p>
+</li>
+<li><p>通过实施告警标准化系统，可以达到对告警分级分类展现，提高工作效率的目的。因此，该银行用户希望通过建设一个日志审计平台，实现对各类安全日志进行集中管理并解决以上安全工作难题。</p>
+</li>
+</ul>
+<h1 id="日志审计的主要功能"><a href="#日志审计的主要功能" class="headerlink" title="日志审计的主要功能"></a>日志审计的主要功能</h1><h2 id="统一日志采集："><a href="#统一日志采集：" class="headerlink" title="统一日志采集："></a>统一日志采集：</h2><ul>
+<li>对不同日志源 (主机系统、网络设备、安全设备、应用中间件、数据库等)所产生的日志进行收集，实现日志的集中管理和存储。支持解析任意格式、任意来源的日志，通过解析规则标准化。</li>
+<li>使用无代理的方式收集日志。</li>
+<li>支持代理方式的日志收集。</li>
+</ul>
+<h2 id="关联分析："><a href="#关联分析：" class="headerlink" title="关联分析："></a>关联分析：</h2><ul>
+<li>预置多种事件关联规则。</li>
+<li>定位外部威胁、黑客攻击、内部违规操作，设备异常。</li>
+<li>简单灵活定义关联规则。</li>
+</ul>
+<h2 id="实时告警："><a href="#实时告警：" class="headerlink" title="实时告警："></a>实时告警：</h2><ul>
+<li>通过邮件、短信、声音对发生的告警进行及时通知，并可通过接口调用自动运行程序或脚本。</li>
+<li>通过告警策略定义，对各类风险 和事件进行及时告警或预警，提升运维效率。</li>
+</ul>
+<h2 id="日志取证分析："><a href="#日志取证分析：" class="headerlink" title="日志取证分析："></a>日志取证分析：</h2><ul>
+<li>深入分析原始日志事件，快速定位问题的根本原因。</li>
+<li>生成取证报表，例如攻击威胁报表、Windows/Linux系统审计报表以及合规性审计报表等。</li>
+</ul>
+<h2 id="监管合规："><a href="#监管合规：" class="headerlink" title="监管合规："></a>监管合规：</h2><ul>
+<li>提供Windows审计、Linux审计、PCI、SOX、ISO27001等合规性报表。</li>
+<li>支持创建自定义合规性报表</li>
+</ul>
+<h1 id="功能结构"><a href="#功能结构" class="headerlink" title="功能结构"></a>功能结构</h1><p><img src="_v_images/20200731161608676_3747.png" alt="图：日志审计系统产品功能结构
+"></p>
+<h2 id="日志的转发方式："><a href="#日志的转发方式：" class="headerlink" title="日志的转发方式："></a>日志的转发方式：</h2><p>日志转发一般可以通过：Syslog转发，Kafka转发，http转发。</p>
+<p>日志收集一般支持：Syslog、SNMP等日志协议。</p>
+<h2 id="日志审计系统常见模块："><a href="#日志审计系统常见模块：" class="headerlink" title="日志审计系统常见模块："></a>日志审计系统常见模块：</h2><ul>
+<li><p>日志事件获取模块：安全事件监控系统是实时掌握全网的安全威胁状况的重要手段之一。通过事件监控模块监控各个网络设备、主机系统等日志信息，以及安全产品的安全事件报警信息等，及时发现正在和已经发生的安全事件，通过响应模块采取措施，保证网络和业务系统的安全、可靠运行。</p>
+</li>
+<li><p>资产管理模块：资产管理实现对网络安全管理平台所管辖的设备和系统对象的管理。它将其所辖IP设备资产信息按其重要程度分类登记入库，并为其他安全管理模块提供信息接口。</p>
+</li>
+<li><p>规则库模块：规则库已支持主流网络设备、主机系统、数据库系统等，而且还应涵盖已经部署的安全系统，包括防火墙系统、防病毒系统等。并提供新日志格式适配功能，支持从安全运营中心平台接收新日志解析映射规则配置。用户可以根据该适配功能，对新日志格式进行自行适配。</p>
+</li>
+<li><p>统计报表功能：具备强大的统计功能，可快速生成多种专业化的报表并支持自定义图表的设定集展示。</p>
+</li>
+<li><p>权限管理模块：超级管理员可根据用户角色分配平台查看、操作各模块的权限，用户可以访问而且只能访问自己被授权的资源</p>
+</li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2021/06/28/architecture/%E6%97%A5%E5%BF%97%E5%AE%A1%E8%AE%A1%E7%B3%BB%E7%BB%9F/" data-id="ckqg285ud0039rcfpcdd4dp9i" data-title="" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2021/06/28/architecture/%E6%98%8E%E7%95%A5%E5%A4%A7%E6%95%B0%E6%8D%AE%E9%A1%B9%E7%9B%AE%E5%AE%9E%E8%B7%B5%E5%88%86%E4%BA%AB/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          (no title)
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2021/06/28/architecture/%E6%95%B0%E6%8D%AE%E4%BA%A4%E6%8D%A2/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title"></div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/06/">June 2021</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2021/06/28/product/%E9%9C%80%E6%B1%82%E8%B0%83%E7%A0%94%E7%9A%84%E5%86%85%E5%AE%B9%E5%92%8C%E5%B7%A5%E4%BD%9C%E6%8C%87%E5%BC%95/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2021/06/28/product/%E9%93%81%E8%B7%AF6C%E4%B8%9A%E5%8A%A1%E7%BB%93%E6%9E%84/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2021/06/28/product/%E9%9C%80%E6%B1%82%E8%B0%83%E7%A0%94%E5%8F%8A%E5%88%86%E6%9E%90%E6%96%B9%E6%B3%95/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2021/06/28/product/%E6%B0%B4%E7%94%B5%E7%AB%99%E7%94%9F%E4%BA%A7%E8%BF%90%E8%A1%8C%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2021/06/28/product/%E6%B0%B4%E7%94%B5%E5%8E%82%E8%BF%90%E8%A1%8C%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F/">(no title)</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2021 John Doe<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.4.1.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

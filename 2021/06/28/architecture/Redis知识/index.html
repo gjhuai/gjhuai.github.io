@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="Redis作为缓存当用jdk默认的序列化方案时，对类的版本要求严格一直，否则抛出ClassNotFoundException。比如：  几个共用redis缓存的应用，它们共用的jar包版本有差异（serialNo），就会导致整个系统失败。 https:&#x2F;&#x2F;github.com&#x2F;alexxiyang&#x2F;shiro-redis&#x2F;issues&#x2F;78 class一旦上线，就不能改变包名或位置，否则无法序列号">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Hexo">
+<meta property="og:url" content="http://example.com/2021/06/28/architecture/Redis%E7%9F%A5%E8%AF%86/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="Redis作为缓存当用jdk默认的序列化方案时，对类的版本要求严格一直，否则抛出ClassNotFoundException。比如：  几个共用redis缓存的应用，它们共用的jar包版本有差异（serialNo），就会导致整个系统失败。 https:&#x2F;&#x2F;github.com&#x2F;alexxiyang&#x2F;shiro-redis&#x2F;issues&#x2F;78 class一旦上线，就不能改变包名或位置，否则无法序列号">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2021-06-28T03:26:10.804Z">
+<meta property="article:modified_time" content="2020-05-19T11:28:44.000Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-architecture/Redis知识" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2021/06/28/architecture/Redis%E7%9F%A5%E8%AF%86/" class="article-date">
+  <time class="dt-published" datetime="2021-06-28T03:26:10.804Z" itemprop="datePublished">2021-06-28</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h2 id="Redis作为缓存"><a href="#Redis作为缓存" class="headerlink" title="Redis作为缓存"></a>Redis作为缓存</h2><p>当用jdk默认的序列化方案时，对类的版本要求严格一直，否则抛出ClassNotFoundException。比如：</p>
+<ul>
+<li>几个共用redis缓存的应用，它们共用的jar包版本有差异（serialNo），就会导致整个系统失败。 <a target="_blank" rel="noopener" href="https://github.com/alexxiyang/shiro-redis/issues/78">https://github.com/alexxiyang/shiro-redis/issues/78</a></li>
+<li>class一旦上线，就不能改变包名或位置，否则无法序列号。 <a target="_blank" rel="noopener" href="https://www.cnblogs.com/technologykai/p/10097167.html">https://www.cnblogs.com/technologykai/p/10097167.html</a></li>
+</ul>
+<h2 id="Redis应用场景"><a href="#Redis应用场景" class="headerlink" title="Redis应用场景"></a>Redis应用场景</h2><p>Redis比较适合的一些应用场景：</p>
+<h4 id="1-取最新N个数据的操作"><a href="#1-取最新N个数据的操作" class="headerlink" title="1.取最新N个数据的操作"></a>1.取最新N个数据的操作</h4><p>比如典型的取你网站的最新文章，通过下面方式，我们可以将最新的5000条评论的ID放在Redis的List集合中，并将超出集合部分从数据库获取</p>
+<ul>
+<li> 使用LPUSH latest.comments<ID>命令，向 list 集合中插入数据</li>
+<li> 插入完成后再用LTRIM latest.comments 0 5000命令使其永远只保存最近5000个ID</li>
+<li>然后我们在客户端获取某一页评论时可以用下面的逻辑（伪代码）</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">FUNCTION get_latest_comments(start,num_items):   </span><br><span class="line">     id_list = redis.lrange(<span class="string">&quot;latest.comments&quot;</span>,start,start+num_items-<span class="number">1</span>)    </span><br><span class="line">     IF id_list.length &lt; num_items        </span><br><span class="line">          id_list = SQL_DB(<span class="string">&quot;SELECT ... ORDER BY time LIMIT ...&quot;</span>)    </span><br><span class="line">     END    </span><br><span class="line">     RETURN id_list</span><br><span class="line">END</span><br></pre></td></tr></table></figure>
+<p>如果你还有不同的筛选维度，比如某个分类的最新N条，那么你可以再建一个按此分类的List，只存ID的话，Redis是非常高效的。</p>
+<h4 id="2-排行榜应用，取TOP-N操作"><a href="#2-排行榜应用，取TOP-N操作" class="headerlink" title="2.排行榜应用，取TOP N操作"></a>2.排行榜应用，取TOP N操作</h4><p>这个需求与上面需求的不同之处在于，前面操作以时间为权重，这个是以某个条件为权重，比如按顶的次数排序，这时候就需要我们的sorted set出马了，将你要排序的值设置成sortedset的score，将具体的数据设置成相应的value，每次只需要执行一条ZADD命令即可。</p>
+<h4 id="3-需要精准设定过期时间的应用"><a href="#3-需要精准设定过期时间的应用" class="headerlink" title="3.需要精准设定过期时间的应用"></a>3.需要精准设定过期时间的应用</h4><p>比如你可以把上面说到的sorted set的score值设置成过期时间的时间戳，那么就可以简单地通过过期时间排序，定时清除过期数据了，不仅是清除Redis中的过期数据，你完全可以把 Redis里这个过期时间当成是对数据库中数据的索引，用Redis来找出哪些数据需要过期删除，然后再精准地从数据库中删除相应的记录。</p>
+<h4 id="4-计数器应用"><a href="#4-计数器应用" class="headerlink" title="4.计数器应用"></a>4.计数器应用</h4><p>Redis的命令都是原子性的，你可以轻松地利用INCR，DECR命令来构建计数器系统。</p>
+<h4 id="5-Uniq操作，获取某段时间所有数据排重值"><a href="#5-Uniq操作，获取某段时间所有数据排重值" class="headerlink" title="5.Uniq操作，获取某段时间所有数据排重值"></a>5.Uniq操作，获取某段时间所有数据排重值</h4><p>这个使用Redis的set数据结构最合适了，只需要不断地将数据往set中扔就行了，set意为集合，所以会自动排重。</p>
+<h4 id="6-实时系统，反垃圾系统"><a href="#6-实时系统，反垃圾系统" class="headerlink" title="6.实时系统，反垃圾系统"></a>6.实时系统，反垃圾系统</h4><p>通过上面说到的set功能，你可以知道一个终端用户是否进行了某个操作，可以找到其操作的集合并进行分析统计对比等。没有做不到，只有想不到。</p>
+<h4 id="7-Pub-Sub构建实时消息系统"><a href="#7-Pub-Sub构建实时消息系统" class="headerlink" title="7.Pub/Sub构建实时消息系统"></a>7.Pub/Sub构建实时消息系统</h4><p>Redis的Pub/Sub系统可以构建实时的消息系统，比如很多用Pub/Sub构建的实时聊天系统的例子。</p>
+<h4 id="8-构建队列系统"><a href="#8-构建队列系统" class="headerlink" title="8.构建队列系统"></a>8.构建队列系统</h4><p>使用list可以构建队列系统，使用sorted set甚至可以构建有优先级的队列系统。</p>
+<h4 id="9-缓存"><a href="#9-缓存" class="headerlink" title="9.缓存"></a>9.缓存</h4><p>这个不必说了，性能优于Memcached，数据结构更多样化。</p>
+<p>转自: <a target="_blank" rel="noopener" href="http://blog.nosqlfan.com/html/2235.html?ref=rediszt">http://blog.nosqlfan.com/html/2235.html?ref=rediszt</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2021/06/28/architecture/Redis%E7%9F%A5%E8%AF%86/" data-id="ckqg285ty002arcfpepqx52ex" data-title="" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2021/06/28/architecture/Sharding-JDBC/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          (no title)
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2021/06/28/architecture/Python%E7%88%AC%E8%99%AB%E6%A1%86%E6%9E%B6scrapy/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title"></div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/06/">June 2021</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2021/06/28/product/%E9%9C%80%E6%B1%82%E8%B0%83%E7%A0%94%E7%9A%84%E5%86%85%E5%AE%B9%E5%92%8C%E5%B7%A5%E4%BD%9C%E6%8C%87%E5%BC%95/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2021/06/28/product/%E9%93%81%E8%B7%AF6C%E4%B8%9A%E5%8A%A1%E7%BB%93%E6%9E%84/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2021/06/28/product/%E9%9C%80%E6%B1%82%E8%B0%83%E7%A0%94%E5%8F%8A%E5%88%86%E6%9E%90%E6%96%B9%E6%B3%95/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2021/06/28/product/%E6%B0%B4%E7%94%B5%E7%AB%99%E7%94%9F%E4%BA%A7%E8%BF%90%E8%A1%8C%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2021/06/28/product/%E6%B0%B4%E7%94%B5%E5%8E%82%E8%BF%90%E8%A1%8C%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F/">(no title)</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2021 John Doe<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.4.1.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

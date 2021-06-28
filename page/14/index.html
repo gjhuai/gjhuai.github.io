@@ -1,0 +1,881 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta property="og:type" content="website">
+<meta property="og:title" content="Hexo">
+<meta property="og:url" content="http://example.com/page/14/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:locale" content="en_US">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main">
+  
+    <article id="post-architecture/王涛_金融行业中的大数据应用" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2021/06/28/architecture/%E7%8E%8B%E6%B6%9B_%E9%87%91%E8%9E%8D%E8%A1%8C%E4%B8%9A%E4%B8%AD%E7%9A%84%E5%A4%A7%E6%95%B0%E6%8D%AE%E5%BA%94%E7%94%A8/" class="article-date">
+  <time class="dt-published" datetime="2021-06-28T03:26:10.864Z" itemprop="datePublished">2021-06-28</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p><a target="_blank" rel="noopener" href="http://www.infoq.com/cn/presentations/big-data-applications-in-financial-industry">http://www.infoq.com/cn/presentations/big-data-applications-in-financial-industry</a></p>
+<p>[TOC]</p>
+<h1 id="大数据技术"><a href="#大数据技术" class="headerlink" title="大数据技术"></a>大数据技术</h1><h2 id="Hadoop"><a href="#Hadoop" class="headerlink" title="Hadoop"></a>Hadoop</h2><p>Hadoop的13个基本框架</p>
+<h2 id="Spark：分布式内存计算框架"><a href="#Spark：分布式内存计算框架" class="headerlink" title="Spark：分布式内存计算框架"></a>Spark：分布式内存计算框架</h2><p>Spark特点</p>
+<h2 id="新一代数据库分类"><a href="#新一代数据库分类" class="headerlink" title="新一代数据库分类"></a>新一代数据库分类</h2><ul>
+<li>K/V</li>
+<li>宽表/列存储</li>
+<li>文档</li>
+<li>图数据库</li>
+</ul>
+<h1 id="SequoiaDB"><a href="#SequoiaDB" class="headerlink" title="SequoiaDB"></a>SequoiaDB</h1><p>SequoiaDB 特点</p>
+<ul>
+<li>用JSON 统一存储非结构化/ 半结构化和结构化数据</li>
+<li>不依赖于Hadoop,  但同时融合SQL/Hadoop/Spark</li>
+<li>擅长在线实时查询和离线统计分析</li>
+<li>支持交易事务,  但不擅长OLTP</li>
+<li>简化大数据技术堆栈</li>
+</ul>
+<p><img src="_v_images/2019-11-29-17-42-19.png"></p>
+<h1 id="典型场景"><a href="#典型场景" class="headerlink" title="典型场景"></a>典型场景</h1><h2 id="1-历叱全量数据的利用"><a href="#1-历叱全量数据的利用" class="headerlink" title="1.历叱全量数据的利用"></a>1.历叱全量数据的利用</h2><h2 id="2-海量非结构化数据的低成本存储"><a href="#2-海量非结构化数据的低成本存储" class="headerlink" title="2.海量非结构化数据的低成本存储"></a>2.海量非结构化数据的低成本存储</h2><h2 id="3-创新应用中的数据灵活管理"><a href="#3-创新应用中的数据灵活管理" class="headerlink" title="3.创新应用中的数据灵活管理"></a>3.创新应用中的数据灵活管理</h2><h2 id="4-宠户实时精准营销（客户画像）"><a href="#4-宠户实时精准营销（客户画像）" class="headerlink" title="4.宠户实时精准营销（客户画像）"></a>4.宠户实时精准营销（客户画像）</h2>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2021/06/28/architecture/%E7%8E%8B%E6%B6%9B_%E9%87%91%E8%9E%8D%E8%A1%8C%E4%B8%9A%E4%B8%AD%E7%9A%84%E5%A4%A7%E6%95%B0%E6%8D%AE%E5%BA%94%E7%94%A8/" data-id="ckqg285uj003hrcfp5ud6h5sk" data-title="" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-architecture/渐进式图片流式传输" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2021/06/28/architecture/%E6%B8%90%E8%BF%9B%E5%BC%8F%E5%9B%BE%E7%89%87%E6%B5%81%E5%BC%8F%E4%BC%A0%E8%BE%93/" class="article-date">
+  <time class="dt-published" datetime="2021-06-28T03:26:10.863Z" itemprop="datePublished">2021-06-28</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h2 id="渐进式图片流式传输"><a href="#渐进式图片流式传输" class="headerlink" title="渐进式图片流式传输"></a>渐进式图片流式传输</h2><h3 id="一、渐进式图片"><a href="#一、渐进式图片" class="headerlink" title="一、渐进式图片"></a>一、渐进式图片</h3><ul>
+<li>JPG图片支持两种编码方式：基线式（Baseline）和渐进式（Progressive）。</li>
+<li>渐进式在编码的时候，要多次扫描图片，计算开销大约是基线式的3到5倍。但是比起Google 的 WebP 图片格式编码 8-10倍开销还是小得很多。</li>
+<li>基线式与渐进式两者编码出来的文件大小基本相同</li>
+<li>基线式的编码方式是图片从上到下，从左到右地进行处理和编码。</li>
+<li>渐进式编码方式是先全局后局部，先轮廓再细节的编码方法。</li>
+<li>渐进式图片编码特性，可以被用来有选择性地控制传输的数据量，提高传输的成功率。</li>
+<li>除了JPEG支持渐进式编码格式，其它比如 WebP、HEVC在设计上也都支持渐进式的。</li>
+</ul>
+<h3 id="二、流式传输"><a href="#二、流式传输" class="headerlink" title="二、流式传输"></a>二、流式传输</h3><ul>
+<li>数据像流水一样在网络中传输，通信双方在数据传输进行的过程中就即时处理，而不是等全部数据接收完毕再处理。</li>
+<li>VS 整体的文件传输，图片分片传输。</li>
+</ul>
+<h3 id="三、图片最小传输长度"><a href="#三、图片最小传输长度" class="headerlink" title="三、图片最小传输长度"></a>三、图片最小传输长度</h3><ul>
+<li>对渐进式图片传输的数据有一个最低长度要求，保证收到的图片基本可用，称这个长度为图片最小传输长度（MinimalTransport Size）。</li>
+<li>发送方只要发送图片的最小传输长度，即可向用户展示发送成功，然后转到后台尽量把完整数据发送完毕。</li>
+</ul>
+<p>参考：<a target="_blank" rel="noopener" href="http://mp.weixin.qq.com/s?src=3&timestamp=1490954714&ver=1&signature=cOaIC8LeZ7x1h-8*nR35Gib7vU*ibCzA8SSURam4gu0VgpoLXO6O3Y7TtzuBJp0A7tf5ZlUYC*gwf*zFeVstHRf2mNPRAdQHK*Ptg4DPad-FzxSFd6*EoxKwqR9aGgL8ck9rh3Waocq3vnewF3srZmYFZ1-dsUFNI11TE6uBzc0=">微信图片优化之秘：C2C渐进式图片流式传输系统</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2021/06/28/architecture/%E6%B8%90%E8%BF%9B%E5%BC%8F%E5%9B%BE%E7%89%87%E6%B5%81%E5%BC%8F%E4%BC%A0%E8%BE%93/" data-id="ckqg285ui003grcfp28b4eeuh" data-title="" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-architecture/深入理解Java虚拟机2nd：JVM高级特性与最佳实践" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2021/06/28/architecture/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3Java%E8%99%9A%E6%8B%9F%E6%9C%BA2nd%EF%BC%9AJVM%E9%AB%98%E7%BA%A7%E7%89%B9%E6%80%A7%E4%B8%8E%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/" class="article-date">
+  <time class="dt-published" datetime="2021-06-28T03:26:10.862Z" itemprop="datePublished">2021-06-28</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="第2章-Java内存区域与内存溢出异常"><a href="#第2章-Java内存区域与内存溢出异常" class="headerlink" title="第2章 Java内存区域与内存溢出异常"></a>第2章 Java内存区域与内存溢出异常</h1><h2 id="2-2-运行时数据区域"><a href="#2-2-运行时数据区域" class="headerlink" title="2.2 运行时数据区域"></a>2.2 运行时数据区域</h2><p><img src="_v_images/2020-04-03-09-49-30.png"></p>
+<h3 id="2-2-1-程序计数器（Program-Counter-Register）"><a href="#2-2-1-程序计数器（Program-Counter-Register）" class="headerlink" title="2.2.1 程序计数器（Program Counter Register）"></a>2.2.1 程序计数器（Program Counter Register）</h3><ul>
+<li>较小的内存空间</li>
+<li>字节码的行号指示器</li>
+<li>“线程私有”</li>
+<li>无OutOfMemoryError情况</li>
+</ul>
+<h3 id="2-2-2-Java虚拟机栈"><a href="#2-2-2-Java虚拟机栈" class="headerlink" title="2.2.2  Java虚拟机栈"></a>2.2.2  Java虚拟机栈</h3><ul>
+<li>线程私有，生命周期与线程相同</li>
+<li>方法的调用过程对应着一个栈帧（Stack Frame）在虚拟机栈中入栈到出栈的过程</li>
+<li>栈帧存储方法的局部变量表、操作数栈、动态链接、方法出口等信息</li>
+<li>局部变量表存放了编译期可知的各种基木数据类型、对象引用(reference)、returnAddress类型</li>
+<li>局部变量表所需的内存空间在编译期间已经确定</li>
+<li>两种异常状况：<ul>
+<li>如果线程请求的栈深度大于虚拟机所允许的深度，将抛出StackOverflowError异常</li>
+<li>如果虚拟机栈可以动态扩展，如果扩展时无法申请到足够的内存，就会抛出OutOfMemoryError异常</li>
+</ul>
+</li>
+</ul>
+<h3 id="2-2-3-本地方法栈（Native-Method-Stack）"><a href="#2-2-3-本地方法栈（Native-Method-Stack）" class="headerlink" title="2.2.3 本地方法栈（Native Method Stack）"></a>2.2.3 本地方法栈（Native Method Stack）</h3><ul>
+<li>类似虚拟机栈，为调用Native方法服务</li>
+<li>也会抛出StackOverflowError和OutOfMemoryError异常</li>
+</ul>
+<h3 id="2-2-4-Java堆（heap）"><a href="#2-2-4-Java堆（heap）" class="headerlink" title="2.2.4 Java堆（heap）"></a>2.2.4 Java堆（heap）</h3><ul>
+<li>被所有线程共享的一块大内存</li>
+<li>所有的对象实例以及数组都要在堆上分配</li>
+<li>堆是垃圾收集器管理的主要区域</li>
+<li>物理上不连续、逻辑上是连续的即可</li>
+<li>如果在堆中没有内存完成实例分配，并且堆也无法再扩展时，将会她出OutOfMemoryError异常</li>
+</ul>
+<h3 id="2-2-5-方法区（Method-Area-Non-Heap）"><a href="#2-2-5-方法区（Method-Area-Non-Heap）" class="headerlink" title="2.2.5 方法区（Method Area, Non-Heap）"></a>2.2.5 方法区（Method Area, Non-Heap）</h3><ul>
+<li>被所有线程共享</li>
+<li>存储类信息、常量、静态变量、JIT编译后的代码等</li>
+<li>为堆的一个逻辑部分</li>
+<li>可以不实现垃圾收集，这区域的内存回收目标主要是针对常量池的回收和对类型的卸载</li>
+</ul>
+<h3 id="2-2-6-运行时常量池（Runtime-Constant-Pool）"><a href="#2-2-6-运行时常量池（Runtime-Constant-Pool）" class="headerlink" title="2.2.6 运行时常量池（Runtime Constant Pool）"></a>2.2.6 运行时常量池（Runtime Constant Pool）</h3><ul>
+<li>存放各种字面量和符号引用</li>
+<li>运行期间也可能将新的常量放人池中</li>
+</ul>
+<h3 id="2-2-7-直接内存"><a href="#2-2-7-直接内存" class="headerlink" title="2.2.7 直接内存"></a>2.2.7 直接内存</h3><ul>
+<li>不是虚拟机运行时数据区的一部分</li>
+<li>超过物理内存的限制，可导致OutOfMemoryError异常</li>
+<li>NIO的DirectByteBuffer对象直接操作这块内存的引用</li>
+<li>设置-Xmx</li>
+</ul>
+<h2 id="2-3-HotSpot虚拟机对象探秘"><a href="#2-3-HotSpot虚拟机对象探秘" class="headerlink" title="2.3  HotSpot虚拟机对象探秘"></a>2.3  HotSpot虚拟机对象探秘</h2>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2021/06/28/architecture/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3Java%E8%99%9A%E6%8B%9F%E6%9C%BA2nd%EF%BC%9AJVM%E9%AB%98%E7%BA%A7%E7%89%B9%E6%80%A7%E4%B8%8E%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/" data-id="ckqg285uh003frcfpbd1i9aox" data-title="" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-architecture/深入理解Java内存模型" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2021/06/28/architecture/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3Java%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B/" class="article-date">
+  <time class="dt-published" datetime="2021-06-28T03:26:10.861Z" itemprop="datePublished">2021-06-28</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h2 id="深入理解Java内存模型"><a href="#深入理解Java内存模型" class="headerlink" title="深入理解Java内存模型"></a>深入理解Java内存模型</h2><p><a target="_blank" rel="noopener" href="https://www.infoq.cn/article/java_memory_model">深入理解 Java 内存模型(书)</a><br><a target="_blank" rel="noopener" href="https://www.infoq.cn/article/java-memory-model-1">深入理解 Java 内存模型（一）——基础</a><br><a target="_blank" rel="noopener" href="https://www.infoq.cn/article/java-memory-model-2">深入理解 Java 内存模型（二）——重排序</a><br><a target="_blank" rel="noopener" href="https://www.infoq.cn/article/java-memory-model-3">深入理解 Java 内存模型（三）——顺序一致性</a><br><a target="_blank" rel="noopener" href="https://www.infoq.cn/article/java-memory-model-4">深入理解 Java 内存模型（四）——volatile</a><br><a target="_blank" rel="noopener" href="https://www.infoq.cn/article/java-memory-model-5">深入理解 Java 内存模型（五）——锁</a><br><a target="_blank" rel="noopener" href="https://www.infoq.cn/article/java-memory-model-6">深入理解 Java 内存模型（六）——final</a><br><a target="_blank" rel="noopener" href="https://www.infoq.cn/article/java-memory-model-7">深入理解 Java 内存模型（七）——总结</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2021/06/28/architecture/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3Java%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B/" data-id="ckqg285uh003ercfp3b3hgtq1" data-title="" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-architecture/权限管理模型" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2021/06/28/architecture/%E6%9D%83%E9%99%90%E7%AE%A1%E7%90%86%E6%A8%A1%E5%9E%8B/" class="article-date">
+  <time class="dt-published" datetime="2021-06-28T03:26:10.860Z" itemprop="datePublished">2021-06-28</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="1-概述"><a href="#1-概述" class="headerlink" title="1 概述"></a>1 概述</h1><p>各行各业中企业的管理方式千差万别、且纷繁复杂，权限管理设计往往迷失在这种复杂的关系中。而由于企业所在行业和管理方式差别，导致不可能拥有一个统一的模型能满足所有企业的权限管理需求。处理企业特殊的复杂的行政管理关系、建立理想权限模型方式是以RBAC模型为基础，在其上面作一些扩展来实现。这种方式的难点是理清行政管理关系不容易，理不清则建立权限模型也会不合理。</p>
+<h1 id="2-基于RBAC权限模型"><a href="#2-基于RBAC权限模型" class="headerlink" title="2  基于RBAC权限模型"></a>2  基于RBAC权限模型</h1><p>这篇文章对RBAC权限模型描述的比较清楚： <a target="_blank" rel="noopener" href="http://www.woshipm.com/pd/440765.html">RBAC权限管理模型：基本模型及角色模型解析及举例</a>  。</p>
+<p>RBAC权限管理模型有四种，分别是RBAC0，RBAC1，RBAC2，RBAC3。它们的区别是 RBAC1有继承关系，RBAC2 对用户、角色和权限三者之间增加了一些限制，RBAC3=RBAC1+RBAC2。</p>
+<p>最常用的是RBAC0，其次是RBAC1。现实业务中除了有特殊的要求，否则最好前两种基础上进行扩展，例如：增加Group支持。</p>
+<h2 id="2-1-RBAC-Group"><a href="#2-1-RBAC-Group" class="headerlink" title="2.1 RBAC+Group"></a>2.1 RBAC+Group</h2><p><img src="_v_images/2019-11-29-18-01-41.png"></p>
+<h1 id="3-RBAC与组织机构的结合"><a href="#3-RBAC与组织机构的结合" class="headerlink" title="3  RBAC与组织机构的结合"></a>3  RBAC与组织机构的结合</h1><p>RBAC是一个理想的模型，而企业的组织机构和管理方式各不相同，必须把RBAC模型和企业组织模型抽象融合在一起，才能适应企业业务需求。 这篇文章对非矩阵型结构的企业的权限模型做了详细描述：<a target="_blank" rel="noopener" href="http://blog.sina.com.cn/s/blog_6df370b70100u8zj.html">统一权限管理与组织机构的结合（缩水版）</a></p>
+<blockquote>
+<p>岗位的层次表明了不仅在某个组织下的岗位有层次，实际所有岗位组成一颗完整的岗位树，都是树状层次结构中的节点。这是由于每个岗位都有直接上级，也就是他汇报工作的对象。</p>
+</blockquote>
+<blockquote>
+<p>给部门分配权限和给岗位分配权限是有区别的。由于用户必须隶属于岗位，而岗位隶属于部门，部门的权限用户是不能继承的，部门的权限用来影响岗位权限。部门内的岗位权限不可超出部门权限，并且部门权限可分为通用权限（部门内岗位可自动继承）和特定权限（必须分配到具体岗位）。这样也可以实现分级的权限管理，由总管理员给部门分配权限，然后各部门管理员 给本部门岗位分配权限。类似的我们也可以给职务分配权限，职务的权限将自动被关联此职务的岗位获得。</p>
+</blockquote>
+<blockquote>
+<p>在 基于角色的权限模型中，我们给角色分配权限，给用户分配角色，而在组织模型中，我们也需要给组织和岗位分配权限，给用户分配岗位，对比可发现两个模型结合的关键就在岗位和角色的关系上。处理岗位和角色的关系有合并和映射两种方法。</p>
+</blockquote>
+<blockquote>
+<p>由于大部分的角色就是基于实际的岗位或者职务生成的，因此可以将岗位和角色合而为 一，用组织模型的岗位同时表示权限模型的角色概念，直接给岗位、组织、职务分配权限。</p>
+</blockquote>
+<p><img src="_v_images/2019-11-29-18-02-02.png"></p>
+<h2 id="3-1-Role映射到岗位还是职务？"><a href="#3-1-Role映射到岗位还是职务？" class="headerlink" title="3.1 Role映射到岗位还是职务？"></a>3.1 Role映射到岗位还是职务？</h2><p><strong>问题：</strong><br>如下图所示的组织结构，在流程引擎中配置一个同时适用于研发1、2部请假审批流程，流程需要研发部门经理审批， 如果 该审批人设置成某一个部门经理的Role（表示岗位），那么流程只能用于其中这个部门。而另一个部门必须再配置一个同样的流程。流程一样而不能复用，这是不合理的。</p>
+<p><img src="_v_images/2019-11-29-18-02-13.png"></p>
+<p><strong>解决办法</strong><br>方法一、将参与者设置成职务，列出该职务对应的岗位负责人，让用户选择审批人。<br>方法二、将参与者设置成职务，通过计算请假人所在部门，通过部门在程序中自动确定审批人。</p>
+<p>所以，是否可以采用如下设计（不一定合理）：一种更灵活方式是，将Role映射到职务，在控制资源、菜单分配权限时，完全满足需求。当涉及到数据权限时（如：研发1部只能看1部的数据），可以将职务结合人员、数据的所属部门来控制权限。</p>
+<h2 id="3-2-简单数据权限如何融入其中？"><a href="#3-2-简单数据权限如何融入其中？" class="headerlink" title="3.2 简单数据权限如何融入其中？"></a>3.2 简单数据权限如何融入其中？</h2><p><strong>问题</strong>：</p>
+<ul>
+<li>用户如何只查看本部门的数据？</li>
+<li>用户如何查看跨部门的数据？</li>
+</ul>
+<p><strong>方案</strong>：<br>所谓简单数据权限管理是满足各个部门人员只能操作本部门的数据，只有在授权的情况下才能操作其他部门的数据。<br>资源权限的控制方式是给资源加上标识，将此标识分配给Role，然后将Role分配给User，实现权限控制。（resource-&gt;role-user）<br>简单的数据权限控制亦可以借鉴这种方式，为每一条数据加上标识（部门Id），将此标识分配给Role，从而实现数据资源控制；同时，由于此标识是部门Id，直接可以通过User的部门Id来判断是否有操作数据的权限。</p>
+<p><strong>待解决的问题</strong>：</p>
+<ul>
+<li>除了数据权限外，如何控制有效期限、可用额度、适用品种等等。</li>
+</ul>
+<h1 id="4-需求分析"><a href="#4-需求分析" class="headerlink" title="4 需求分析"></a>4 需求分析</h1><h2 id="4-1-RBAC要解决的问题"><a href="#4-1-RBAC要解决的问题" class="headerlink" title="4.1 RBAC要解决的问题"></a>4.1 RBAC要解决的问题</h2><ul>
+<li>如何对一个部门的人员<strong>批量授权</strong>？</li>
+<li>如何管理多个系统的角色、如何授权、如何鉴权？</li>
+<li>如何解决同一Role的用户，具有相同的功能权限，但是他们的数据操作权限不同的问题？</li>
+<li>“经理”可以查看、审批“普通员工”的工作报告，而“普通员工”只能查看、编辑自己的工作报告。如何控制？</li>
+<li>人员部门调动、职称发生变化，其权限如何自动变化？</li>
+<li>如何分级授权？</li>
+<li>如何 适应信息系统和用户数量增加、信息系统功能升级、公司组织变动及岗位调整、业务权限审核人员变动等情况？</li>
+<li>如何 信息留痕：所有权限申请审批、设置、变更记录需要留痕，要做到可检查、可追踪？</li>
+<li>用户申请权限如何审批？</li>
+<li>如何实现角色-权限配置、用户-角色配置分离管理？</li>
+</ul>
+<p>可参考附件《基于RBAC的用户权限管理的设计与实现》</p>
+<h2 id="4-2-GM权限管理要解决的问题"><a href="#4-2-GM权限管理要解决的问题" class="headerlink" title="4.2 GM权限管理要解决的问题"></a>4.2 GM权限管理要解决的问题</h2><ul>
+<li>角色是按组织、职务方式来管理，还是按照系统来管理？系统间的角色有共用的吗？</li>
+<li>org+role = 岗位？岗位能确定到人，Role是职务，不能确定到人。</li>
+<li>为用户分配角色的权限、业务功能权限是否需要分离？</li>
+<li>开发人员以plugin方式开发、以system方式发布。</li>
+</ul>
+<h1 id="5-多系统的统一权限管理"><a href="#5-多系统的统一权限管理" class="headerlink" title="5 多系统的统一权限管理"></a>5 多系统的统一权限管理</h1><p>多系统统一权限管理需要解决的问题：</p>
+<ul>
+<li>建立统一的组织机构、人员、用户的管理</li>
+<li>提供统一的多系统、多终端的单点登录入口</li>
+<li>提供统一的授权管理，即各系统不提供授权管理，有统一授权平台来授权</li>
+<li>提供统一的权限校验方式</li>
+<li>支持分级授权</li>
+</ul>
+<p>可参考附件：《医院信息系统分级授权管理机制的研究和设计》</p>
+<p>根据自己项目的经验，有两点建议吧：<br>1、实时跨系统校验不是一个好的方案，最好在各业务子系统做授权信息的缓存，由统一权限中心往各业务系统推送权限信息，子系统通过统一权限中心服务提供的jar包来管理缓存以及进行访问认证。这样权限系统服务响应慢或者不可用，或者升级等不会影响下游子系统的稳定运行。</p>
+<h1 id="6-待解决的问题"><a href="#6-待解决的问题" class="headerlink" title="6 待解决的问题"></a>6 待解决的问题</h1><ul>
+<li>Saas架构的权限管理如何设计？</li>
+<li>针对金融等对安全要求很高行业的权限模型如何设计？</li>
+</ul>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ul>
+<li> <a target="_blank" rel="noopener" href="http://www.woshipm.com/pd/440765.html">RBAC权限管理模型：基本模型及角色模型解析及举例</a>  </li>
+<li><a target="_blank" rel="noopener" href="http://blog.sina.com.cn/s/blog_6df370b70100u8zj.html">统一权限管理与组织机构的结合（缩水版）</a></li>
+<li><a target="_blank" rel="noopener" href="http://blog.csdn.net/u011529563/article/details/12648345"> 多站点整合—单点登录简单方案 </a></li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2021/06/28/architecture/%E6%9D%83%E9%99%90%E7%AE%A1%E7%90%86%E6%A8%A1%E5%9E%8B/" data-id="ckqg285ue003crcfp4dkn7mck" data-title="" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-architecture/流程引擎选型" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2021/06/28/architecture/%E6%B5%81%E7%A8%8B%E5%BC%95%E6%93%8E%E9%80%89%E5%9E%8B/" class="article-date">
+  <time class="dt-published" datetime="2021-06-28T03:26:10.860Z" itemprop="datePublished">2021-06-28</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h2 id="国产原创"><a href="#国产原创" class="headerlink" title="国产原创"></a>国产原创</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://github.com/snakerflow/snakerflow">snakerflow </a>  star 451 , fork 329<br>Snaker是一个基于Java的轻量级工作流引擎，适用于企业应用中常见的业务流程。本着轻量、简单、灵巧理念设计，定位于简单集成，多环境支持。<br>轻量: snaker-core.jar大小208K，代码行数约7000行，强大的扩展支持，不依赖于具体的ORM框架<br>简单: 表设计简单，流程组件简单[start/end/task/custom/subprocess/decision/fork/join]<br>灵巧: 暴露大量可扩展接口，支持流程设计器、流程引擎的组件模型自定义</li>
+</ul>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://github.com/fixteam/fixflow">fixflow</a>   star 442, fork 262<br>Fixflow是一款开源的基于BPMN2.0标准的工作流引擎,引擎底层直接支持BPMN2.0国际标准, 吸纳了 jBPM3 、 Activiti5、BonitaBPM 等国际开源流程引擎的精髓, 同时提供了强大的中国式流程流转处理,引擎采用微内核+插件形式设计,提供灵活的扩展模式, 建模采用基于BPMN2.0标准的Eclipse设计器和基于Web的流程设计器,不仅仅为审批流程提供了解决方案, 同时还为复杂业务流程编排提供了强大的支持。<br>FixFLow本身并不具备完整的开发平台功能,它的定位是专门用于集成到现有系统的引擎。</li>
+</ul>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://gitee.com/youseries/uflo">UFLO</a>    star 244, fork 99<br>UFLO2是一款纯Java流程引擎，它架构于Spring、Hibernate之上，提供诸如并行、动态并行、串行、会签等各种常见及不常见的业务流程流转功能，支持单机或集群部署；UFLO2采用全新的基于网页的流程模版设计器，打开网页即可完成流程模版的设计与制作。<br>不是特别完善，不是标准BMPN，功能不全。</li>
+</ul>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://gitee.com/opencc/JFlow">JFlow</a><br>驰骋工作流引擎研发与2003年，具有.net与java两个版本，这两个版本代码结构，数据库结构，设计思想，功能组成， 操作手册，完全相同。 导入导出的流程模版，表单模版两个版本完全通用。<br>功能比较全， 代码不清晰，难以嵌入到已有项目中 。</li>
+</ul>
+<h2 id="基于Activiti定制"><a href="#基于Activiti定制" class="headerlink" title="基于Activiti定制"></a>基于Activiti定制</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://github.com/bluejoe2008/openwebflow">openwebflow</a>   star 460<br>基于Activiti的工作流引擎扩展，接管了Activiti对活动权限以及用户表的管理，并提供了催办、代办、加签（包括前加签/后加签）、自由跳转、分裂节点等功能</li>
+</ul>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://github.com/zhijund/jund-workflow">jund-workflow</a>   star 43<br>基于Activiti5 定制化中国式工作流系统，定制化的流程设计器，添加自定义属性。</li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2021/06/28/architecture/%E6%B5%81%E7%A8%8B%E5%BC%95%E6%93%8E%E9%80%89%E5%9E%8B/" data-id="ckqg285ug003drcfph20vfkh0" data-title="" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-architecture/时间序列数据库" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2021/06/28/architecture/%E6%97%B6%E9%97%B4%E5%BA%8F%E5%88%97%E6%95%B0%E6%8D%AE%E5%BA%93/" class="article-date">
+  <time class="dt-published" datetime="2021-06-28T03:26:10.858Z" itemprop="datePublished">2021-06-28</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>[TOC]</p>
+<h2 id="阅读参考"><a href="#阅读参考" class="headerlink" title="阅读参考"></a>阅读参考</h2><p><a target="_blank" rel="noopener" href="http://blog.csdn.net/guanhui1997/article/details/72840769">工业大数据漫谈12：实时数据库与时序数据库</a></p>
+<p><a target="_blank" rel="noopener" href="http://liubin.org/blog/2016/02/18/tsdb-intro/">时序列数据库武斗大会之什么是TSDB</a><br><a target="_blank" rel="noopener" href="http://liubin.org/blog/2016/02/25/tsdb-list-part-1/">时序列数据库武斗大会之TSDB名录 Part 1</a><br><a target="_blank" rel="noopener" href="http://liubin.org/blog/2016/03/01/tsdb-list-part-2/">时序列数据库武斗大会之TSDB名录 Part 2</a><br><a target="_blank" rel="noopener" href="http://blog.fatedier.com/2016/07/06/test-influxdb-and-opentsdb/">InfluxDB 与 OpenTSDB 对比测试</a></p>
+<h2 id="InfluxDB"><a href="#InfluxDB" class="headerlink" title="InfluxDB"></a>InfluxDB</h2><p><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/e1e4326f3bf0">influxdb写入数据遇到的错误</a><br><a target="_blank" rel="noopener" href="http://docs.influxdata.com/influxdb/v1.6/introduction/getting-started/">Getting started with InfluxDB OSS</a><br><a target="_blank" rel="noopener" href="https://blog.csdn.net/eric_sunah/article/details/76274188">InfluxDB使用总结与性能优化</a><br><a target="_blank" rel="noopener" href="https://blog.csdn.net/marksinoberg/article/details/79339140">influxDB与Grafana初体验</a></p>
+<p><a target="_blank" rel="noopener" href="https://hub.docker.com/_/influxdb/">InfluDB docker install</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2021/06/28/architecture/%E6%97%B6%E9%97%B4%E5%BA%8F%E5%88%97%E6%95%B0%E6%8D%AE%E5%BA%93/" data-id="ckqg285ud003arcfp68ar8po1" data-title="" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-architecture/明略大数据项目实践分享" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2021/06/28/architecture/%E6%98%8E%E7%95%A5%E5%A4%A7%E6%95%B0%E6%8D%AE%E9%A1%B9%E7%9B%AE%E5%AE%9E%E8%B7%B5%E5%88%86%E4%BA%AB/" class="article-date">
+  <time class="dt-published" datetime="2021-06-28T03:26:10.858Z" itemprop="datePublished">2021-06-28</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="问题1-关系数据库到Hadoop-的增量同步"><a href="#问题1-关系数据库到Hadoop-的增量同步" class="headerlink" title="问题1. 关系数据库到Hadoop 的增量同步"></a>问题1. 关系数据库到Hadoop 的增量同步</h1><ul>
+<li>开源的方案-Sqoop<ul>
+<li>基于自增主键的增量同步<pre><code>要求主键自增，且主键丌会被更新
+</code></pre>
+</li>
+<li>基于最新更新时间戳的增量同步<pre><code>要求表中含有最后更新时间戳字段
+</code></pre>
+</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li>不足之处<ul>
+<li> 数据源丌一定都满足使用场景</li>
+<li> 性能损失，每次重做数据</li>
+<li> 数据丌一致，主键更新时导致数据丌一致</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li>我们的增强方案<ul>
+<li> 基于数据库操作日志的实时增量数据同步方案</li>
+</ul>
+</li>
+</ul>
+<p><img src="_v_images/2019-11-29-17-27-46.png"></p>
+<ul>
+<li>优势<ul>
+<li> 数据秒级同步</li>
+<li> 性能消耗低，目标数据无需重做</li>
+<li> 数据一致性好，支持主键更新</li>
+<li> 试用场景多，叧要求源表有主键戒唯一索引</li>
+</ul>
+</li>
+</ul>
+<h1 id="问题2-数据权限需求"><a href="#问题2-数据权限需求" class="headerlink" title="问题2.数据权限需求"></a>问题2.数据权限需求</h1><ul>
+<li>简单粗暴<br> 为每个权限需求新做数据<br> 数据冗余<br> 笨重丌灵活</li>
+</ul>
+<ul>
+<li>Hive权限管理 + View<br> 可能会有非常多的view需要迚行管理<br> 可能成千上万的企业用户映射到Hive用户<br> 丌能支撑复杂查询<br> 缺乏统一的跨引擎的权限控制<br> 叧限制Hive查询，限制丌了Impala和Spark SQL</li>
+</ul>
+<ul>
+<li>明略方案-ACRE<ul>
+<li> 基于Apache Hadoop</li>
+<li> 精确到cell级别的跨引擎的</li>
+<li> 统一权限管理工具</li>
+</ul>
+</li>
+</ul>
+<pre><code> **业务能力**
+-  支持基于ACL和RBAC的混合授权模型
+-  可以限制开发人员
+ - 支持Hive、Impala、Spark的统一授权管理
+-  支持行列（Cell）基本访问控制
+-  基于访问过滤的实现无需修改原数据库/表结构
+</code></pre>
+<p><img src="_v_images/2019-11-29-17-27-57.png"></p>
+<h1 id="Cell-级别的跨引擎的统一权限管理"><a href="#Cell-级别的跨引擎的统一权限管理" class="headerlink" title="Cell 级别的跨引擎的统一权限管理"></a>Cell 级别的跨引擎的统一权限管理</h1><ul>
+<li>ACRE原理<ul>
+<li> 权限模型</li>
+<li>行权限<pre><code>Where语句控制
+</code></pre>
+</li>
+<li>库、表、列权限<pre><code>语法树分析
+</code></pre>
+</li>
+</ul>
+</li>
+</ul>
+<p><img src="_v_images/2019-11-29-17-28-05.png"></p>
+<h1 id="问题3-百亿数据、百万用户的OLAP"><a href="#问题3-百亿数据、百万用户的OLAP" class="headerlink" title="问题3. 百亿数据、百万用户的OLAP"></a>问题3. 百亿数据、百万用户的OLAP</h1><ul>
+<li>方案1：传统方案 - 数据库分库<ul>
+<li> 把丌同商户分布到丌同的mysql数据库上</li>
+<li> 前端做Proxy迚行路由</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li><p>问题</p>
+<ul>
+<li><p> 大数据平台和Mysql之间的数据同步</p>
+</li>
+<li><p> Mysql HA</p>
+</li>
+<li><p> 单个用户的数据量过大</p>
+</li>
+<li><p>不 易扩展</p>
+</li>
+<li><p> 运维成本</p>
+</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li>方案2：基于Impala/SparkSQL等的方案</li>
+</ul>
+<pre><code>-  问题
+     -  商户数据存入一张表戒者多张表时没办法满足高并发
+     -  按商户分表的话可能会建立非常多的表
+     -  定制化的处理提高流程的复杂度
+</code></pre>
+<ul>
+<li><p>方案3：明略方案-基于Hbase支撑OLAP需求</p>
+<ul>
+<li><p> 原始数据同步到Hbase构建数据表</p>
+</li>
+<li><p> 根据用户查询的各个维度，通过MapReduce迚行预构建查询索引</p>
+</li>
+<li><p> 索引的key为纬度的丌同组合</p>
+</li>
+<li><p> 索引的value中存入用户常用的各种metric计算结果</p>
+</li>
+</ul>
+</li>
+</ul>
+<pre><code>** 优势**
+      -  百亿级的数据在秒级甚至亚秒级返回结果
+     -  基于Hbase的实现轻松支撑高并发请求
+     -  可视化配置、灵活定义的索引
+     -  源自于Hadoop系统的超强扩展能力
+</code></pre>
+<h1 id="简单总结"><a href="#简单总结" class="headerlink" title="简单总结"></a>简单总结</h1><ul>
+<li>Hadoop平台面对的是异构多源的数据源， 需要能够支持增量同步这些异构数据源的 数据</li>
+<li>安全不权限是企业级客户永丌缺席的需求</li>
+<li>海量数据高并发的实时BI需求越来越多</li>
+<li>数据是基础，好的数据应用需要更丰富的 数据</li>
+</ul>
+<p>关键字：数据中心方案、大数据、数据挖掘、Mining、 Hadoop、Hive、Hbase、Sqoop、数据权限</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2021/06/28/architecture/%E6%98%8E%E7%95%A5%E5%A4%A7%E6%95%B0%E6%8D%AE%E9%A1%B9%E7%9B%AE%E5%AE%9E%E8%B7%B5%E5%88%86%E4%BA%AB/" data-id="ckqg285ue003brcfpgdru0tkk" data-title="" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-architecture/日志审计系统" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2021/06/28/architecture/%E6%97%A5%E5%BF%97%E5%AE%A1%E8%AE%A1%E7%B3%BB%E7%BB%9F/" class="article-date">
+  <time class="dt-published" datetime="2021-06-28T03:26:10.857Z" itemprop="datePublished">2021-06-28</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>[toc]</p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/cheng_fangang/article/details/42418017">https://blog.csdn.net/cheng_fangang/article/details/42418017</a><br><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_38265137/article/details/106790419">https://blog.csdn.net/qq_38265137/article/details/106790419</a><br><a target="_blank" rel="noopener" href="http://www.youxia.org/2015/01/13547.html">http://www.youxia.org/2015/01/13547.html</a></p>
+<h1 id="日志审计系统简介"><a href="#日志审计系统简介" class="headerlink" title="日志审计系统简介"></a>日志审计系统简介</h1><h2 id="什么是日志审计？"><a href="#什么是日志审计？" class="headerlink" title="什么是日志审计？"></a>什么是日志审计？</h2><p>综合日志审计平台，通过集中采集信息系统中的系统安全事件、用户访问记录、系统运行日志、系统运行状态等各类信息，经过规范化、过滤、归并和告警分析等处理后，以统一格式的日志形式进行集中存储和管理，结合丰富的日志统计汇总及关联分析功能，实现对信息系统日志的全面审计。</p>
+<p>通过日志审计系统，企业管理员随时了解整个IT系统的运行情况，及时发现系统异常事件；另一方面，通过事后分析和丰富的报表系统，管理员可以方便高效地对信息系统进行有针对性的安全审计。遇到特殊安全事件和系统故障，日志审计系统可以帮助管理员进行故障快速定位，并提供客观依据进行追查和恢复。</p>
+<h2 id="为什么需要日志审计平台？"><a href="#为什么需要日志审计平台？" class="headerlink" title="为什么需要日志审计平台？"></a>为什么需要日志审计平台？</h2><ol>
+<li><p>日志审计的合规要求，由于网络安全法的颁布实施，由原先的不合规转变成了不合法。如果不对要求的相关日志不做留存6个月以上，一旦追查，将面临法律责任。</p>
+</li>
+<li><p>安全运营的挑战。随着网络设备的增多，以及服务器数量的增多，如果没有统一的综合日志审计平台，那么需要登录到每台设备上查看日志，不利于运维人员管理。而且众多设备会产生海量的日志，无法有效管理。多种设备形成信息孤岛，日志无法关联分析。通过统一的日志审计平台，将所有设备日志都收集到日志平台进行统一管理，统一分析。</p>
+</li>
+</ol>
+<h2 id="日志审计的核心目标："><a href="#日志审计的核心目标：" class="headerlink" title="日志审计的核心目标："></a>日志审计的核心目标：</h2><ul>
+<li>多源数据归一化</li>
+<li>日志存储集中化</li>
+<li>关联分析自动化</li>
+<li>安全态势立体化</li>
+</ul>
+<h1 id="需求背景"><a href="#需求背景" class="headerlink" title="需求背景"></a>需求背景</h1><p>但是随着信息安全系统的部署和发展，该银行的信息安全工作面临如下的需求：</p>
+<ul>
+<li><p>需要建设全面的日志采集需求：需要将接入网络、网站范围内的安全日志及主机系统日志，统一采取日志，集中管理分析。</p>
+</li>
+<li><p>日志规范化需求：由于全网设备种类繁多，各设备日志信息存储格式、字段含义、通信协议差异较大。需要对采集到的各种设备日志进行归一化处理，提取审计记录完整信息，为后续审计分析提供依据。</p>
+</li>
+<li><p>基于策略的日志过滤、归并：面对海量原始日志，需要按照相关策略进行过滤和归并，减轻日志数据传输压力和存储压力。</p>
+</li>
+<li><p>关联分析及审计需求：对于来自各个资源的日志信息，提供多维的关联分析功能。面向系统用户，将一个用户在多个设备上的操作进行横向关联分析，形成以用户为主题的操作行为审计；面向特定安全事件，对于发生在多个设备上的事件痕迹进行关联分析，形成一个完整的事件相关操作过程的审计；从设备角度，形成本设备全部访问情况的安全审计报告。</p>
+</li>
+<li><p>日志存储需求：原始日志信息是来自网络的第一手数据，需要长期存储，并确保它们的完整性、保密性，不得随意访问、修改和删除。同时，由于日志量较大，应提供压缩存储机制。</p>
+</li>
+<li><p>通过实施告警标准化系统，可以达到对告警分级分类展现，提高工作效率的目的。因此，该银行用户希望通过建设一个日志审计平台，实现对各类安全日志进行集中管理并解决以上安全工作难题。</p>
+</li>
+</ul>
+<h1 id="日志审计的主要功能"><a href="#日志审计的主要功能" class="headerlink" title="日志审计的主要功能"></a>日志审计的主要功能</h1><h2 id="统一日志采集："><a href="#统一日志采集：" class="headerlink" title="统一日志采集："></a>统一日志采集：</h2><ul>
+<li>对不同日志源 (主机系统、网络设备、安全设备、应用中间件、数据库等)所产生的日志进行收集，实现日志的集中管理和存储。支持解析任意格式、任意来源的日志，通过解析规则标准化。</li>
+<li>使用无代理的方式收集日志。</li>
+<li>支持代理方式的日志收集。</li>
+</ul>
+<h2 id="关联分析："><a href="#关联分析：" class="headerlink" title="关联分析："></a>关联分析：</h2><ul>
+<li>预置多种事件关联规则。</li>
+<li>定位外部威胁、黑客攻击、内部违规操作，设备异常。</li>
+<li>简单灵活定义关联规则。</li>
+</ul>
+<h2 id="实时告警："><a href="#实时告警：" class="headerlink" title="实时告警："></a>实时告警：</h2><ul>
+<li>通过邮件、短信、声音对发生的告警进行及时通知，并可通过接口调用自动运行程序或脚本。</li>
+<li>通过告警策略定义，对各类风险 和事件进行及时告警或预警，提升运维效率。</li>
+</ul>
+<h2 id="日志取证分析："><a href="#日志取证分析：" class="headerlink" title="日志取证分析："></a>日志取证分析：</h2><ul>
+<li>深入分析原始日志事件，快速定位问题的根本原因。</li>
+<li>生成取证报表，例如攻击威胁报表、Windows/Linux系统审计报表以及合规性审计报表等。</li>
+</ul>
+<h2 id="监管合规："><a href="#监管合规：" class="headerlink" title="监管合规："></a>监管合规：</h2><ul>
+<li>提供Windows审计、Linux审计、PCI、SOX、ISO27001等合规性报表。</li>
+<li>支持创建自定义合规性报表</li>
+</ul>
+<h1 id="功能结构"><a href="#功能结构" class="headerlink" title="功能结构"></a>功能结构</h1><p><img src="_v_images/20200731161608676_3747.png" alt="图：日志审计系统产品功能结构
+"></p>
+<h2 id="日志的转发方式："><a href="#日志的转发方式：" class="headerlink" title="日志的转发方式："></a>日志的转发方式：</h2><p>日志转发一般可以通过：Syslog转发，Kafka转发，http转发。</p>
+<p>日志收集一般支持：Syslog、SNMP等日志协议。</p>
+<h2 id="日志审计系统常见模块："><a href="#日志审计系统常见模块：" class="headerlink" title="日志审计系统常见模块："></a>日志审计系统常见模块：</h2><ul>
+<li><p>日志事件获取模块：安全事件监控系统是实时掌握全网的安全威胁状况的重要手段之一。通过事件监控模块监控各个网络设备、主机系统等日志信息，以及安全产品的安全事件报警信息等，及时发现正在和已经发生的安全事件，通过响应模块采取措施，保证网络和业务系统的安全、可靠运行。</p>
+</li>
+<li><p>资产管理模块：资产管理实现对网络安全管理平台所管辖的设备和系统对象的管理。它将其所辖IP设备资产信息按其重要程度分类登记入库，并为其他安全管理模块提供信息接口。</p>
+</li>
+<li><p>规则库模块：规则库已支持主流网络设备、主机系统、数据库系统等，而且还应涵盖已经部署的安全系统，包括防火墙系统、防病毒系统等。并提供新日志格式适配功能，支持从安全运营中心平台接收新日志解析映射规则配置。用户可以根据该适配功能，对新日志格式进行自行适配。</p>
+</li>
+<li><p>统计报表功能：具备强大的统计功能，可快速生成多种专业化的报表并支持自定义图表的设定集展示。</p>
+</li>
+<li><p>权限管理模块：超级管理员可根据用户角色分配平台查看、操作各模块的权限，用户可以访问而且只能访问自己被授权的资源</p>
+</li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2021/06/28/architecture/%E6%97%A5%E5%BF%97%E5%AE%A1%E8%AE%A1%E7%B3%BB%E7%BB%9F/" data-id="ckqg285ud0039rcfpcdd4dp9i" data-title="" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-architecture/数据交换" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2021/06/28/architecture/%E6%95%B0%E6%8D%AE%E4%BA%A4%E6%8D%A2/" class="article-date">
+  <time class="dt-published" datetime="2021-06-28T03:26:10.856Z" itemprop="datePublished">2021-06-28</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h3 id="Kettle"><a href="#Kettle" class="headerlink" title="Kettle"></a>Kettle</h3><p><a target="_blank" rel="noopener" href="https://github.com/pentaho/pentaho-kettle">Kettle Github</a><br><a target="_blank" rel="noopener" href="http://www.niubua.com/?tag=etl&paged=2"> 数据对接—kettle使用 </a></p>
+<p>Kettle中有两种脚本文件，transformation和job，transformation完成针对数据的基础转换，job则完成整个工作流的控制。</p>
+<p>Kettle家族目前包括4个产品：Spoon、Pan、CHEF、Kitchen。<br><strong>SPOON</strong> 允许你通过图形界面来设计ETL转换过程（Transformation）。<br><strong>PAN</strong> 允许你批量运行由Spoon设计的ETL转换 (例如使用一个时间调度器)。Pan是一个后台执行的程序，没有图形界面。<br><strong>CHEF</strong> 允许你创建任务（Job）。 任务通过允许每个转换，任务，脚本等等，更有利于自动化更新数据仓库的复杂工作。任务通过允许每个转换，任务，脚本等等。任务将会被检查，看看是否正确地运行了。<br><strong>KITCHEN</strong> 允许你批量使用由Chef设计的任务 (例如使用一个时间调度器)。KITCHEN也是一个后台运行的程序。</p>
+<h3 id="scriptella"><a href="#scriptella" class="headerlink" title="scriptella"></a>scriptella</h3><p>使用简单，使用xml配置、java api调用，没有提供Job管理的功能，没有配置界面。</p>
+<p><a target="_blank" rel="noopener" href="https://github.com/scriptella/scriptella-etl">scriptella Github</a><br><a target="_blank" rel="noopener" href="http://scriptella.javaforge.com/tutorial.html">Two Minute Tutorial</a><br><a target="_blank" rel="noopener" href="http://scriptella.javaforge.com/reference/index.html">Scriptella ETL Reference</a><br><a target="_blank" rel="noopener" href="http://commons.apache.org/proper/commons-jexl/reference/syntax.html">Commons JEXL Syntax</a></p>
+<h3 id="DataX"><a href="#DataX" class="headerlink" title="DataX"></a>DataX</h3><p>DataX是淘宝开源的数据导入导出的工具，解决异构环境的数据交换问题，支持HDFS集群与各种关系型数据库之间的数据交换，对于不同数据库的支持都是插件式的，对于新增的数据源类型，只要新开发一个插件就好了。</p>
+<p><img src="_v_images/2019-11-29-17-14-18.png"></p>
+<p>其特点在于：</p>
+<p>1）官方版本支持的Hadoop版本较低（0.19），暂不支持高版本（如CDH4）。<br>2）支持从一个HDFS集群到另一个HDFS集群之间的数据导入导出。<br>3）支持数据不落地的并行导入导出。</p>
+<ul>
+<li>在异构的数据库/文件系统之间高速交换数据</li>
+<li>采用Framework + plugin架构构建，Framework处理了缓冲，流控，并发，上下文加载等高速数据交换的大部分技术问题，提供了简单的接口与插件交互，插件仅需实现对数据处理系统的访问</li>
+<li>运行模式：stand-alone</li>
+<li>数据传输过程在单进程内完成，全内存操作，不读写磁盘，也没有IPC</li>
+<li>开放式的框架，开发者可以在极短的时间开发一个新插件以快速支持新的数据库/文件系统。（具体参见《DataX插件开发指南》）</li>
+</ul>
+<h5 id="DataX结构模式（框架-插件）"><a href="#DataX结构模式（框架-插件）" class="headerlink" title="DataX结构模式（框架+插件）"></a>DataX结构模式（框架+插件）</h5><p><img src="_v_images/2019-11-29-17-15-49.png"></p>
+<ul>
+<li>Job: 一道数据同步作业</li>
+<li>Splitter: 作业切分模块，将一个大任务与分解成多个可以并发的小任务.</li>
+<li>Sub-job： 数据同步作业切分后的小任务</li>
+<li>Reader(Loader): 数据读入模块，负责运行切分后的小任务，将数据从源头装载入DataX</li>
+<li>Storage: Reader和Writer通过Storage交换数据</li>
+<li>Writer(Dumper): 数据写出模块，负责将数据从DataX导入至目的数据地</li>
+</ul>
+<p>DataX框架内部通过双缓冲队列、线程池封装等技术，集中处理了高速数据交换遇到的问题，提供简单的接口与插件交互，插件分为Reader和 Writer两类，基于框架提供的插件接口，可以十分便捷的开发出需要的插件。比如想要从oracle导出数据到mysql，那么需要做的就是开发出 OracleReader和MysqlWriter插件，装配到框架上即可。并且这样的插件一般情况下在其他数据交换场合是可以通用的。更大的惊喜是我们 已经开发了如下插件：</p>
+<p>Reader插件</p>
+<ul>
+<li>hdfsreader : 支持从hdfs文件系统获取数据。</li>
+<li>mysqlreader: 支持从mysql数据库获取数据。</li>
+<li>sqlserverreader: 支持从sqlserver数据库获取数据。</li>
+<li>oraclereader : 支持从oracle数据库获取数据。</li>
+<li>streamreader: 支持从stream流获取数据（常用于测试）</li>
+<li>httpreader : 支持从http URL获取数据。</li>
+</ul>
+<p>Writer插件</p>
+<ul>
+<li>hdfswriter：支持向hdbf写入数据。</li>
+<li>mysqlwriter：支持向mysql写入数据。</li>
+<li>oraclewriter：支持向oracle写入数据。</li>
+<li>streamwriter：支持向stream流写入数据。（常用于测试）</li>
+</ul>
+<p>您可以按需选择使用或者独立开发您自己的插件 (具体参见《DataX插件开发指南》)</p>
+<h3 id="Sqoop"><a href="#Sqoop" class="headerlink" title="Sqoop"></a>Sqoop</h3><p>Sqoop是Apache下的顶级项目，用来将Hadoop和关系型数据库中的数据相互转移，可以将一个关系型数据库（例如：MySQL，Oracle，PostgreSQL等）中的数据导入到Hadoop的HDFS中，也可以将HDFS的数据导入到关系型数据库中。目前在各个公司应用广泛，且发展前景比较乐观。其特点在于：</p>
+<p>1）专门为Hadoop而生，随Hadoop版本更新支持程度好，且原本即是从CDH版本孵化出来的开源项目，支持CDH4应该没问题。<br>2）支持并行导入，宣称速度很快（由于时间紧，未来得及进行真实环境的测试），可以指定按某个字段进行拆分并行化导入过程。<br>3）支持按字段进行导入与导出。<br>4）自带的辅助工具比较丰富，如sqoop-import、sqoop-list-databases、sqoop-list-tables等。</p>
+<p><img src="_v_images/2019-11-29-17-16-37.png"></p>
+<h3 id="DataX-vs-Sqoop"><a href="#DataX-vs-Sqoop" class="headerlink" title="DataX vs  Sqoop"></a>DataX vs  Sqoop</h3><p>DataX 直接在运行DataX的机器上进行数据的抽取及加载。<br>而Sqoop充分里面了map-reduce的计算框架。Sqoop根据输入条件，生成一个map-reduce的作业，在Hadoop的框架中运行。<br>从理论上讲，用map-reduce框架同时在多个节点上进行import应该会比从单节点上运行多个并行导入效率高。而实际的测试中也是如此，测试一个Oracle to hdfs的作业，DataX上只能看到运行DataX上的机器的数据库连接，而Sqoop运行时，4台task-tracker全部产生一个数据库连接。调起的Sqoop作业的机器也会产生一个数据库连接，应为需要读取数据表的一些元数据信息，数据量等，做分区。<br>Sqoop现在作为Apache的顶级项目，如果要我从DataX和Sqoop中间选择的话，我想我还是会选择Sqoop。而且Sqoop还有很多第三方的插件。早上使用了Quest开发的OraOop插件，确实像quest说的一样，速度有着大幅的提升，Quest在数据库方面的经验，确实比旁人深厚。</p>
+<p>在我的测试环境上，一台只有700m内存的，IO低下的oracle数据库，百兆的网络，使用Quest的Sqoop插件在4个并行度的情况下，导出到HDFS速度有5MB/s ，这已经让我很满意了。相比使用原生Sqoop的2.8MB/s快了将近一倍，sqoop又比DataX的760KB/s快了两倍。<br>另外一点Sqoop采用命令行的方式调用，比如容易与我们的现有的调度监控方案相结合，DataX采用xml 配置文件的方式，在开发运维上还是有点不方便。</p>
+<h3 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h3><p><a target="_blank" rel="noopener" href="http://code.taobao.org/p/datax/wiki/index/">DataX 官方Wiki、代码</a><br><a target="_blank" rel="noopener" href="http://www.xiaohui.org/archives/545.html">大数据异构环境数据同步工具DataX 与Sqoop 之比较</a><br><a target="_blank" rel="noopener" href="http://www.open-open.com/lib/view/1325771223625">淘宝异构数据源数据交换工具 DataX</a><br><a target="_blank" rel="noopener" href="http://www.sinosoft.com.cn/khyal/K_ccbx_news/ccbx_news_0009.html">中软数据交换平台解决方案</a><br><a target="_blank" rel="noopener" href="http://www.ritoinfo.com/html/software/WhiteBook/20120914913.html">RiDol DE数据交换平台</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2021/06/28/architecture/%E6%95%B0%E6%8D%AE%E4%BA%A4%E6%8D%A2/" data-id="ckqg285uc0038rcfpgg5b599s" data-title="" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+
+
+  <nav id="page-nav">
+    
+    <a class="extend prev" rel="prev" href="/page/13/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/12/">12</a><a class="page-number" href="/page/13/">13</a><span class="page-number current">14</span><a class="page-number" href="/page/15/">15</a><a class="page-number" href="/page/16/">16</a><span class="space">&hellip;</span><a class="page-number" href="/page/21/">21</a><a class="extend next" rel="next" href="/page/15/">Next &raquo;</a>
+  </nav>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/06/">June 2021</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2021/06/28/product/%E9%9C%80%E6%B1%82%E8%B0%83%E7%A0%94%E7%9A%84%E5%86%85%E5%AE%B9%E5%92%8C%E5%B7%A5%E4%BD%9C%E6%8C%87%E5%BC%95/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2021/06/28/product/%E9%93%81%E8%B7%AF6C%E4%B8%9A%E5%8A%A1%E7%BB%93%E6%9E%84/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2021/06/28/product/%E9%9C%80%E6%B1%82%E8%B0%83%E7%A0%94%E5%8F%8A%E5%88%86%E6%9E%90%E6%96%B9%E6%B3%95/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2021/06/28/product/%E6%B0%B4%E7%94%B5%E7%AB%99%E7%94%9F%E4%BA%A7%E8%BF%90%E8%A1%8C%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2021/06/28/product/%E6%B0%B4%E7%94%B5%E5%8E%82%E8%BF%90%E8%A1%8C%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F/">(no title)</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2021 John Doe<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.4.1.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>
