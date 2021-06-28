@@ -1,0 +1,344 @@
+<p>数据库方面： </p>
+<ol>
+<li>事务是什么？ </li>
+</ol>
+<p>事务是作为一个逻辑单元执行的一系列操作，一个逻辑工作单元必须有四个属性，称为 ACID（原子性、一致性、隔离性和持久性）属性，只有这样才能成为一个事务： </p>
+<p>原子性 </p>
+<p>事务必须是原子工作单元；对于其数据修改，要么全都执行，要么全都不执行。 </p>
+<p>一致性 </p>
+<p>事务在完成时，必须使所有的数据都保持一致状态。在相关数据库中，所有规则都必须应用于事务的修改，以保持所有数据的完整性。事务结束时，所有的内部数据结构（如 B 树索引或双向链表）都必须是正确的。 </p>
+<p>隔离性 </p>
+<p>由并发事务所作的修改必须与任何其它并发事务所作的修改隔离。事务查看数据时数据所处的状态，要么是另一并发事务修改它之前的状态，要么是另一事务修改它之后的状态，事务不会查看中间状态的数据。这称为可串行性，因为它能够重新装载起始数据，并且重播一系列事务，以使数据结束时的状态与原始事务执行的状态相同。 </p>
+<p>持久性 </p>
+<p>事务完成之后，它对于系统的影响是永久性的。该修改即使出现系统故障也将一直保持。 </p>
+<ol>
+<li>游标的作用？如何知道游标已经到了最后？ </li>
+</ol>
+<p>游标用于定位结果集的行，通过判断全局变量@@FETCH_STATUS可以判断是否到了最后，通常此变量不等于0表示出错或到了最后。 </p>
+<ol>
+<li>触发器分为事前触发和事后触发，这两种触发有和区别。语句级触发和行级触发有何区别。 </li>
+</ol>
+<p>事前触发器运行于触发事件发生之前，而事后触发器运行于触发事件发生之后。通常事前触发器可以获取事件之前和新的字段值。 </p>
+<p>语句级触发器可以在语句执行前或后执行，而行级触发在触发器所影响的每一行触发一次。</p>
+<p>题目(1)</p>
+<p>存在表table（FID，FCLASS，FSSCORE），三字段分别代表姓名、班级、成绩。用最高效、最简单的SQL语句列出人数大于30的各班最高成绩的列表，显示班级、成绩两个字段。</p>
+<p>参考答案(1)：</p>
+<p>select a.FCLASS,max(a.FSSCORE)</p>
+<p>from table a, (select FCLASS,count(FID) from table having count(FID)&gt;30 group by FCLASS) b</p>
+<p>where a.FCLASS=b.FCLASS</p>
+<p>group by a.FCLASS</p>
+<p>参考答案(2)：</p>
+<p>Select FCLASS，Max(FSSCORE) From Table</p>
+<p>Group By FCLASS Having Count(FID)&gt;30</p>
+<p>题目(2)</p>
+<p>studentname    classname      grade</p>
+<p>mike          english          65</p>
+<p>mike          math             75</p>
+<p>Jerry         english          80</p>
+<p>Jerry         math             68</p>
+<p>Lida          english          88</p>
+<p>Lida          chinese          77</p>
+<p>Lida          math             90</p>
+<p>求出各科成绩都大于75分的学生。即得到如下结果</p>
+<p>studentname    classname      grade</p>
+<p>Lida          english          88</p>
+<p>Lida          chinese          77</p>
+<p>Lida          math             90</p>
+<p>参考答案：</p>
+<p>select * from # a where not exists (select 1 from # where studentname=a.studentname and grade&lt;75)</p>
+<p>题目(3)</p>
+<p>已知一个表的结构为：</p>
+<p>姓名 科目 成绩</p>
+<p>张三 语文 20</p>
+<p>张三 数学 30</p>
+<p>张三 英语 50</p>
+<p>李四 语文 70</p>
+<p>李四 数学 60</p>
+<p>李四 英语 90</p>
+<p>怎样通过select语句把他变成以下结构：</p>
+<p>姓名 语文 数学 英语</p>
+<p>张三 20 30 50</p>
+<p>李四 70 60 90</p>
+<p>参考答案(1)：</p>
+<p>select A.姓名,A.科目 as 语文,B.科目 as 数学,C.科目 as 英语</p>
+<p>from student A,student B,student C</p>
+<p>where A.姓名=B.姓名 and B.姓名=C.姓名</p>
+<p>and A.科目='语文'</p>
+<p>and B.科目='数学'</p>
+<p>and C.科目='英语'</p>
+<p>参考答案(2)：</p>
+<p>select distinct A._name as '姓名',(select chengji from A c where kemu='语文' and c._name=A._name) as '语文', (select chengji from A d where kemu='数学' and d._name=A._name) as '数学', (select chengji from A e where kemu='英语' and e._name=A._name) as '英语' from A</p>
+<p>参考答案(3)：</p>
+<p>declare @sql varchar(4000)</p>
+<p>set @sql = 'SELECT 姓名'</p>
+<p>select @sql = @sql + ',sum(case 科目 when '''+科目+''' then 成绩 end) ['+科目+']'</p>
+<p>from (select distinct 科目 from 表名字) as 学科</p>
+<p>select @sql = @sql+' from 表名字 group by 姓名'</p>
+<p>exec(@sql)</p>
+<p>题目(4)</p>
+<p>假设只有一个table，名为pages，有四个字段，id, url,title,body。里面储存了很多网页，网页的url地址，title和网页的内容，然后你用一个sql查询将url匹配的排在最前，title匹配的其次，body匹配最后，没有任何字段匹配的，不返回。</p>
+<p>就是上面这道面试题，让我想了一个下午，在网上找资料，最后用下面方法实现</p>
+<p>SELECT *</p>
+<p>FROM page where url like '%baidu%' or title like '%baidu%' or like ''</p>
+<p>ORDER BY CHARINDEX('baidu', url) DESC, CHARINDEX('baidu', title) DESC,</p>
+<pre><code>  CHARINDEX('baidu', body) DESC
+</code></pre>
+<p>但我感觉这种方法并不是最简单的，后来把这个方法发给面试的人，他给我了一种更简单方法，只要用基本的Sql语句就可以实现。代码如下</p>
+<p>select a.[id],a.mark from</p>
+<p>(</p>
+<p>select [page].[id],100 as mark from [page] where [page].[url] like '%baidu%'</p>
+<p>union</p>
+<p>select [page].[id],50 as mark from [page] where [page].[title] like '%baidu%'</p>
+<p>union</p>
+<p>select [page].[id],10 as mark from [page] where [page].[body] like '%baidu%'</p>
+<p>) as a  order by mark desc</p>
+<p>用union 实现联合查询，在每个查询语句中定义一个临时变量mark 并给mark赋值，在最后的输出时采用mark来排序，这样实现真的好简单。其实这都考验我们对Sql的编成思想。</p>
+<p>1：找出公司里收入最高的前三名员工：</p>
+<p>SQL&gt; select rownum, last_name, salary</p>
+<p>2 from (select last_name, salary</p>
+<p>3 from s_emp</p>
+<p>4 order by salary desc)</p>
+<p>5 where rownum&lt;=3;</p>
+<p>ROWNUM LAST_NAME SALARY</p>
+<hr />
+<p>1 Velasquez 4750</p>
+<p>2 Ropeburn 2945</p>
+<p>3 Nguyen 2897.5</p>
+<p>注意：请大家分析一下一下语句为什么不对：</p>
+<p>SQL&gt; select rownum, last_name, salary</p>
+<p>2 from s_emp</p>
+<p>3 where rownum&lt;=3</p>
+<p>4 order by salary desc;</p>
+<p>ROWNUM LAST_NAME SALARY</p>
+<hr />
+<p>1 Velasquez 4750</p>
+<p>3 Nagayama 2660</p>
+<p>2 Ngao 2000</p>
+<p>2： 找出表中的某一行或某几行的数据：</p>
+<p>（1）：找出表中第三行数据：</p>
+<p>用以下方法是不行的，因为rownum后面至可以用&lt;或&lt;=号,不可以用=,&gt;号和其它的比较符号。</p>
+<p>SQL&gt; select * from s_emp</p>
+<p>2 where rownum=3;</p>
+<p>no rows selected</p>
+<p>SQL&gt; select * from s_emp</p>
+<p>2 where rownum between 3 and 5;</p>
+<p>no rows selected</p>
+<p>正确的方法如下：</p>
+<p>SQL&gt; l</p>
+<p>1 select last_name, salary</p>
+<p>2 from (select rownum a, b.*</p>
+<p>3 from s_emp b)</p>
+<p>4* where a=3</p>
+<p>SQL&gt; /</p>
+<p>LAST_NAME SALARY</p>
+<hr />
+<p>Nagayama 2660</p>
+<p>（2）：找出第三行到第五行之间的数据：</p>
+<p>SQL&gt; l</p>
+<p>1 select last_name, salary</p>
+<p>2 from (select rownum a, b.*</p>
+<p>3 from s_emp b)</p>
+<p>4* where a between 3 and 5</p>
+<p>SQL&gt; /</p>
+<p>LAST_NAME SALARY</p>
+<hr />
+<p>Nagayama 2660</p>
+<p>Quick-To-See 2755</p>
+<p>Ropeburn 2945</p>
+<p>3：找出那些工资高于他们所在部门的平均工资的员工。</p>
+<p>（1）：第一种方法：</p>
+<p>SQL&gt; select last_name, dept_id, salary</p>
+<p>2 from s_emp a</p>
+<p>3 where salary&gt;(select avg(salary)</p>
+<p>4 from s_emp</p>
+<p>5 where dept_id=a.dept_id);</p>
+<p>LAST_NAME DEPT_ID SALARY</p>
+<hr />
+<p>Velasquez 50 4750</p>
+<p>Urguhart 41 2280</p>
+<p>Menchu 42 2375</p>
+<p>Biri 43 2090</p>
+<p>Catchpole 44 2470</p>
+<p>Havel 45 2483.3</p>
+<p>Nguyen 34 2897.5</p>
+<p>Maduro 41 2660</p>
+<p>Nozaki 42 2280</p>
+<p>Schwartz 45 2090</p>
+<p>10 rows selected.</p>
+<p>（2）：第二种方法：</p>
+<p>SQL&gt; l</p>
+<p>1 select a.last_name, a.salary, a.dept_id, b.avgsal</p>
+<p>2 from s_emp a, (select dept_id, avg(salary) avgsal</p>
+<p>3 from s_emp</p>
+<p>4 group by dept_id) b</p>
+<p>5 where a.dept_id=b.dept_id</p>
+<p>6* and a.salary&gt;b.avgsal</p>
+<p>SQL&gt; /</p>
+<p>LAST_NAME SALARY DEPT_ID AVGSAL</p>
+<hr />
+<p>Velasquez 4750 50 3847.5</p>
+<p>Urguhart 2280 41 2181.5</p>
+<p>Menchu 2375 42 2055.16667</p>
+<p>Biri 2090 43 1710</p>
+<p>Catchpole 2470 44 1995</p>
+<p>Havel 2483.3 45 2069.1</p>
+<p>Nguyen 2897.5 34 2204</p>
+<p>Maduro 2660 41 2181.5</p>
+<p>Nozaki 2280 42 2055.16667</p>
+<p>Schwartz 2090 45 2069.1</p>
+<p>10 rows selected.</p>
+<p>4：找出那些工资高于他们所在部门的manager的工资的员工。</p>
+<p>SQL&gt; l</p>
+<p>1 select id, last_name, salary, manager_id</p>
+<p>2 from s_emp a</p>
+<p>3 where salary&gt;(select salary</p>
+<p>4 from s_emp</p>
+<p>5* where id=a.manager_id)</p>
+<p>SQL&gt; /</p>
+<p>ID LAST_NAME SALARY MANAGER_ID</p>
+<hr />
+<p>6 Urguhart 2280 2</p>
+<p>7 Menchu 2375 2</p>
+<p>8 Biri 2090 2</p>
+<p>9 Catchpole 2470 2</p>
+<p>10 Havel 2483.3 2</p>
+<p>12 Giljum 2831 3</p>
+<p>13 Sedeghi 2878.5 3</p>
+<p>14 Nguyen 2897.5 3</p>
+<p>15 Dumas 2755 3</p>
+<p>16 Maduro 2660 6</p>
+<p>10 rows selected.</p>
+<p>题目1：取得最新数据</p>
+<p>分布在各地的各个监测站会不定期地取数据并存入数据库。现在开始统计：如果监测站当天八点有数据，就取当天八点钟时间段的最新数据，否则取该站的最新数据</p>
+<p>数据源：</p>
+<p>create table stinfo (</p>
+<p>stcd varchar(20) primary key(stcd,sdate),</p>
+<p>sdate datetime,</p>
+<p>data decimal(5,2)</p>
+<p>)</p>
+<p>insert into stinfo values('0003','061010 9:40',1.5)</p>
+<p>insert into stinfo values('0002','061011 8:04',0.8)</p>
+<p>insert into stinfo values('0001','061012 7:10',1.8)</p>
+<p>insert into stinfo values('0002','061012 7:00',1.7)</p>
+<p>insert into stinfo values('0001','061012 8:02',1.4)</p>
+<p>insert into stinfo values('0001','061012 8:11',1.5)</p>
+<p>insert into stinfo values('0002','061012 8:18',1.6)</p>
+<p>insert into stinfo values('0002','061012 8:30',1.8)</p>
+<p>insert into stinfo values('0001','061012 9:40',1.3)</p>
+<p>insert into stinfo values('0002','061012 9:41',1.5)</p>
+<p>insert into stinfo values('0003','061012 9:45',1.4)</p>
+<p>要求得到结果：(假设今天是2006-10-12)</p>
+<p>stcd sdate data</p>
+<p>0001 2006-10-12 08:11:00.000 1.5</p>
+<p>0002 2006-10-12 08:30:00.000 1.8</p>
+<p>0003 2006-10-12 09:45:00.000 1.4</p>
+<p>实现方法：</p>
+<p>select stinfo.* from stinfo right join</p>
+<p>(</p>
+<p>select stcd,max(sdate) sdate from stinfo group by stcd having stcd not in</p>
+<p>(select stcd from stinfo where datediff(day,sdate,getdate())=0 and datepart(hour,sdate)=8)</p>
+<p>union</p>
+<p>select stcd,max(sdate) sdate from stinfo where datediff(day,sdate,getdate())=0 and datepart(hour,sdate)=8</p>
+<p>group by stcd</p>
+<p>)as tab</p>
+<p>on stinfo.stcd=tab.stcd and stinfo.sdate=tab.sdate</p>
+<p>题目2：按数据范围统计每个监测站的数据个数</p>
+<p>数据源：题目1的stinfo表及数据</p>
+<p>要求得到结果：</p>
+<p>STCD 0-1.0 1.0-1.4 1.4-1.8 &gt;1.8</p>
+<p>0001 NULL 1 2 1</p>
+<p>0002 1 NULL 3 1</p>
+<p>0003 NULL NULL 2 NULL</p>
+<p>实现方法：</p>
+<p>select tab.stcd,tab1.[0-1.0],tab2.[1.0-1.4],tab3.[1.4-1.8],tab4.[&gt;=1.8] from</p>
+<p>(</p>
+<p>(select stcd from stinfo group by stcd) as tab full outer join</p>
+<p>(select stcd,count(data) '0-1.0' from stinfo where data&lt;1.0 group by stcd) as tab1</p>
+<p>on tab.stcd=tab1.stcd</p>
+<p>full outer join</p>
+<p>(select stcd,count(data) '1.0-1.4' from stinfo where data&gt;=1.0 and data&lt;1.4 group by stcd) as tab2</p>
+<p>on tab.stcd=tab2.stcd</p>
+<p>full outer join</p>
+<p>(select stcd,count(data) '1.4-1.8' from stinfo where data&gt;=1.4 and data&lt;1.8 group by stcd) as tab3</p>
+<p>on tab.stcd=tab3.stcd</p>
+<p>full outer join</p>
+<p>(select stcd,count(data) '&gt;=1.8' from stinfo where data&gt;=1.8 group by stcd) as tab4</p>
+<p>on tab.stcd=tab4.stcd</p>
+<p>)</p>
+<p>题目3：行列数据交换(提示动态SQL交叉表)</p>
+<p>数据源：</p>
+<p>create table sitemvalue(</p>
+<p>STCD int primary key(stcd,xmmc),</p>
+<p>XMMC varchar(20),</p>
+<p>SValue decimal(4,2)</p>
+<p>)</p>
+<p>insert into sitemvalue values ('0001', 'ph', 7.0)</p>
+<p>insert into sitemvalue values ('0001', 'cod', 0.2)</p>
+<p>insert into sitemvalue values ('0001', 'do', 0.3)</p>
+<p>insert into sitemvalue values ('0001', 'wt', 1.1)</p>
+<p>insert into sitemvalue values ('0002', 'ph', 7.0)</p>
+<p>insert into sitemvalue values ('0002', 'do', 0.2)</p>
+<p>insert into sitemvalue values ('0002', 'wt', 0.2)</p>
+<p>insert into sitemvalue values ('0002', 'cod', 1.5)</p>
+<p>要求得到结果：</p>
+<p>STCD PH COD DO WT</p>
+<p>0001 7.0 0.2 0.3 1.1</p>
+<p>0002 7.0 1.5 0.2 0.2</p>
+<p>实现方法：</p>
+<p>select stcd,</p>
+<p>sum(case xmmc when 'ph' then svalue else 0 end) as ph,</p>
+<p>sum(case xmmc when 'cod' then svalue else 0 end) as cod,</p>
+<p>sum(case xmmc when 'do' then svalue else 0 end) as do,</p>
+<p>sum(case xmmc when 'wt' then svalue else 0 end) as wt</p>
+<p>from sitemvalue group by stcd</p>
+<p>题目4：拆分一个连续字符串(提示用存储过程循环拆分)</p>
+<p>declare @s as varchar(100)</p>
+<p>set @str='ph,p,cod,do,cu'</p>
+<p>要求得到结果：</p>
+<p>ph</p>
+<p>p</p>
+<p>cod</p>
+<p>do</p>
+<p>实现方法：</p>
+<p>create procedure parse @str varchar(200) as</p>
+<p>declare @start as int</p>
+<p>declare @end as int</p>
+<p>set @start=0</p>
+<p>set @end=charindex(',',@str)</p>
+<p>while @end!=0</p>
+<p>begin</p>
+<p>print substring(@str,@start,@end)</p>
+<p>set @str=substring(@str,@end+1,len(@str))</p>
+<p>set @end=charindex(',',@str)</p>
+<p>end</p>
+<p>print @str</p>
+<p>return</p>
+<p>exec parse 'ph,p,cod,do'</p>
+<p>题目5：用一个函数计算监测站的所有监测项目(用函数)</p>
+<p>数据源：</p>
+<p>create table svalue(</p>
+<p>STCD varchar(20) primary key(stcd,sdate),</p>
+<p>SDate dateTime,</p>
+<p>SItem varchar(20))</p>
+<p>insert into svalue values ('0001','061010','ph')</p>
+<p>insert into svalue values ('0001','061012','cod')</p>
+<p>insert into svalue values ('0002','061015','ph')</p>
+<p>insert into svalue values ('0002','061016','cu')</p>
+<p>insert into svalue values ('0002','061017','p')</p>
+<p>insert into svalue values ('0003','061019','cu')</p>
+<p>要求得到结果：</p>
+<p>STCD SItem</p>
+<p>0001 ph,cod</p>
+<p>0002 ph,cu,p</p>
+<p>0003 cu</p>
+<p>实现方法：</p>
+<p>CREATE function Fun_SUM(</p>
+<p>@chvName Varchar(200)</p>
+<p>)returns varchar(8000) as</p>
+<p>begin</p>
+<p>declare @r varchar(4000)</p>
+<p>set @r=''</p>
+<p>select @r=@r+','+SItem from svalue where STCD = @chvName</p>
+<p>return(stuff(@r,1,1,''))</p>
+<p>end</p>
+<p>SELECT stcd,dbo.Fun_SUM(STCD) as sItem FROM svalue GROUP BY STCD</p>

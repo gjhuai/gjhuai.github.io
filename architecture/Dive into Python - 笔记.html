@@ -1,0 +1,1216 @@
+<p>★ 字典keys, values 和 items 函数</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>params = {"server":"mpilgrim", "database":"master", "uid":"sa", "pwd":"secret"}</p>
+<p>params. keys ()</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>['server', 'uid', 'database', 'pwd']</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>params. values ()</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>['mpilgrim', 'sa', 'master', 'secret']</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>params. items ()</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>[('server', 'mpilgrim'), ('uid', 'sa'), ('database', 'master'), ('pwd', 'secret')]</p>
+<p>★ join 方法和type 方法</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>";". join (["%s=%s" % (k, v) for k, v in params.items()])  # join连接一个列表</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>'server=mpilgrim;uid=sa;database=master;pwd=secret'</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>type (odbchelper) == types .ModuleType         # 可以使用 types 模块中的常量来进行对象类型的比较</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>True</p>
+<p>★ str方法</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>horsemen = ['war', 'pestilence', 'famine']</p>
+<p>horsemen. append ('Powerbuilder')</p>
+<p>str (horsemen)</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>"['war', 'pestilence', 'famine', 'Powerbuilder']"</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>str (odbchelper)</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>"<module 'odbchelper' from 'c:\\docbook\\dip\\py\\odbchelper.py'>"</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>str (None)</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>'None'</p>
+<p>★ callable 函数</p>
+<p>callable 函数接收任何对象作为参数， 如果参数对象是可调用的，返回 True；否则返回 False。 可调用对象包括函数、类方法，甚至类自身。</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>import string</p>
+<p>string. punctuation</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>'!"#$%&amp;\'()*+,-./:;&lt;=&gt;?@[\]^_`{|}~'</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>string.join</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p><function join at 00C55A7C></p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>callable (string.punctuation)</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>False</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>callable (string.join)       </p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>True</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>print string.join.<strong>doc</strong>      # 任何对象都有 doc string</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>join(list [,sep]) -&gt; string</p>
+<pre><code>Return a string composed of the words in list, with
+
+intervening occurrences of sep.  The default separator is a
+
+single space.
+
+(joinfields and join are synonymous)
+</code></pre>
+<p>★ getattr 函数介绍</p>
+<p>使用 函数，可以返回任何对象的任何属性，并且这个属性的名称可以是直到运行时才知道（即可以是字符串）。</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>li = ["Larry", "Curly"]</p>
+<p>li.pop                       # 获取列表的 pop 方法的引用。是引用(方法对象本身)，而不是调用( li.pop() ) 。</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p><built-in method pop of list object at 010DF884></p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>getattr(li, "pop")            #   返回 pop 方法的引用，但是此时，方法名称是作为一个字符串参数传递给 函数的。</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p><built-in method pop of list object at 010DF884></p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>getattr (li, "append")("Moe")</p>
+<p>li</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>["Larry", "Curly", "Moe"]</p>
+<p>例 4.12. 使用 创建分发者</p>
+<p>statsout 模块定义了三个函数：output_html、output_xml 和 output_text。然后主程序定义了唯一的输出函数，如下：</p>
+<p>import statsout</p>
+<p>def output(data, format="text"):                             </p>
+<pre><code>output_function = getattr (statsout, "output_%s" % format)
+
+return output_function(data)
+</code></pre>
+<p>缺省值</p>
+<p>import statsout</p>
+<p>def output(data, format="text"):</p>
+<pre><code># 下面的 第三个参数是一个缺省返回值，如果第二个参数指定的属性或者方法没能找到，则将返回这个缺省返回值 。
+
+output_function = (statsout, "output_%s" % format, statsout.output_text )
+
+return output_function(data)
+</code></pre>
+<p>★ 列表方法 count 的使用</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>li = ["a", "mpilgrim", "foo", "b", "c", "b", "d", "d"]</p>
+<p>[elem for elem in li if li. count (elem) == 1]          # count 返回某个值在列表中出现的次数 ，可以用来剔除列表中出现两次以上的值 (本例中的 b 和 d)。</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>['a', 'mpilgrim', 'foo', 'c']</p>
+<p>★ filter方法的使用</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>def f(x): return x % 2 != 0 and x % 3 != 0</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>...</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>filter (f, range(2, 25))         # 对2-24之间的整数运用函数 f(x)， 如果 f(x) 的运行结果是真 ，那么 x 就加入返回列表</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>[5, 7, 11, 13, 17, 19, 23]</p>
+<p>★ map方法的使用</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>def cube(x): return x<em>x</em>x</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>...</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>map (cube, range(1, 11))        # 对应1-10之间的整数运用函数 cube(x)，并把 cube(x) 的运行结果加入返回列表</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>[1, 8, 27, 64, 125, 216, 343, 512, 729, 1000]</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>seq = range(8)</p>
+<p>def add(x, y): return x+y</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>...</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>map (add, seq, seq)</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>[0, 2, 4, 6, 8, 10, 12, 14]</p>
+<p>★ reduce方法的使用  </p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>def add(x,y): return x+y</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>...</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>reduce (add, range(1, 11))         # 计算1-10的累加和</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>55</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>def sum(seq):</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>...     def add(x,y): return x+y</p>
+<p>...     return reduce (add, seq, 0 )          # 第三个参数 0 ，是表示列表seq的开始值</p>
+<p>...</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>sum(range(1, 11))</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>55</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>sum([])</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>0</p>
+<p>★ and 和 or 布尔逻辑演算符</p>
+<p>and 和 or  它们并不返回布尔值，而是返回它们实际进行比较的值之一 。 在布尔环境中从左到右演算表达式的值。0、''、[]、()、{}、None 在布尔环境中为假；其它任何东西都为真 。</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>'' and 'b'          # 如果布尔环境中的某个值为假，则 and 返回第一个假值</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>''</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>'a' and 'b' and 'c'          # 所有值都为真，所以 and 返回最后一个真值，'c'</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>'c'</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>'a' or 'b'          # 如果有一个值为真，or 立刻返回该值</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>'a'</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>'' or [] or {}      # 如果所有的值都为假，or 返回最后一个假值</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>{}</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>def sidefx():</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>...     print "in sidefx()"</p>
+<p>...     return 1</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>'a' or sidefx()             # 进行 or 运算时，会一直进行表达式演算直到找到第一个真值，然后就会忽略剩余的比较值。</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>'a'</p>
+<p>★ 使用 and-or 技巧</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>a = "first"</p>
+<p>b = "second"</p>
+<p>1 and a or b         # 1 and 'first' 演算值为 'first'，然后 'first' or 'second' 的演算值为 'first'。</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>'first'</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>0 and a or b         # 0 and 'first' 演算值为 False，然后 0 or 'second' 演算值为 'second'。</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>'second'</p>
+<p>如果 a 为假，and-or 技巧和 C 语言中的 bool ? a : b 语法非常重要的不同。</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>a = ""</p>
+<p>b = "second"</p>
+<p>1 and a or b        </p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>'second'</p>
+<p>★ 安全使用 and-or 技巧</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>a = ""</p>
+<p>b = "second"</p>
+<p>(1 and [a] or [b])[0]          # 由于 [a] 是一个非空列表，所以它决不会为假。即使 a 是 0 或者 '' 或者其它假值，列表 [a] 也为真，因为它有一个元素。</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>'' </p>
+<p>★ lambda方法</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>g = lambda x: x*2          # 定义单行的最小函数</p>
+<p>g(3)</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>6</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>( lambda x: x*2)(3)</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>6</p>
+<p>processFunc = collapse and (lambda s: " ".join(s.split())) or (lambda s: s)        # 这里使用了 and-or 技巧的简单形式</p>
+<p>processFunc 是一个函数的引用，但是它到底是哪一个函数还要取决于 collapse 变量。如果 collapse 为真，processFunc(string) 将压缩空白；否则 processFunc(string) 将返回未改变的参数。</p>
+<p>★ 为什么对一个 doc string 使用 str ？</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>def foo(): print 2</p>
+<p>foo()</p>
+</blockquote>
+</blockquote>
+</blockquote>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>2</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>foo.<strong>doc</strong>    </p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>foo.<strong>doc</strong> == None</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>True</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>str (foo.<strong>doc</strong>)   </p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>'None'</p>
+<p>★ ljust 方法介绍</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>s = 'buildConnectionString'</p>
+<p>s. ljust (30)                 # ljust 用空格填充字符串以符合指定的长度</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>'buildConnectionString         '</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>s. ljust (20)                 # 如果指定的长度小于字符串的长度，ljust 将简单地返回未变化的字符串，而不会截断字符串 。 </p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>'buildConnectionString'  </p>
+<p>class FileInfo(UserDict):</p>
+<pre><code>"store file metadata"
+
+def __init__(self, filename=None):
+
+    UserDict.__init__(self)
+
+    self["name"] = filename
+</code></pre>
+<p>在类的实例创建后被立即调用。它不是构造函数</p>
+<p>是因为对象在调用 <strong>init</strong> 时已经被构造出来了，你已经有了一个对类的新实例的有效引用。</p>
+<p>必须显示地调用在父类中的合适方法。</p>
+<p><strong>init</strong> 方法从不返回一个值。</p>
+<p><strong>init</strong> 方法是可选的</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>import fileinfo</p>
+<p>f = fileinfo.FileInfo("/music/_singles/kairo.mp3")</p>
+<p>f.<strong>class</strong>                                       </p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p><class fileinfo.FileInfo at 010EC204></p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>f.<strong>doc</strong>                                         </p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>'store file metadata'</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>f                                                 </p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>{'name': '/music/_singles/kairo.mp3'}</p>
+<p>每一个类的实例有一个内置属性，<strong>class</strong>，它是对象的类。(</p>
+<p>这类元数据可以直接通过对象本身的属性，像 <strong>class</strong>、<strong>name</strong> 和 <strong>bases</strong> 来得到。</p>
+<p>你可以像对函数或模块一样来访问实例的 doc string。</p>
+<p>class UserDict:                               </p>
+<pre><code>def __init__(self, dict=None):
+
+    self.data = {}
+
+    if dict is not None: self.update(dict)
+</code></pre>
+<p>update 方法是一个字典复制器：它把一个字典中的键和值全部拷贝到另一个字典。这个操作并不 事先清空目标字典，如果一些键在目标字典中已经存在，则它们将被覆盖，那些键名在目标字典中不存在的则不改变。应该把 update 看作是合并函数，而不是复制函数。</p>
+<p>例 5.11. 直接继承自内建数据类型 dict</p>
+<p>class FileInfo(dict):                 </p>
+<pre><code>"store file metadata"
+
+def __init__(self, filename=None):
+
+    self["name"] = filename
+</code></pre>
+<p>第一个区别是你不需要导入 UserDict 模块，因为 dict 是已经可以使用的内建数据类型。第二个区别是你不是继承自 UserDict.UserDict ，而是直接继承自 dict。 </p>
+<p>第三个区别有些晦涩，但却很重要。UserDict 内部的工作方式要求你手工地调用它的 <strong>init</strong> 方法去正确初始化它的内部数据结构。dict 并不这样工作，它不是一个封装所以不需要明确的初始化。 </p>
+<p>专用类方法</p>
+<p><strong>getitem</strong> 专用方法</p>
+<pre><code>def __getitem__(self, key): return self.data[key]&gt;&gt;&gt; f = fileinfo.FileInfo("/music/_singles/kairo.mp3")
+</code></pre>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>f</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>{'name':'/music/_singles/kairo.mp3'}</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>f.<strong>getitem</strong>("name")</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>'/music/_singles/kairo.mp3'</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>f["name"]            </p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>'/music/_singles/kairo.mp3'</p>
+<p>暗地里，Python 已经将这个语法转化为 f.<strong>getitem</strong>("name") 的方法调用。</p>
+<p><strong>setitem</strong> 专用方法</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>f["genre"] = 32           </p>
+<p>f</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>暗地里调用了 f.<strong>setitem</strong>("genre", 32)。</p>
+<p><strong>repr</strong></p>
+<p>在当调用 repr(instance) 时被调用。</p>
+<p>repr 函数是一个内置函数，它返回一个对象的字符串表示。</p>
+<p>它可以用在任何对象上，不仅仅是类的实例。</p>
+<p>相当于java的toString()方法</p>
+<p><strong>cmp</strong> 在比较类实例时被调用。通常，你可以通过使用 == 比较任意两个 Python 对象，不只是类实例。</p>
+<p>对于类实例，你可以定义 <strong>cmp</strong> 方法，自已编写比较逻辑，然后你可以使用 == 来比较你的类，Python 将会替你调用你的 <strong>cmp</strong> 专用方法。</p>
+<p>相当于java的equals()，需要重载来实现自己的逻辑</p>
+<p><strong>len</strong> 在调用 len(instance) 时被调用。</p>
+<p>对于类实例，定义 <strong>len</strong> 方法，接着自已编写长度的计算，然后调用 len(instance)，Python 将替你调用你的 <strong>len</strong> 专用方法。</p>
+<p><strong>delitem</strong> 在调用 del instance[key] 时调用</p>
+<p>当你在类实例中使用 del 时，Python 替你调用 <strong>delitem</strong> 专用方法。</p>
+<p>class MP3FileInfo(FileInfo):</p>
+<pre><code>"store ID3v1.0 MP3 tags"
+
+tagDataMap = {"title"   : (  3,  33, stripnulls),
+
+              "artist"  : ( 33,  63, stripnulls),
+
+              "album"   : ( 63,  93, stripnulls),
+
+              "year"    : ( 93,  97, stripnulls),
+
+              "comment" : ( 97, 126, stripnulls),
+
+              "genre"   : (127, 128, ord)}&gt;&gt;&gt; import fileinfo
+</code></pre>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>fileinfo.MP3FileInfo           </p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p><class fileinfo.MP3FileInfo at 01257FDC></p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>fileinfo.MP3FileInfo.tagDataMap</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>{'title': (3, 33, <function stripnulls at 0260C8D4>),</p>
+<p>'genre': (127, 128, <built-in function ord>),</p>
+<p>'artist': (33, 63, <function stripnulls at 0260C8D4>),</p>
+<p>'year': (93, 97, <function stripnulls at 0260C8D4>),</p>
+<p>'comment': (97, 126, <function stripnulls at 0260C8D4>),</p>
+<p>'album': (63, 93, <function stripnulls at 0260C8D4>)}</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>m = fileinfo.MP3FileInfo()     </p>
+<p>m.tagDataMap</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>tagDataMap 是一个类属性：字面的意思，一个类的属性。它在创建任何类实例之前就有效了。 </p>
+<p>类属性既可以通过直接对类的引用，也可以通过对类的任意实例的引用来使用。</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>f.seek(-128, 2)      </p>
+<p>f.tell()             </p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>7542909</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>tagData = f.read(128)</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>文件对象的 seek 方法在被打开文件中移动到另一个位置。第二个参数指出第一个参数是什么意思：0 表示移动到一个绝对位置 (从文件起始处算起)，1 表示移到一个相对位置 (从当前位置算起)，还有 2 表示相对于文件尾的位置。</p>
+<p>tell 方法确认了当前位置已经移动了。</p>
+<p>可选参数指定了读取的最大字节数。如果没有指定参数，read 将读到文件末尾。</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>f.closed      </p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>False</p>
+<p>例 6.14. <strong>module</strong> 类属性</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>from fileinfo import MP3FileInfo</p>
+<p>MP3FileInfo.<strong>module</strong>             </p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>'fileinfo'</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>sys.modules[MP3FileInfo.<strong>module</strong>]</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p><module 'fileinfo' from 'fileinfo.pyc'>  每个 Python 类都拥有一个内置的类属性 <strong>module</strong>，它定义了这个类的模块的名字。 </p>
+<p>将它与 sys.modules 字典复合使用，你可以得到定义了某个类的模块的引用。</p>
+<p>hasattr 是一个补充性的函数，用来检查一个对象是否具有一个特定的属性；</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>import os</p>
+<p>os.path.join("c:\music\ap\", "mahadeva.mp3") </p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>'c:\music\ap\mahadeva.mp3'</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>os.path.join("c:\music\ap", "mahadeva.mp3")  </p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>'c:\music\ap\mahadeva.mp3'</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>os.path.expanduser("~")                        </p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>'c:\Documents and Settings\mpilgrim\My Documents'</p>
+<p>os.path 的 join 函数把一个或多个部分路径名连接成一个路径名。</p>
+<p>expanduser 将对使用 ~ 来表示当前用户根目录的路径名进行扩展。</p>
+<p>例 6.17. 分割路径名</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>os.path.split("c:\music\ap\mahadeva.mp3")                       </p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>('c:\music\ap', 'mahadeva.mp3')</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>(filepath, filename) = os.path.split("c:\music\ap\mahadeva.mp3")</p>
+<p>filepath                                                           </p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>'c:\music\ap'</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>filename                                                           </p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>'mahadeva.mp3'</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>(shortname, extension) = os.path.splitext(filename)                </p>
+<p>shortname</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>'mahadeva'</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>extension</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>'.mp3'</p>
+<p>split 函数对一个全路径名进行分割，返回一个包含路径和文件名的 tuple。</p>
+<p>os.path 也包含了一个 splitext 函数，可以用来对文件名进行分割，并且返回一个包含了文件名和文件扩展名的 tuple。</p>
+<p>例 6.18. 列出目录</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>[f for f in os.listdir(dirname)</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>...     if os.path.isfile(os.path.join(dirname, f))]</p>
+<p>['AUTOEXEC.BAT', 'boot.ini', 'CONFIG.SYS', 'IO.SYS', 'MSDOS.SYS',</p>
+<p>'NTDETECT.COM', 'ntldr', 'pagefile.sys']</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>[f for f in os.listdir(dirname)</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>...     if os.path.isdir(os.path.join(dirname, f))] </p>
+<p>['cygwin', 'docbook', 'Documents and Settings', 'Incoming',</p>
+<p>'Inetpub', 'Music', 'Program Files', 'Python20', 'RECYCLER',</p>
+<p>'System Volume Information', 'TEMP', 'WINNT']</p>
+<p>listdir 同时返回文件和文件夹，并不指出哪个是文件，哪个是文件夹。</p>
+<p>我们使用 os.path.join 来确保得到一个全路径名，但 isfile 对部分路径 (相对于当前目录) 也是有效的。你可以使用 os.getcwd() 来得到当前目录。</p>
+<p>fileList = [os.path.normcase(f)</p>
+<pre><code>            for f in os.listdir(directory)]
+</code></pre>
+<p>os.path.normcase(f) 根据操作系统的缺省值对大小写进行标准化处理。</p>
+<p>在 Windows 和 Mac OS 下，normcase 将把整个文件名转换为小写字母；而在 UNIX 兼容的系统下，它将返回未作修改的文件名。</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>import glob</p>
+<p>glob.glob('c:\music\_singles\*.mp3')          </p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>['c:\music\_singles\a_time_long_forgotten_con.mp3',</p>
+<p>'c:\music\_singles\hellraiser.mp3',</p>
+<p>'c:\music\_singles\kairo.mp3',</p>
+<p>'c:\music\_singles\long_way_home1.mp3',</p>
+<p>'c:\music\_singles\sidewinder.mp3',</p>
+<p>'c:\music\_singles\spinning.mp3']</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>glob.glob('c:\music\_singles\s*.mp3')         </p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>['c:\music\_singles\sidewinder.mp3',</p>
+<p>'c:\music\_singles\spinning.mp3']</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>glob.glob('c:\music\<em>\</em>.mp3')</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>glob 模块，另一方面，接受一个通配符并且返回文件的或目录的完整路径与之匹配。</p>
+<p>例 8.10. locals 介绍</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>def foo(arg):</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>...     x = 1</p>
+<p>...     print locals()</p>
+<pre><code>    locals()["x"] = 2
+
+    print "x=",x  #这样会打印出 x= 1，而不是 x= 2。
+</code></pre>
+<p>...    </p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>foo(7)       </p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>{'arg': 7, 'x': 1}</p>
+<p>函数 foo 在它的局部名字空间中有两个变量：arg (它的值是被传入函数的) 和 x (它是在函数里定义的)。</p>
+<p>locals 实际上没有返回局部名字空间，它返回的是一个拷贝。所以对它进行改变对局部名字空间中的变量值并无影响。</p>
+<p>例 8.11. globals 介绍</p>
+<p>看看下面列出的在文件 BaseHTMLProcessor.py 尾部的代码块：</p>
+<p>if <strong>name</strong> == "<strong>main</strong>":</p>
+<pre><code>for k, v in globals().items():
+
+    print k, "=", v
+</code></pre>
+<p>globals 函数返回一个 dictionary，</p>
+<p>globals 返回实际的全局名字空间，而不是一个拷贝：与 locals 的行为完全相反。所以对 globals 所返回的 dictionary 的任何的改动都会直接影响到全局变量。</p>
+<p>例 8.12. locals 是只读的，globals 不是</p>
+<p>def foo(arg):</p>
+<pre><code>x = 1
+
+print locals()
+
+locals()["x"] = 2
+
+print "x=",x
+</code></pre>
+<p>z = 7</p>
+<p>print "z=",z</p>
+<p>foo(3)</p>
+<p>globals()["z"] = 8   </p>
+<p>print "z=",z         </p>
+<p>例 8.13. 基于 dictionary 的字符串格式化介绍</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>params = {"server":"mpilgrim", "database":"master", "uid":"sa", "pwd":"secret"}</p>
+<p>"%(pwd)s" % params                                   </p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>'secret'</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>"%(pwd)s is not a good password for %(uid)s" % params</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>'secret is not a good password for sa'</p>
+<p>XML 解析</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>from xml.dom import minidom                                         </p>
+<p>xmldoc = minidom.parse('~/diveintopython/common/py/kgp/binary.xml') </p>
+<p>xmldoc                                                              </p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p><xml.dom.minidom.Document instance at 010BE87C></p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>print xmldoc.toxml()                                                </p>
+</blockquote>
+</blockquote>
+</blockquote>
+<?xml version="1.0" ?>
+
+<p><grammar></p>
+<p><ref id="bit"></p>
+<p>0</p>
+
+<p>1</p>
+
+<p></ref></p>
+<p><ref id="byte"></p>
+<p><xref id="bit"/><xref id="bit"/><xref id="bit"/><xref id="bit"/>\
+
+<xref id="bit"/><xref id="bit"/><xref id="bit"/><xref id="bit"/></p>
+
+<p></ref></p>
+<p></grammar></p>
+<p>minidom.parse 接收一个参数</p>
+<p>本地磁盘上一个 XML 文档的文件名。(你需要将路径改为指向下载的例子所在的目录。) 但是你也可以传入一个文件对象，或甚至是一个类文件对象。</p>
+<p>从 minidom.parse 返回的对象是一个 Document 对象，它是 Node 类的一个子对象。</p>
+<p>toxml 是 Node 类的一个方法</p>
+<p>toxml 打印出了 Node 表示的 XML。对于 Document 节点，这样就会打印出整个 XML 文档。</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>xmldoc.childNodes   </p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>[<DOM Element: grammar at 17538908>]</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>xmldoc.childNodes[0]  #得到第一个 (在本例中，只有一个) 子节点</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p><DOM Element: grammar at 17538908></p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>xmldoc.firstChild   </p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p><DOM Element: grammar at 17538908></p>
+<p>每个 Node 都有一个 childNodes 属性，它是一个 Node 对象的列表。一个 Document 只有一个子节点，即 XML 文档的根元素</p>
+<p>Node 类有一个 firstChild 属性，它和childNodes[0]具有相同的语义。(还有一个 lastChild 属性，它和childNodes[-1]具有相同的语义。)</p>
+<p>例 9.10. toxml 用于任何节点</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>grammarNode = xmldoc.firstChild</p>
+<p>print grammarNode.toxml()</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p><grammar></p>
+<p><ref id="bit"></p>
+<p>0</p>
+
+<p>1</p>
+
+<p></ref></p>
+<p><ref id="byte"></p>
+<p><xref id="bit"/><xref id="bit"/><xref id="bit"/><xref id="bit"/>\
+
+<xref id="bit"/><xref id="bit"/><xref id="bit"/><xref id="bit"/></p>
+
+<p></ref></p>
+<p></grammar></p>
+<p>每一个 Node 类都有toxml()方法</p>
+<p>例 9.11. 子节点可以是文本</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>grammarNode.childNodes                 </p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>[<DOM Text node "\n">, <DOM Element: ref at 17533332>, \</p>
+<p><DOM Text node "\n">, <DOM Element: ref at 17549660>, <DOM Text node "\n">]</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>print grammarNode.firstChild.toxml()   </p>
+<p>print grammarNode.childNodes[1].toxml()</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p><ref id="bit"></p>
+<p>0</p>
+
+<p>1</p>
+
+<p></ref></p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>print grammarNode.childNodes[3].toxml()</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p><ref id="byte"></p>
+<p><xref id="bit"/><xref id="bit"/><xref id="bit"/><xref id="bit"/>\
+
+<xref id="bit"/><xref id="bit"/><xref id="bit"/><xref id="bit"/></p>
+
+<p></ref></p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>print grammarNode.lastChild.toxml()    </p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>查看 binary.xml 中的 XML ，你可能会认为 grammar 只有两个子节点，即两个 ref 元素。但是你忘记了一些东西：硬回车！在'<grammar>'之后，第一个'<ref>'之前是一个硬回车，并且这个文本算作 grammar 元素的一个子节点。类似地，在每个'</ref>'之后都有一个硬回车；它们都被当作子节点。所以grammar.childNodes实际上是一个有5个对象的列表：3个 Text 对象和两个 Element 对象。 </p>
+<p>第一个子节点是一个 Text 对象，它表示在'<grammar>'标记之后、第一个'<ref>'标记之后的硬回车。 </p>
+<p>第二个子节点是一个 Element 对象，表示了第一个 ref 元素。 </p>
+<p>第四个子节点是一个 Element 对象，表示了第二个 ref 元素。 </p>
+<p>最后一个子节点是一个 Text 对象，表示了在'</ref>'结束标记之后、'</grammar>' 结束标记之前的硬回车。 </p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>reflist = xmldoc.getElementsByTagName('ref')</p>
+<p>reflist</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>[<DOM Element: ref at 136138108>, <DOM Element: ref at 136144292>]</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>print reflist[0].toxml()</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p><ref id="bit"></p>
+<p>0</p>
+
+<p>1</p>
+
+<p></ref></p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>print reflist[1].toxml()</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p><ref id="byte"></p>
+<p><xref id="bit"/><xref id="bit"/><xref id="bit"/><xref id="bit"/>\
+
+<xref id="bit"/><xref id="bit"/><xref id="bit"/><xref id="bit"/></p>
+
+<p></ref></p>
+<p>例 9.22. 每个元素都是可搜索的</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>firstref = reflist[0]                     </p>
+<p>print firstref.toxml()</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p><ref id="bit"></p>
+<p>0</p>
+
+<p>1</p>
+
+<p></ref></p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>plist = firstref.getElementsByTagName("p")</p>
+<p>plist</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>[<DOM Element: p at 136140116>, <DOM Element: p at 136142172>]</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>print plist[0].toxml()                    </p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>0</p>
+
+<blockquote>
+<blockquote>
+<blockquote>
+<p>print plist[1].toxml()</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>1</p>
+
+<p>例 9.23. 搜索实际上是递归的</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>plist = xmldoc.getElementsByTagName("p")</p>
+<p>plist</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>[<DOM Element: p at 136140116>, <DOM Element: p at 136142172>, <DOM Element: p at 136146124>]</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>plist[0].toxml()                        </p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>'<p>0</p>'</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>plist[1].toxml()</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>'<p>1</p>'</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>plist[2].toxml()                        </p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>'<p><xref id="bit"/><xref id="bit"/><xref id="bit"/><xref id="bit"/>\</p>
+<p><xref id="bit"/><xref id="bit"/><xref id="bit"/><xref id="bit"/></p>'</p>
+<p>例 9.24. 访问元素属性</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>xmldoc = minidom.parse('binary.xml')</p>
+<p>reflist = xmldoc.getElementsByTagName('ref')</p>
+<p>bitref = reflist[0]</p>
+<p>print bitref.toxml()</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p><ref id="bit"></p>
+<p>0</p>
+
+<p>1</p>
+
+<p></ref></p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>bitref.attributes         </p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p><xml.dom.minidom.NamedNodeMap instance at 0x81e0c9c></p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>bitref.attributes.keys()   </p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>[u'id']</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>bitref.attributes.values()</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>[<xml.dom.minidom.Attr instance at 0x81d5044>]</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>bitref.attributes["id"]   </p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p><xml.dom.minidom.Attr instance at 0x81d5044></p>
+<p>每个 Element 对象都有一个 attributes 属性，它是一个 NamedNodeMap 对象。</p>
+<p>NamedNodeMap 是一个行为像字典的对象</p>
+<p>再次将 NamedNodeMap 视为一个字典，你可以通过 attributes.values() 获取属性值的一个列表。这些值本身是 Attr 类型的对象。</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>a = bitref.attributes["id"]</p>
+<p>a</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p><xml.dom.minidom.Attr instance at 0x81d5044></p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>a.name </p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>u'id'</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>a.value</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>u'bit'</p>
+<p>Attr 对象完整代表了单个 XML 元素的单个 XML 属性。</p>
+<p>StringIO可以把字符串转换成类文件对象，那么你只要这个对象传递给 minidom.parse 就可以了。</p>
+<p>例 10.5. 解析字符串 XML (类文件对象方式)</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>contents = "<grammar><ref id='bit'><p>0</p><p>1</p></ref></grammar>"</p>
+<p>ssock = StringIO.StringIO(contents)</p>
+<p>xmldoc = minidom.parse(ssock)</p>
+<p>ssock.close()</p>
+<p>print xmldoc.toxml()</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<?xml version="1.0" ?>
+
+<p><grammar><ref id="bit"><p>0</p><p>1</p></ref></grammar></p>
+<h1>stdout.py</h1>
+<p>import sys</p>
+<p>print 'Dive in'                                         </p>
+<p>saveout = sys.stdout                                    </p>
+<p>fsock = open('out.log', 'w')                            </p>
+<p>sys.stdout = fsock                                      </p>
+<p>print 'This message will be logged instead of displayed'</p>
+<p>sys.stdout = saveout                                    </p>
+<p>fsock.close()                                           </p>
+<p>始终在重定向前保存 stdout，这样的话之后你还可以将其设回正常。</p>
+<p>所有后续的输出都会被重定向到刚才打开的新文件上。</p>
+<p>它设回原来的方式。</p>
+<h1>stderr.py</h1>
+<p>import sys</p>
+<p>fsock = open('error.log', 'w')              </p>
+<p>sys.stderr = fsock                          </p>
+<p>raise Exception, 'this error will be logged' </p>
+<p>引发一个异常。从屏幕输出上可以注意到这个行为没有 在屏幕上打印出任何东西。所有正常的跟踪信息已经写进 error.log。</p>
+<p>还要注意你既没有显式关闭日志文件，也没有将 stderr 设回最初的值。这样挺好，因为一旦程序崩溃 (由于引发的异常)，Python 将替我们清理并关闭文件，因此永远不恢复 stderr 不会造成什么影响。然而对于 stdout，恢复初始值相对更为重要――你可能会在后面再次操作标准输出。</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>import sys</p>
+<p>print &gt;&gt; sys.stderr, 'entering function'</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>entering function</p>
+<p>print 语句的快捷语法可以用于写入任何打开的文件 (或者是类文件对象)。在这里，你可以将单个 print 语句重定向到 stderr 而且不用影响后面的 print 语句。</p>

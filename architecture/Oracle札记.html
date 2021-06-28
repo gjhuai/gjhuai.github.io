@@ -1,0 +1,91 @@
+<h2>instantclient 连接PL/SQL Develop</h2>
+<ul>
+<li>
+<p>win8
+可以使用 instantclient_10_2，  instantclient_11_2没有试过。</p>
+</li>
+<li>
+<p>win10
+只能使用 instantclient_11_2，且需要安装 <a href="https://www.microsoft.com/en-us/download/details.aspx?id=18471">Microsoft Visual Studio 2005 Redistributable</a></p>
+</li>
+</ul>
+<p>-步骤
+    - TNS_ADMIN=D:\dev\instantclient_11_2</p>
+<pre><code>- 加  D:\dev\instantclient_11_2 到  Path中
+
+- 配置 NLS_LANG=SIMPLIFIED CHINESE_CHINA.ZHS16GBK
+
+- 编写tnsnames.ora
+</code></pre>
+<pre><code>ORCL =
+
+  (DESCRIPTION =
+
+    (ADDRESS_LIST =
+
+      (ADDRESS = (PROTOCOL = TCP)(HOST = 192.168.1.106)(PORT = 1521))
+
+    )
+
+    (CONNECT_DATA =
+
+      (SERVICE_NAME = orcl)
+
+    )
+
+  )
+
+</code></pre>
+<pre><code>- 在PLSQL Developer中设置Oracle_Home和OCI Library：
+</code></pre>
+<p>Tools -&gt; Preferences -&gt; Oracle -&gt; Connection：</p>
+<p>Oracle_Home： D:\dev\instantclient_11_2</p>
+<p>OCI Library： D:\dev\instantclient_11_2\oci.dll</p>
+<h2>创建表空间和用户</h2>
+<p>create temporary tablespace ts_snhb_tmp<br />
+tempfile '/opt/oracle/oradata/oracle10g/snhb_tmp.dbf' 
+size 50m<br />
+autoextend on<br />
+next 50m maxsize 20480m<br />
+extent management local;</p>
+<p>create tablespace ts_snhb<br />
+logging<br />
+datafile '/opt/oracle/oradata/oracle10g/snhb.dbf' 
+size 50m<br />
+autoextend on<br />
+next 50m maxsize 20480m<br />
+extent management local;</p>
+<p>create user snhb identified by snhb<br />
+default tablespace ts_snhb<br />
+temporary tablespace ts_snhb_tmp;</p>
+<p>grant connect,resource,dba to snhb;
+grant all privileges to snhb;</p>
+<p>-- resource is a role in oracle, which gives you the right to create objects (tables, procedures, some more but no views!). ALL PRIVILEGES grants a lot more of system privileges.</p>
+<h2>查看oracle数据库(database)的版本命令</h2>
+<p>在sqlplus下输入以下任意一个语句</p>
+<pre><code>SQL&gt; select * from v$version;
+
+SQL&gt; select version from v$instance;
+
+SQL&gt; Select version FROM Product_component_version   Where SUBSTR(PRODUCT,1,6)='Oracle';
+
+</code></pre>
+<h2>Oracle锁表</h2>
+<pre><code class="language-sql">select s.SID,
+       s.serial#,
+       s.USERNAME,
+       s.machine,
+       s.OSUSER,
+       s.PROGRAM,
+       l.locked_mode,
+       o.OBJECT_NAME,
+       a.sql_text
+from v$session s, v$locked_object l, v$sqlarea a, dba_objects o
+where l.session_id = s.sid
+   and s.prev_sql_addr = a.address
+   and o.object_id = l.object_id
+order by sid, s.serial#;
+</code></pre>
+<p>https://www.cnblogs.com/shenckicc/p/5458574.html
+https://www.cnblogs.com/dgq-blog/p/9243196.html
+https://www.cnblogs.com/su1643/p/6598571.html</p>

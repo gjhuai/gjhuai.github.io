@@ -1,0 +1,150 @@
+<h1>第一章：分布式 Java 应用</h1>
+<h2>网络通信</h2>
+<ul>
+<li>协议</li>
+<li>TCP/IP</li>
+<li>UDP/IP</li>
+<li>Multicast</li>
+<li>IO</li>
+<li>BIO<ul>
+<li>同步，阻塞</li>
+</ul>
+</li>
+<li>NIO<ul>
+<li>同步，事件驱动，非阻塞</li>
+<li>Reactor</li>
+</ul>
+</li>
+<li>AIO<ul>
+<li>异步，事件驱动</li>
+<li>Proactor</li>
+</ul>
+</li>
+<li>同步与异步有何不同？</li>
+<li>reactor 原理</li>
+<li>epoll 与 nio</li>
+<li>nio 的事件驱动原理</li>
+<li>aio 与 nio 区别</li>
+<li>JAVA 的 aio</li>
+<li>proactor 原理</li>
+</ul>
+<h2>消息方式的系统间通信</h2>
+<ul>
+<li>基于 Java 包</li>
+<li>TCP/IP<ul>
+<li>BIO: Socket、ServerSocket</li>
+<li>NIO: SocketChannel、ServerSocketChannel</li>
+</ul>
+</li>
+<li>UDP/IP<ul>
+<li>BIO: DatagramSocket、DatagramPacket</li>
+<li>NIO: DatagramChannel、ByteBuffer</li>
+</ul>
+</li>
+<li>Multicast<ul>
+<li>MulticastSocket、DatagramPackat</li>
+<li>SRM</li>
+</ul>
+</li>
+<li>基于开源框架</li>
+<li>Mina</li>
+<li>Netty</li>
+<li>性能角度</li>
+<li>连接管理<ul>
+<li>连接池</li>
+<li>连接复用</li>
+<li>短连接、长连接</li>
+</ul>
+</li>
+</ul>
+<h2>远程调用方式的系统间通信</h2>
+<ul>
+<li>基于 Java 包</li>
+<li>RMI<ul>
+<li>UnicastRemoteObject</li>
+<li>LocateRegistry</li>
+</ul>
+</li>
+<li>WebService</li>
+<li>基于开源框架</li>
+<li>Spring RMI</li>
+<li>Apache CXF</li>
+<li>性能</li>
+<li>反射</li>
+<li>序列化、反序列化</li>
+</ul>
+<h1>第二章：大型分布式 Java 应用与 SOA</h1>
+<ul>
+<li>为什么需要 SOA</li>
+<li>系统多元化</li>
+<li>系统拆分</li>
+<li>SOA 是什么</li>
+<li>系统之间统一以 Service 的方式进行交互</li>
+<li>eBay 的 SOA 平台</li>
+<li>服务多级调用带来的延时</li>
+<li>调试/跟踪困难</li>
+<li>更高的安全/检测的要求</li>
+<li>现有应用移植</li>
+<li>QoS 的支持</li>
+<li>高可用和高度可伸缩</li>
+<li>多版本和依赖管理</li>
+<li>可实现 SOA 的方法</li>
+<li>SCA 标准<ul>
+<li>发布服务</li>
+<li>调用服务</li>
+<li>支持的通信以及交互方式</li>
+</ul>
+</li>
+<li>SCA 框架 Tuscany<ul>
+<li>发布服务</li>
+<li>调用服务</li>
+<li>支持的通信以及交互方式</li>
+</ul>
+</li>
+<li>ESB<ul>
+<li>发布服务</li>
+<li>调用服务</li>
+<li>支持的通信以及交互方式</li>
+</ul>
+</li>
+<li>ESB 框架 Mule<ul>
+<li>发布服务</li>
+<li>调用服务</li>
+<li>支持的通信以及交互方式</li>
+</ul>
+</li>
+</ul>
+<h1>第 4 章：分布式与 JDK 类库</h1>
+<h2>集合包</h2>
+<ul>
+<li>ArrayList</li>
+<li>如何插入、删除？</li>
+<li>LinkedList</li>
+<li>Vector</li>
+<li>Stack</li>
+<li>HashSet</li>
+<li>TreeSet</li>
+<li>HashMap</li>
+<li>TreeMap</li>
+</ul>
+<h2>并发包</h2>
+<ul>
+<li>ConcurrentHashMap</li>
+<li>CopyOnWriteArrayList</li>
+<li>CopyOnWriteArraySet</li>
+<li>ArrayBlockingQueue</li>
+<li>AtomicInteger</li>
+<li>ThreadPoolExecutor</li>
+<li>Executors</li>
+<li>FutureTask</li>
+<li>Semaphore</li>
+<li>CountDownLatch</li>
+<li>CyclicBarrier</li>
+<li>ReentrantLock</li>
+<li>ReentrantReadWriteLock</li>
+</ul>
+<h2>(反)序列化</h2>
+<ul>
+<li>序列化</li>
+<li>反序列化</li>
+</ul>

@@ -1,0 +1,117 @@
+<p>[TOC]</p>
+<h2>Eclipse平台介绍</h2>
+<ul>
+<li>SWT/JFace<ul>
+<li>和SWT相似的技术是什么？</li>
+<li>JFace与SWT的关系？ swt工具箱</li>
+</ul>
+</li>
+<li>插件技术和OSGI<ul>
+<li>插件延迟加载怎么实现的？ 扩展的声明和实现分离</li>
+<li>eclipse3.0做了什么重构？<ul>
+<li>OSGI实现</li>
+<li>新的框架名为Equinox</li>
+</ul>
+</li>
+<li>OSGI的优点？<ul>
+<li>分解为小的可重用组件</li>
+<li>动态的增删模块</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>RCP技术<ul>
+<li>什么是RCP？<ul>
+<li>富客户端开发平台</li>
+</ul>
+</li>
+<li>RCP优点？<ul>
+<li>继承Eclipse的UI和Runtime模块</li>
+<li>基于OSGI</li>
+<li>基于SWT/JFace</li>
+<li>可以添加其他插件</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>EMF技术<ul>
+<li>EMF是什么？解决什么问题？<ul>
+<li>帮用户实现UML建模，并辅助实现代码。</li>
+<li>适用于模型驱动的程序</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>GEF技术<ul>
+<li>GEF是什么？<ul>
+<li>基于SWT的轻量级绘图系统</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2>插件探测器（Plug-in Spy）</h2>
+<ul>
+<li>Shift+Alt+F1   查看eclipse各个视图的源码</li>
+<li>按下Shift+Alt+F2键，此时 鼠标 再点击工具栏按钮或菜单项，同样可以调出插件探测器主界面。</li>
+</ul>
+<h2>eclipse源码使用指南</h2>
+<h3>模板概览</h3>
+<p>“Templates”向导页包含11个典型示例模板，清单如下：
+1.Hello，World
+2.Hello，World Command
+3.ODA Data Source Designer（ODA数据源设计器示例）
+4.ODA Data Source Runtime Driver（ODA数据源运行时驱动示例）
+5.Plug-in with a multi-page editor多页编辑器示例）
+6.Plug-in with a popup menu（弹出菜单示例）
+7.Plug-in with a property page（属性页示例）
+8.Plug-in with a view（自定义视图示例）
+9.Plug-in with an editor（编辑器示例）
+10.Plug-in with an incremental project builder（工程项目编译器示例）
+11.Plug-in with sample help content（上下文帮助示例）</p>
+<p>“Template Selection”向导页包含17典型示例模板（涉及16个扩展点），扩展点清单如下：
+1.org.eclipse.core.resources.builders
+2.org.eclipse.ui.navigator.CommonNavigator
+3.org.eclipse.ui.decorators
+4.org.eclipse.ui.editors
+5.org.eclipse.ui.commands
+6.org.eclipse.ui.actionSets
+7.org.eclipse.help.toc
+8.org.eclipse.ui.importWizards
+9.org.eclipse.ui.newWizards
+10.org.eclipse.ui.perspectives
+11.org.eclipse.ui.popupMenus
+12.org.eclipse.ui.PreferencePages
+13.org.eclipse.ui.propertyPages
+14.org.eclipse.ui.splashHandlers
+15.org.eclipse.ui.intro.configExtension
+16.org.eclipse.ui.views</p>
+<h3>扩展项（Extension）</h3>
+<p>“Extension Wizards”</p>
+<h3>插件源码导入</h3>
+<p>在插件开发透视图中（Plug-in Development），默认有一个插件视图（Plug-ins），该视图用于呈现当前Eclipse开发环境下的插件清单，清单包含当前工作区（workspace）中已打开的插件工程项目。</p>
+<p><img alt="" src="_v_images/2019-11-21-20-45-42.png" /></p>
+<p>启动Eclipse，通过File菜单的“Import…”菜单项调出导入向导。</p>
+<p>Ctrl+Shift+A</p>
+<p><img alt="" src="_v_images/2019-11-21-20-46-00.png" /></p>
+<h2>tycho使用</h2>
+<p>flowable-designer 导入eclipse，eclipse必须安装 graphiti的0.13.2版本：   http://archive.eclipse.org/graphiti/updates/0.13.2</p>
+<h3>https://blog.csdn.net/soszou/article/details/12775101</h3>
+<p>Tycho则是一群Eclipse、OSGi插件开发人员受不了重复地配置类似的Maven pom.xml而创造出来的。Tycho大大简化了Eclipse、OSGi插件中的pom.xml，它实际上是一系列专用于build Eclipse插件和OSGi模块的maven插件的集合。</p>
+<p>Tycho牛逼之处就在于它可以读懂这些metadata，这样程序员就不需要在pom文件里面重新定义一遍。不止如此，为了避免程序员乌龙地在MANIFEST文件和pom文件里面定义的依赖出现冲突，Tycho甚至规定所有的依赖必须定义于MANIFEST文件中（不然没法编译），出现在pom文件中的依赖一律直接被忽略。</p>
+<p>为了优化对Eclipse插件和OSGi模块的build，Tycho提供了专门的packaging，用来处理专门的模块生命周期，最典型的比如eclipse-repository，配合tycho-p2-director-plugin，直接就可以读懂product文件，build整个Eclipse RCP的product。
+PS: feature是插件的集合，我们在给Eclipse安装插件的时候往往安装的是feature，而不是安装一个个的plugin jar</p>
+<h3>官方文档： https://www.eclipse.org/tycho/documentation.php</h3>
+<p>例子：  https://github.com/jsievers/tycho-demo</p>
+<h3>eclipse插件开发-tycho使用: http://ju.outofmemory.cn/entry/260944</h3>
+<ul>
+<li>升级版本号： 在根目录执行 mvn -Dtycho.mode=maven org.eclipse.tycho:tycho-versions-plugin:set-version -DnewVersion=1.6.0 即可全部替换pom和plugin的版本号</li>
+<li>如果项目导入后在eclipse中报错，一般是因为缺少了上面说的那个依赖。可以直接复制到eclipse的plugin依赖目录。或者在mvn clean install之后，通过安装 依赖feature的方式解决。</li>
+</ul>
+<h3>教程</h3>
+<p><a href="https://o7planning.org/en/10137/building-java-osgi-project-with-maven-and-tycho">Building Java OSGi Project with Maven and Tycho</a>
+<a href="http ://www.vogella.com/tutorials/EclipseTycho/article.html">Eclipse Tycho for building plug-ins, OSGi bundles and Eclipse applications - Tutorial</a>
+- eclipse插件开发教程
+    - <a href="https://www.vogella.com/tutorials/EclipsePlugin/article.html">Eclipse IDE Plug-in Development: Plug-ins, Features, Update Sites and IDE Extensions</a></p>
+<pre><code>- [Eclipse RCP (Rich Client Platform) - Tutorial](https://www.vogella.com/tutorials/EclipseRCP/article.html)
+</code></pre>

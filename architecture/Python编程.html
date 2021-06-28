@@ -1,0 +1,89 @@
+<p>[TOC]</p>
+<p>学习资料：
+<a href="https://www.liaoxuefeng.com/wiki/0014316089557264a6b348958f449949df42a6d3a2e542c000">Python教程</a>
+<a href="http://www.runoob.com/python3/python3-tutorial.html">Python 3 教程</a></p>
+<h2>语法</h2>
+<hr />
+<h3>三元运算符</h3>
+<p>参考：
+<a href="https://www.cnblogs.com/hhfzj/p/6978092.html">Python之三元运算、集合、函数</a></p>
+<pre><code class="language-python">c= a if a&gt;1 else b #如果a大于1的话，c=a，否则c=b
+ss = [i for i in range(1,11) if i%2==0 ] #循环1-11间的值（不包括11），如果值能被2整除（即取偶数）
+</code></pre>
+<h3>Set</h3>
+<pre><code class="language-python">#a.定义一个列表，通过强制转换来定义集合
+nums = [1,1,2,3,5,6,77,8]
+num_set = set(nums)
+#b.直接定义
+num_set1={1,2,3,3,4}
+#集合不能通过下标来访问元素
+s.remove(333) #删除元素，如果元素不存在就会报错
+s.pop() #删除一个随机的元素，并返回删除的元素
+s.discare(111) #如果删除的元素存在，删除，不存在不做处理
+</code></pre>
+<h3>可变参数</h3>
+<pre><code class="language-python">def post(*args):    #想传多少个参数就传多少个，将传入的参数放到一个元组里
+    print(args)
+
+# 调用
+post('001','denglu',post)  # 输出：('001', 'denglu', &lt;function post at 0x000001EBEF237400&gt;)
+post()
+</code></pre>
+<h3>关键字参数</h3>
+<pre><code class="language-python">def kw(**kwargs):  #参数不固定，个数不限，和其它类型参数混用时，顺序为：必填参数，默认值参数，可变参数和关键字参数。
+    print(kwargs)    # 参数被转化为一个字典
+# 调用
+kw()
+kw(age=18,name='aaa')    # 
+d={'age':18,'name':'aaa'}
+kw(**d)    # 传入字典调用的时，就得写**{'age':18,'name':'aaa'}
+</code></pre>
+<h3>int与string转换</h3>
+<pre><code class="language-python"># string转换成10进制的int
+int('12')
+
+# string转换成16进制的int
+int('12', 16)
+
+#  int转换成10进制string
+str(18)
+
+str(0x12)
+#  int转换成16进制string
+hex(18)
+
+hex(0x12)
+</code></pre>
+<h3>日期时间</h3>
+<p>参考：<a href="https://www.cnblogs.com/benric/p/5057718.html">python 之日期时间处理</a>
+<a href="http://www.runoob.com/python3/python3-date-time.html">Python3 日期和时间</a></p>
+<h2>自定义排序</h2>
+<hr />
+<pre><code class="language-python">    import functools
+    def cmp(a,b):
+        if a[1] == b[1]:
+            return 0
+        elif len(a[1])&gt;=len(b[1]) and a[1]&gt;b[1]:
+            return -1
+        else:
+            return 1
+
+
+     emap = {'a':'3', 'b':'2'}
+
+    sortedLinks = sorted(emap.items(), key=functools.cmp_to_key(cmp))
+</code></pre>
+<h2>字符串查找定位</h2>
+<pre><code class="language-python">chapters = []
+
+urls = [ch for ch in chapters]
+idx = urls.index(urlPrefix+posMap.get(novel['name']))
+</code></pre>
+<h2>字符串与dict转换</h2>
+<pre><code class="language-python">import json
+json_str= '{&quot;name&quot; : &quot;jay&quot;, &quot;sex&quot; : &quot;male&quot;, &quot;age&quot;: 22}'
+# JSON到字典转化：
+dictinfo = json.loads(json_str)   #输出dict类型
+# 字典到JSON转化：
+jsoninfo = json.dumps( dictinfo   )    #输出str类型
+</code></pre>

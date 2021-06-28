@@ -1,0 +1,101 @@
+<h2>题目说明</h2>
+<p>文件【Java语言简介.txt】，内容如下：</p>
+<pre><code>Java语言作为静态面向对象编程语言的
+
+代表，极好地实现了面向对象理论，允许
+程序员以优雅的思维方式进行复杂的编程
+ [1] 。
+Java具有简单性、面向对象、安全性、平台独立与可移植性、多线程、
+动态性等特点 [2] ！
+Java可以编写桌面
+
+应用程序、Web应用程序、分布式系统和嵌入式系统应用程序等
+ [3] 。
+</code></pre>
+<p>请编写一个程序将这段文字格式化，要求如下：
+1. 如果某一行以【。！】结尾，可认为是一段话结束，段与段之间空一行。
+2. 一段内空行要求去掉，并把非【。！】结尾的行连接起来，放在一行。
+3. 生成的新文件名在原文件后加上_new，即：【Java语言简介_new.txt】</p>
+<p>转换的结果如下：</p>
+<pre><code>Java语言作为静态面向对象编程语言的代表，极好地实现了面向对象理论，允许程序员以优雅的思维方式进行复杂的编程 [1] 。
+
+Java具有简单性、面向对象、分布式、健壮性、安全性、平台独立与可移植性、多线程、动态性等特点 [2] 。
+
+Java可以编写桌面应用程序、Web应用程序、分布式系统和嵌入式系统应用程序等 [3] 。
+</code></pre>
+<h2>知识点</h2>
+<ol>
+<li>文件读写：使用Java7以后的文件操作，并做一下总结。</li>
+<li>字符串处理：总结一下常用的字符串处理用法。</li>
+<li>循环控制语句的使用。</li>
+</ol>
+<hr />
+<h2>答案</h2>
+<pre><code class="language-groovy">import org.apache.commons.lang3.StringUtils
+
+import java.nio.file.StandardOpenOption
+
+@Grab('org.apache.commons:commons-lang3:3.7')
+import static org.apache.commons.lang3.StringUtils.*
+
+import java.nio.charset.Charset
+import java.nio.file.Files
+import java.nio.file.Paths
+
+
+if (this.args.size() &lt;1 )  {
+    println &quot;No Input File!!!!!&quot;
+    return
+}
+
+def filePath = this.args[0]
+//def filePath = &quot;1.txt&quot;
+def endStr = &quot;.。!！?？」》节&quot;.toCharArray().collect { String.valueOf(it)}
+
+
+def lines = Files.readAllLines(Paths.get(filePath), Charset.forName(&quot;GBK&quot;))
+
+def text = new StringBuilder()
+def isEnd = true
+def upLineIsEnd = false
+for (int i=0;i&lt;lines.size;i++){
+    String line = lines[i]
+    if (StringUtils.isBlank(line)){
+        continue
+    }
+
+    line = stripEnd(line, null);
+    isEnd = checkIsEnd(line, endStr)
+
+    if (upLineIsEnd==false) {
+        line = stripStart(line, null)
+    }
+    text.append(line)
+
+    if (isEnd){
+        text.append(&quot;\r\n\r\n&quot;)
+    }
+
+    upLineIsEnd = isEnd
+}
+Files.write(Paths.get(&quot;02.txt&quot;), Arrays.asList(text),
+        Charset.forName(&quot;GBK&quot;), StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING)
+
+
+def checkIsEnd(String line, endStr){
+    def isEnd = false
+    for (String c : endStr ){
+        if (line.endsWith(c)){
+            isEnd = true
+            break;
+        }
+    }
+
+    if (line.contains(&quot;章&quot;) || line.contains(&quot;楔子&quot;)){
+        isEnd = true
+    }
+
+    return isEnd
+}
+
+</code></pre>

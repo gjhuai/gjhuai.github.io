@@ -1,0 +1,409 @@
+<h1>1. 第一章 基础框架搭建</h1>
+<p>https://www.kancloud.cn/mrbird/spring-cloud/1263687</p>
+<p>JDK 1.8
+Spring Boot 2.1.6.RELEASE
+Spring Cloud Greenwich.SR1
+Spring Cloud OAuth2
+Spring Cloud Security</p>
+<h2>1.1. 架构预览</h2>
+<p><img alt="系统架构图" src="https://s2.ax1x.com/2019/08/31/mxMgW8.png =1024x" /></p>
+<p>FEBS-Register：微服务注册中心，用于统一控制各个微服务实例的注册与发现；
+FEBS-Gateway：微服务网关，统一处理外部请求，是客户端和众多微服务连接的桥梁；
+FEBS-Auth：微服务认证服务器，用于令牌（Token）生成和令牌校验，是整个权限系统的核心所在；
+FEBS-Server-System：微服务提供者（资源服务器）A，对外提供系统模块的CRUD服务；
+FEBS-Server-Test：微服务提供者（资源服务器）B。</p>
+<h2>1.2. 搭建微服务注册中心</h2>
+<p>https://www.kancloud.cn/mrbird/spring-cloud/1263688</p>
+<p>在这一节中，我们先使用Eureka构建微服务注册中心（Eureka服务端），因为Eureka较为简单，无须启动第三方服务，只需要引入相关依赖即可。</p>
+<h2>1.3. 搭建认证服务器</h2>
+<p>https://www.kancloud.cn/mrbird/spring-cloud/1263689</p>
+<p>借助Spring Cloud OAuth和Spring Cloud Security搭建一个统一给微服务发放访问令牌的认证服务器febs-auth。</p>
+<h2>1.4. 搭建微服务网关</h2>
+<p>https://www.kancloud.cn/mrbird/spring-cloud/1263690</p>
+<p>在微服务的架构中，服务网关就是一个介于客户端与服务端之间的中间层。在这种情况下，客户端只需要跟服务网关交互，无需调用具体的微服务接口。这样的好处在于，客户端可以降低复杂性，无需关注具体是哪个微服务在提供服务。这一节我们将使用Spring Cloud Zuul搭建微服务网关febs-gateway。</p>
+<h2>1.5. 搭建资源服务器</h2>
+<p>https://www.kancloud.cn/mrbird/spring-cloud/1420720</p>
+<h1>2. 架构完善</h1>
+<p>这一章主要对上一节搭建的基础框架进行完善，解决微服务权限系统常见的问题。</p>
+<h2>2.1. 参数配置化</h2>
+<p>https://www.kancloud.cn/mrbird/spring-cloud/1263694</p>
+<p><code>spring-boot-configuration-processor</code></p>
+<pre><code class="language-java">@Data
+@SpringBootConfiguration
+@PropertySource(value = {&quot;classpath:febs-auth.properties&quot;})
+@ConfigurationProperties(prefix = &quot;febs.auth&quot;)
+public class FebsAuthProperties {
+    private FebsClientsProperties[] clients = {};
+    private int accessTokenValiditySeconds = 60 * 60 * 24;
+    private int refreshTokenValiditySeconds = 60 * 60 * 24 * 7;
+}
+</code></pre>
+<pre><code class="language-ini">febs.auth.accessTokenValiditySeconds=86400
+febs.auth.refreshTokenValiditySeconds=604800
+
+febs.auth.clients[0].client=febs
+febs.auth.clients[0].secret=123456
+febs.auth.clients[0].grantType=password,authorization_code,refresh_token
+febs.auth.clients[0].scope=all
+</code></pre>
+<h2>2.2. 异常处理</h2>
+<p>https://www.kancloud.cn/mrbird/spring-cloud/1263695</p>
+<h2>2.3. Feign的使用</h2>
+<p>https://www.kancloud.cn/mrbird/spring-cloud/1263696</p>
+<p>微服务之间服务的调用可以借助Spring Cloud Feign来完成，Spring Cloud Feign内部整合了Spring Cloud Ribbon和Spring Cloud Hystrix，所以它具有客户端负载均衡和服务容错的功能。</p>
+<p><code>spring-cloud-starter-openfeign</code></p>
+<pre><code class="language-java">@EnableFeignClients
+@SpringBootApplication
+public class FebsServerTestApplication {
+    ......
+</code></pre>
+<pre><code class="language-java">@FeignClient(value = &quot;FEBS-Server-System&quot;, contextId = &quot;helloServiceClient&quot;, fallbackFactory = HelloServiceFallback.class)
+public interface IHelloService {
+    @GetMapping(&quot;hello&quot;)
+    String hello(@RequestParam(&quot;name&quot;) String name);
+}
+</code></pre>
+<h2>2.4. 微服务防护</h2>
+<p>https://www.kancloud.cn/mrbird/spring-cloud/1263697</p>
+<ul>
+<li>自定义Zuul过滤器
+解决这个问题的大致思路是：在网关转发请求前，请求头部加入网关信息，然后在处理请求的微服务模块里定义全局拦截器，校验请求头部的网关信息，这样就能避免客户端直接访问微服务了。
+在自定义Zuul过滤器前，我们先来简单了解下Zuul的核心过滤器。Zuul中默认定义了4种不同生命周期的过滤器类型。<ul>
+<li>PRE：PRE过滤器用于将请求路径与配置的路由规则进行匹配，以找到需要转发的目标地址，并做一些前置加工，比如请求的校验等；</li>
+<li>ROUTING：ROUTING过滤器用于将外部请求转发到具体服务实例上去；</li>
+<li>POST：POST过滤器用于将微服务的响应信息返回到客户端，这个过程种可以对返回数据进行加工处理；</li>
+<li>ERROR：上述的过程发生异常后将调用ERROR过滤器。ERROR过滤器捕获到异常后需要将异常信息返回给客户端，所以最终还是会调用POST过滤器。</li>
+</ul>
+</li>
+</ul>
+<h2>2.5. 跨域处理</h2>
+<p>https://www.kancloud.cn/mrbird/spring-cloud/1263698</p>
+<pre><code class="language-java">@Configuration
+public class FebsGateWayCorsConfigure {
+    @Bean
+    public CorsFilter corsFilter() {
+        final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        final CorsConfiguration corsConfiguration = new CorsConfiguration();
+        // 允许cookie跨域
+        corsConfiguration.setAllowCredentials(true);
+        // 请求头部允许携带任何内容
+        corsConfiguration.addAllowedHeader(CorsConfiguration.ALL);
+        // 允许任何来源
+        corsConfiguration.addAllowedOrigin(CorsConfiguration.ALL);
+        // 允许任何HTTP方法
+        corsConfiguration.addAllowedMethod(CorsConfiguration.ALL);
+        source.registerCorsConfiguration(&quot;/**&quot;, corsConfiguration);
+        return new CorsFilter(source);
+    }
+}
+</code></pre>
+<h1>3. 完善登录流程</h1>
+<h2>3.1. 表结构设计</h2>
+<p>https://www.kancloud.cn/mrbird/spring-cloud/1263701</p>
+<p><img alt="用户-角色-权限" src="https://s2.ax1x.com/2019/08/13/mpOPpR.png" /></p>
+<h2>3.2. 完善登录</h2>
+<p>https://www.kancloud.cn/mrbird/spring-cloud/1263702</p>
+<p><code>mybatis-plus-boot-starter</code>
+<code>dynamic-datasource-spring-boot-starter</code> MyBatis Plus多数据源依赖
+<code>mysql-connector-java</code></p>
+<h2>3.3. 整合图形验证码</h2>
+<p>https://www.kancloud.cn/mrbird/spring-cloud/1263703</p>
+<p>Spring Security本质是一长串的过滤器链，处理用户名密码登录的过滤器为<code>UsernamePasswordAuthenticationFilter</code>，要集成图形验证码校验很简单，只需要在<code>UsernamePasswordAuthenticationFilter</code>过滤器前添加图形验证码校验过滤器即可。</p>
+<p>我们通常会把验证码存储在Redis中，并设置失效时间。
+Spring Boot 2.0后推荐使用Lettuce来代替Jedis，Lettuce基于Netty异步，拥有更好的性能。</p>
+<p>生成图形验证码可以借助GitHub的一个开源项目<code>https://github.com/whvcse/EasyCaptcha</code>，其提供了较为丰富的验证码配置可供选择。
+在febs-auth的pom里引入该依赖：
+<dependency>
+    <groupId>com.github.whvcse</groupId>
+    <artifactId>easy-captcha</artifactId>
+    <version>1.6.2</version>
+</dependency></p>
+<p>在前后端不分离的架构下，我们通过浏览器传输的jsessionid来和验证码图片一一对应，但前后的分离的模式下，客户端发送的请求并没有携带jsessionid（因为不再基于Session），所以我们需要客户端在发送获取验证码请求的时候，携带一个key（比如按一定算法生成的随机字符串，模拟jsessionid）来和验证码一一对应。于是我们在create里一开始就从请求中获取key值，然后根据验证码配置文件生成验证码，并将验证码字符保存到了Redis中（Redis Key为febs.captcha. + 客户端上送的key值，有效时间为配置文件定义的120秒），并将验证码图片以流的形式返回给客户端。</p>
+<pre><code class="language-java">@Component
+public class ValidateCodeFilter extends OncePerRequestFilter {
+
+    @Autowired
+    private ValidateCodeService validateCodeService;
+
+    @Override
+    protected void doFilterInternal(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, FilterChain filterChain) throws ServletException, IOException {
+    // 校验验证码
+</code></pre>
+<h2>3.4. Sentinel验证码限流</h2>
+<p>https://www.kancloud.cn/mrbird/spring-cloud/1263704</p>
+<p>因为我们的验证码服务是免认证的，所以只要知道了地址就可以频繁的去获取验证码，这无形之中给服务器增加了很大的压力，甚至可能导致服务器宕机。
+为了解决这个问题，我们可以在网关处整合阿里巴巴开源的Sentinel流量哨兵来限制验证码的获取频率。</p>
+<p><code>com.alibaba.csp:sentinel-zuul-adapter:1.6.3</code></p>
+<pre><code class="language-java">@Configuration
+public class FebsGatewaySentinelFilter {
+....
+    @PostConstruct
+    public void doInit() {
+        initGatewayRules();
+    }
+
+    /**
+     * 定义验证码请求限流，限流规则：
+     *  60秒内同一个IP，同一个 key最多访问 10次
+     */
+    private void initGatewayRules() {
+        Set&lt;ApiDefinition&gt; definitions = new HashSet&lt;&gt;();
+        Set&lt;ApiPredicateItem&gt; predicateItems = new HashSet&lt;&gt;();
+
+        predicateItems.add(new ApiPathPredicateItem().setPattern(&quot;/auth/captcha&quot;));
+        ApiDefinition definition = new ApiDefinition(&quot;captcha&quot;)
+                .setPredicateItems(predicateItems);
+        definitions.add(definition);
+        GatewayApiDefinitionManager.loadApiDefinitions(definitions);
+
+        Set&lt;GatewayFlowRule&gt; rules = new HashSet&lt;&gt;();
+
+        rules.add(new GatewayFlowRule(&quot;captcha&quot;)
+                .setResourceMode(SentinelGatewayConstants.RESOURCE_MODE_CUSTOM_API_NAME)
+                .setParamItem(
+                        new GatewayParamFlowItem()
+                                .setParseStrategy(SentinelGatewayConstants.PARAM_PARSE_STRATEGY_URL_PARAM)
+                                .setFieldName(&quot;key&quot;)
+                                .setMatchStrategy(SentinelGatewayConstants.PARAM_MATCH_STRATEGY_EXACT)
+                                .setParseStrategy(SentinelGatewayConstants.PARAM_PARSE_STRATEGY_CLIENT_IP)
+                )
+                .setCount(10)
+                .setIntervalSec(60)
+        );
+        GatewayRuleManager.loadRules(rules);
+    }
+}
+</code></pre>
+<h1>4. 整合Swagger</h1>
+<h2>4.1. 完善febs-server-system</h2>
+<p>https://www.kancloud.cn/mrbird/spring-cloud/1263707</p>
+<p>因为febs-server-system模块负责用户管理、角色管理、菜单管理、部门管理等模块的增删改查，所以这章将演示如何在febs-server-system模块里集成swagger，其他微服务系统要集成swagger照猫画虎就行了。</p>
+<ul>
+<li>集成MyBatis Plus</li>
+<li>配置p6spy
+p6spy用于在控制台中打印MyBatis执行的SQL。</li>
+<li>用户管理模块增删改查</li>
+<li>暴露服务</li>
+<li>数据校验</li>
+<li>PostMan测试</li>
+</ul>
+<h2>4.2. 接入Swagger</h2>
+<p>https://www.kancloud.cn/mrbird/spring-cloud/1263708</p>
+<p><code>io.springfox:springfox-swagger2:2.9.2</code>
+<code>io.springfox:springfox-swagger-ui:2.9.2</code></p>
+<h2>4.3. Swagger OAuth2认证</h2>
+<p>https://www.kancloud.cn/mrbird/spring-cloud/1263709</p>
+<p>我们在febs-auth模块里配置一个新的Client，专门用于Swagger令牌发放。在febs-auth模块的febs-auth.properties配置文件里添加如下配置:</p>
+<pre><code class="language-ini">febs.auth.clients[1].client=swagger
+febs.auth.clients[1].secret=123456
+febs.auth.clients[1].grantType=password
+febs.auth.clients[1].scope=test
+</code></pre>
+<h1>5. 整合第三方服务</h1>
+<h2>5.1. 整合Spring Boot Admin</h2>
+<p>https://www.kancloud.cn/mrbird/spring-cloud/1263712</p>
+<p>Spring Boot Admin通过<code>spring-boot-starter-actuator</code>提供的REST接口实现了图形化的监控界面，包括应用的配置信息、Beans信息、环境属性、线程信息、JVM状况等。
+Spring Boot Admin分为服务端和客户端。客户端通过HTTP向服务端提供自身信息，服务端收集这些信息并以图形化界面的方式呈现。下面，Spring Boot Admin客户端简称为SBA客户端，Spring Boot Admin服务端简称为SBA服务端。
+整合Spring Boot Admin后，我们的系统架构如下所示:</p>
+<p><img alt="系统架构图" src="https://s2.ax1x.com/2019/08/31/mxQHHA.png =1024x" /></p>
+<p><code>de.codecentric:spring-boot-admin-server:2.1.6</code>
+<code>de.codecentric:spring-boot-admin-server-ui:2.1.6</code></p>
+<h2>5.2. Sleuth Zipkin链路追踪</h2>
+<p>https://www.kancloud.cn/mrbird/spring-cloud/1263713</p>
+<p>一个复杂的业务流程通常会被拆分多个微服务系统来完成，微服务间通过Feign来通信。当业务流程足够复杂时，一个完整的HTTP请求调用链一般会经过多个微服务系统，要通过日志来跟踪一整个调用链变得不再那么简单。我们可以通过Spring Cloud Sleuth来解决这个问题。</p>
+<ul>
+<li>整合Spring Cloud Sleuth
+<code>org.springframework.cloud:spring-cloud-starter-sleuth</code></li>
+</ul>
+<p>从日志里捞取traceId并追踪请求链路。借助zipkin实现使用图形化界面的方式追踪请求链路。</p>
+<ul>
+<li>整合Zipkin
+在整合Zipkin之前，我们需要先搭建RabbitMQ。RabbitMQ用于收集Sleuth提供的追踪信息，然后Zipkin Server从RabbitMQ里获取，这样可以提升性能。</li>
+</ul>
+<h2>5.3. logback日志打印</h2>
+<p>https://www.kancloud.cn/mrbird/spring-cloud/1263714</p>
+<h2>5.4. ELK日志收集</h2>
+<p>https://www.kancloud.cn/mrbird/spring-cloud/1263715</p>
+<ul>
+<li>搭建ELK环境</li>
+<li>修改微服务日志配置
+我们分别在febs-auth、febs-gateway和febs-server模块的pom里引入<code>Logstash</code>依赖 <code>net.logstash.logback:logstash-logback-encoder:6.1</code>， 并增加logback-spring.xml 配置：</li>
+</ul>
+<pre><code class="language-xml">&lt;!--输出到 logstash的 appender--&gt;
+&lt;appender name=&quot;logstash&quot; class=&quot;net.logstash.logback.appender.LogstashTcpSocketAppender&quot;&gt;
+    &lt;destination&gt;192.168.33.10:4560&lt;/destination&gt;
+    &lt;encoder charset=&quot;UTF-8&quot; class=&quot;net.logstash.logback.encoder.LogstashEncoder&quot;/&gt;
+&lt;/appender&gt;
+
+&lt;root level=&quot;info&quot;&gt;
+    &lt;appender-ref ref=&quot;logstash&quot; /&gt;
+&lt;/root&gt;
+</code></pre>
+<h1>6. 前端系统介绍</h1>
+<p>FEBS Cloud的前端FEBS Cloud Web采用 vue-element-admin，它是一款基于 vue 和 element-ui实现的后台管理系统模板。</p>
+<h2>6.1. 封装Axios</h2>
+<p>https://www.kancloud.cn/mrbird/spring-cloud/1263718</p>
+<h2>6.2. Vue导航守卫</h2>
+<p>https://www.kancloud.cn/mrbird/spring-cloud/1263719</p>
+<h2>6.3. 动态路由构建</h2>
+<p>https://www.kancloud.cn/mrbird/spring-cloud/1263720</p>
+<h2>6.4. 处理用户登录</h2>
+<p>https://www.kancloud.cn/mrbird/spring-cloud/1263721</p>
+<p><img alt="登录流程" src="https://s2.ax1x.com/2019/08/28/mHF6WF.png" /></p>
+<h2>6.5. 处理令牌刷新</h2>
+<p>https://www.kancloud.cn/mrbird/spring-cloud/1263722</p>
+<p>我们在febs-auth定义的令牌有效时间为86400秒（即24小时），过了24小时候令牌就失效了。假如令牌即将要失效时，用户还在使用系统，那么用户的某个操作可能进行了一半时，系统突然弹出登录过期提示，非常影响用户体验。
+要解决上面的问题，我们可以在令牌将要失效时，判断用户是否还在使用系统，如果是的话，我们可以偷偷地通过刷新令牌来获取一个新的访问令牌，存储到浏览器内存中。这样就可以在用户无感知的情况下，“延长”访问令牌的有效时间。
+因为我们系统的请求都是通过6.1节封装的Axios对象来完成的，并且我们在request.js里配置了请求拦截，所以我们刷新令牌的动作也可以在请求拦截器里完成，大致步骤如下图所示：</p>
+<p><img alt="处理令牌刷新" src="https://s2.ax1x.com/2019/08/28/mH8sDP.png" /></p>
+<h2>6.6. 自定义Vue权限指令</h2>
+<p>https://www.kancloud.cn/mrbird/spring-cloud/1263723</p>
+<p><code>&lt;button v-has-permission="['user:add']"&gt;新增用户&lt;/button&gt;</code></p>
+<h1>7. 微服务部署</h1>
+<h2>7.1. 微服务Docker化</h2>
+<p>https://www.kancloud.cn/mrbird/spring-cloud/1263726</p>
+<h2>7.2. 使用Docker Compose部署</h2>
+<p>https://www.kancloud.cn/mrbird/spring-cloud/1263727</p>
+<h1>8. 微服务进阶</h1>
+<h2>8.1. 令牌存储策略</h2>
+<p>https://www.kancloud.cn/mrbird/spring-cloud/1277531</p>
+<ul>
+<li>
+<p>RedisTokenStore
+在第一章搭建认证服务器的时候，我们使用的是RedisTokenStore令牌存储策略。使用这种策略时，用户的access_token将存储到Redis中，退出登录后，Redis中存储的令牌也会被清除。
+除了这种令牌存储策略外，Spring还提供了InMemoryTokenStore、JdbcTokenStore和JwtTokenStore三种存储策略：</p>
+</li>
+<li>
+<p>InMemoryTokenStore
+该策略将令牌存储到内存中，优点就是无需依赖第三方存储，对于开发小型服务是不错的选择；缺点是认证服务器故障重启后，之前存储的令牌就丢失。</p>
+</li>
+<li>
+<p>JdbcTokenStore
+顾名思义，该策略使用数据库来存储令牌。在使用这种策略之前，我们需要先准备好库表。Spring Security OAuth仓库可以找到相应的脚本，只需要使用到oauth_access_token和oauth_refresh_token数据表。</p>
+</li>
+<li>
+<p>JwtTokenStore
+前面三种存储策略生成的令牌都是使用UUID生成的无意义字符串，我们也可以使用JwtTokenStore生成JWT格式令牌。
+在febs-auth模块下认证服务器配置类FebsAuthorizationServerConfigure中配置JwtTokenStore。</p>
+</li>
+</ul>
+<h2>8.2. 使用Cloud Gateway搭建网关</h2>
+<p>https://www.kancloud.cn/mrbird/spring-cloud/1263731</p>
+<p>这一节，我们将使用Spring Cloud Gateway构建一个全新的微服务网关，代替之前通过Spring Cloud Zuul构建的微服务网关。和Zuul相比，Spring Cloud Gateway具有如下优势：
+基于Reactor模型的WebFlux构建，运行在Netty上，具有更好的性能；
+可拓展性高，内置了非常丰富的转发规则，除此之外，我们也可以定义自己的转发规则。
+对于WebFlux不熟悉的同学可以在学完本节后阅读我的博文：https://mrbird.cc/tags/WebFlux/。</p>
+<p><code>org.springframework.cloud:spring-cloud-starter-gateway</code></p>
+<ul>
+<li>转发规则
+Spring Cloud Gateway两大核心概念为：谓词工厂和过滤器工厂，谓词工厂用于定义转发规则，过滤器工厂用于修改请求和响应。Spring Cloud Gateway内置的谓词工厂和过滤器工厂可以参考：https://cloud.spring.io/spring-cloud-gateway/reference/html/#gateway-request-predicates-factories和https://cloud.spring.io/spring-cloud-gateway/reference/html/#gatewayfilter-factories。</li>
+</ul>
+<pre><code class="language-yml">spring:
+  cloud:
+    gateway:
+      routes:
+        - id: FEBS-Auth
+          uri: lb://FEBS-Auth
+          predicates:
+            - Path=/auth/**
+          filters:
+            - StripPrefix=1
+        - id: FEBS-Server-System
+          uri: lb://FEBS-Server-System
+          predicates:
+            - Path=/system/**
+          filters:
+            - StripPrefix=1
+        - id: FEBS-Server-test
+          uri: lb://FEBS-Server-Test
+          predicates:
+            - Path=/test/**
+          filters:
+            - StripPrefix=1
+</code></pre>
+<ul>
+<li>定义全局过滤器</li>
+</ul>
+<h2>8.3. 使用Alibaba Nacos注册中心</h2>
+<p>https://www.kancloud.cn/mrbird/spring-cloud/1271133</p>
+<h2>8.4. 使用Alibaba Nacos存储配置</h2>
+<p>https://www.kancloud.cn/mrbird/spring-cloud/1289434</p>
+<p>Spring Cloud Alibaba Nacos不但可以用于搭建微服务注册中心，还可以统一管理微服务配置，类似于Spring Cloud Config。</p>
+<ul>
+<li>Nacos数据持久化
+Nacos支持使用MySQL进行数据持久化。</li>
+<li>使用Nacos管理配置
+增加依赖<code>org.springframework.cloud:spring-cloud-starter-alibaba-nacos-config</code></li>
+</ul>
+<pre><code class="language-yml">spring:
+  application:
+    name: FEBS-Auth
+  cloud:
+    nacos:
+      discovery:
+        server-addr: ${nacos.url}:8001
+      config:
+        server-addr: ${nacos.url}:8001
+        group: DEFAULT_GROUP
+        prefix: febs-auth
+        file-extension: yaml
+</code></pre>
+<h2>8.5. 接入Prometheus + Grafana</h2>
+<p>这节的目的是搭建一个多维度监控微服务的可视化平台，包括Docker容器监控、MySQL监控、Redis监控和微服务JVM监控等，并且在必要的情况下可以发送预警邮件。
+这节主要用到的组件有Prometheus、Grafana、alertmanager、node_exporter、mysql_exporter、redis_exporter、cadvisor。各自作用如下所示：</p>
+<ol>
+<li>Prometheus：获取、存储监控数据，供第三方查询；</li>
+<li>Grafana：提供Web页面，从Prometheus获取监控数据可视化展示；</li>
+<li>alertmanager：定义预警规则，发送预警信息；</li>
+<li>node_exporter：收集微服务端点监控数据；</li>
+<li>mysql_exporter：收集MySQL数据库监控数据；</li>
+<li>redis_exporter：收集Redis监控数据；</li>
+<li>cadvisor：收集Docker容器监控数据。</li>
+</ol>
+<h2>8.6. 整合skywalking分布式追踪</h2>
+<p>https://www.kancloud.cn/mrbird/spring-cloud/1337996</p>
+<p>Skywalking是由国人吴晟开发的一款分布式追踪软件，后面成功孵化为Apache的顶级项目。Skywalking主要包括了分布式追踪、性能指标分析、应用和服务依赖分析等功能，使用体验后个人感觉比zipkin更为直观，是替代zipkin的一个不错的选择。
+Skywalking的主要结构图如下所示:
+<img alt="" src="https://s2.ax1x.com/2019/10/20/Kutat0.png =1024x" /></p>
+<p>从上图可以看出Skywalking主要分为四个模块：agent、collector、webapp-ui和storage。我们可以使用Skywalking agent探针无侵入地接入Spring Cloud应用，然后通过HTTP或者GRPC将应用数据采集到collector收集器。collector中的数据存储与storage，支持MySQL、H2、Elasticsearch等存储，最终这些数据集中在webapp-ui以图形化的方式呈现。</p>
+<h2>8.7. 升级到Hoxton.RELEASE</h2>
+<p>https://www.kancloud.cn/mrbird/spring-cloud/1411735</p>
+<h1>9. K8S集群部署</h1>
+<h2>9.1. 集群环境准备</h2>
+<p>https://www.kancloud.cn/mrbird/spring-cloud/1426915</p>
+<p>这一章节，我们的目标是通过Kubernetes（下面简称k8s，因为k和s之间有8个字符，所以俗称k8s）部署一个高可用的FEBS Cloud微服务权限系统，所以在此之前你需要掌握Kubernetes的基本知识。如果您还未曾接触过Kubernetes，可以通过我的博客https://mrbird.cc/tags/Kubernetes/或者购买《Kubernetes权威指南(第4版)》书籍学习。</p>
+<h2>9.2. 安装第三方服务</h2>
+<p>https://www.kancloud.cn/mrbird/spring-cloud/1426916</p>
+<p>这一节我们需要安装的内容较多，包括Docker、Docker Compose、MySQL、Redis、ELK等软件。</p>
+<h2>9.3. Kubeadm搭建K8S 1.16.2集群</h2>
+<p>https://www.kancloud.cn/mrbird/spring-cloud/1426917</p>
+<p>Kubernetes从1.4版本开始后就引入了kubeadm用于简化集群搭建的过程，在Kubernetes 1.13版本中，kubeadm工具进入GA阶段，可用于生产环境Kubernetes集群搭建。本节将使用Kubeadm搭建Kubernetes1.16.2集群，宿主机使用9.1里搭建的master、node1、node2、node3四台虚拟机，即一主三从的K8S集群结构。</p>
+<h2>9.4. NFS服务器搭建</h2>
+<p>https://www.kancloud.cn/mrbird/spring-cloud/1426918</p>
+<p>在K8S中，我们虽然可以使用volume将容器内目录挂载到宿主机目录上，但由于Pod调度的不确定性，这种数据存储方式是不牢靠的。对于有状态的应用，我们希望无论Pod被调度到哪个节点上，它们的数据总能够完整地恢复，这时候我们就不能用volume挂载了，而应该使用“网络共享存储”。</p>
+<h2>9.5. 搭建Docker镜像仓库Harbor</h2>
+<p>https://www.kancloud.cn/mrbird/spring-cloud/1426919</p>
+<p>在本地环境下（或者公司局域网），将Docker镜像推送到Docker Hub速度比较慢，推荐的做法是安装一个第三方的Docker镜像仓库，这里推荐使用Harbor。Harbor是一款开源的Docker镜像存储仓库，其扩展了Docker Distribution，在此基础上添加了我们常用的功能，比如安全认证，RBAC用户权限管理，可视化页面操作等功能。</p>
+<h2>9.6. K8S构建高可用Nacos</h2>
+<p>https://www.kancloud.cn/mrbird/spring-cloud/1426920</p>
+<h2>9.7. K8S构建FEBS Cloud服务集群</h2>
+<p>https://www.kancloud.cn/mrbird/spring-cloud/1426921</p>
+<h2>9.8. 部署前端测试</h2>
+<p>https://www.kancloud.cn/mrbird/spring-cloud/1426922</p>
+<h1>10. 分布式事务研究</h1>
+<h2>10.1. 分布式架构事务挑战</h2>
+<p>https://www.kancloud.cn/mrbird/spring-cloud/1456143</p>
+<h2>10.2. 分布式事务解决方案</h2>
+<p>https://www.kancloud.cn/mrbird/spring-cloud/1456144</p>
+<h2>10.3. 基于消息中间件RocketMQ方案（一）</h2>
+<p>https://www.kancloud.cn/mrbird/spring-cloud/1456145</p>
+<h2>10.4. 基于消息中间件RocketMQ方案（二）</h2>
+<p>https://www.kancloud.cn/mrbird/spring-cloud/1456146</p>
+<h2>10.5. 基于TX-LCN方案</h2>
+<p>https://www.kancloud.cn/mrbird/spring-cloud/1456147</p>
+<h2>10.6. 基于阿里Seata方案</h2>
+<p>10.6. https://www.kancloud.cn/mrbird/spring-cloud/1456148</p>
+<ul>
+<li>搭建Seata Server
+Seata是一款开源的分布式事务解决方案，致力于提供高性能和简单易用的分布式事务服务。Seata 将为用户提供了 AT、TCC、SAGA（适合业务流程长、业务流程多的情况，所以本节不演示） 和 XA（截至2020年1月1日，该功能Seata还在开发中，所以也不演示） 事务模式，为用户打造一站式的分布式解决方案。</li>
+</ul>

@@ -1,0 +1,93 @@
+<p>[TOC]</p>
+<h1>参考资料</h1>
+<ul>
+<li>
+<p><a href="https://mp.weixin.qq.com/s/JPgROEQIQRuRNwAT_19cVA">必须了解的MySQL三大日志：binlog、redo log和undo log</a>
+日志是 mysql 数据库的重要组成部分，记录着数据库运行期间各种状态信息。mysql 日志主要包括错误日志、查询日志、慢查询日志、事务日志、二进制日志几大类。作为开发，我们重点需要关注的是二进制日志 (binlog) 和事务日志(包括 redo log 和 undo log)，本文接下来会详细介绍这三种日志。</p>
+</li>
+<li>
+<p><a href="https://tech.meituan.com/2017/06/29/database-availability-architecture.html">美团数据库高可用架构的演进与设想</a>
+MMM、MHA、MHA+Zebra 架构等</p>
+</li>
+<li>
+<p><a href="https://www.cnblogs.com/lgx211/p/12456859.html">多图文，详细介绍mysql各个集群方案</a>
+介绍优劣：
+一，mysql原厂出品（1，MySQL Replication、2，MySQL Fabirc、3，MySQL Cluster）； 
+二，mysql第三方优化（4，MMM、5，MHA、6，Galera Cluster）
+三，依托硬件配合（7，heartbeat+SAN、8，heartbeat+DRDB）
+四，其它（9，Zookeeper + proxy、10，Paxos）</p>
+</li>
+<li>
+<p><a href="https://www.zhihu.com/question/21307639">高性能、高可用、可扩展的MySQL集群如何组建？</a>
+组建MySQL集群的几种方案
+LVS+Keepalived+MySQL（有脑裂问题？但似乎很多人推荐这个）
+DRBD+Heartbeat+MySQL（有一台机器空余？Heartbeat切换时间较长？有脑裂问题？）
+MySQL Proxy（不够成熟与稳定？使用了Lua？是不是用了他做分表则可以不用更改客户端逻辑？）
+MySQL Cluster （社区版不支持INNODB引擎？商用案例不足？）
+MySQL + MHA （如果配上异步复制，似乎是不错的选择，又和问题？）
+MySQL + MMM （似乎反映有很多问题，未实践过，谁能给个说法）</p>
+</li>
+</ul>
+<hr />
+<p>回答：
+不管哪种方案都是有其场景限制 或说 规模限制，以及优缺点的。
+1. 首先反对大家做读写分离，关于这方面的原因解释太多次数（增加技术复杂度、可能导致读到落后的数据等），只说一点：99.8%的业务场景没有必要做读写分离，只要做好数据库设计优化 和配置合适正确的主机即可。
+2.Keepalived+MySQL --确实有脑裂的问题，还无法做到准确判断mysqld是否HANG的情况；
+3.DRBD+Heartbeat+MySQL --同样有脑裂的问题，还无法做到准确判断mysqld是否HANG的情况，且DRDB是不需要的，增加反而会出问题；
+3.MySQL Proxy -- 不错的项目，可惜官方半途夭折了，不建议用，无法高可用，是一个写分离；
+4.MySQL Cluster -- 社区版本不支持NDB是错误的言论，商用案例确实不多，主要是跟其业务场景要求有关系、这几年发展有点乱不过现在已经上正规了、对网络要求高；
+5.MySQL + MHA -- 可以解决脑裂的问题，需要的IP多，小集群是可以的，但是管理大的就麻烦，其次MySQL + MMM 的话且坑很多，有MHA就没必要采用MMM</p>
+<p>建议：
+1.若是双主复制的模式，不用做数据拆分，那么就可以选择MHA或 Keepalive 或 heartbeat
+2.若是双主复制，还做了数据的拆分，则可以考虑采用Cobar；
+3.若是双主复制+Slave，还做了数据的拆分，需要读写分类，可以考虑Amoeba；</p>
+<ul>
+<li><a href="https://www.yuque.com/zerodai/yqzdgs/mnkzn3">MySQL数据库集群方案汇总</a></li>
+<li><a href="https://database.51cto.com/art/202004/615706.htm">悄悄告诉你MySQL MGR到底牛在哪</a></li>
+<li>
+<p><a href="https://www.cnblogs.com/kevingrace/p/10470226.html">MySQL+MGR 单主模式和多主模式的集群环境 - 部署手册 (Centos7.5) </a></p>
+</li>
+<li>
+<p><a href="https://blog.csdn.net/William0318/article/details/106855431">MySQL高可用架构对比，MMM与MHA以及MGR</a></p>
+</li>
+</ul>
+<h1>MyCat</h1>
+<p>mycat的三大功能：分表、读写分离、主从切换</p>
+<ul>
+<li>
+<p>分表
+mycat分表的实现：首先在mycat的scheme.xml中配置逻辑表，并且在配置中说明此表在哪几个物理库上。此逻辑表的名字与真实数据库中的名字一致！然后需要配置分片规则，即按照什么逻辑分库！</p>
+</li>
+<li>
+<p>读写分离</p>
+</li>
+<li>
+<p>MyCat 基本元素</p>
+</li>
+<li><code>逻辑库</code>：对后端多个物理数据库的映射，逻辑库中不保存数据。</li>
+<li>
+<p><code>逻辑表</code>：逻辑库中的表，映射后端多个物理数据库中的表，也不保存数据</p>
+</li>
+<li>
+<p>逻辑表分类</p>
+</li>
+<li>
+<p><code>分片表</code>：进行了水平切分的表，表结构相同，可存储在不同库中，所有分片表的集合才是一张完整的表。</p>
+<ol>
+<li><code>非分片表</code>：垂直切分的表，一个数据库中就保存了一张完整的表</li>
+<li><code>全局表</code>：所有分片数据库中都存在的表</li>
+<li><code>ER关系表</code>：mycat独有，子表依赖父表，保证在同一个数据库中</li>
+</ol>
+</li>
+<li>
+<p>配置文件</p>
+<ol>
+<li><code>/usr/local/mycat/conf/server.xml</code>
+定义用户以及系统相关变量，如端口等。其中用户信息是前端应用程序连接 mycat 的用户信息。</li>
+<li><code>/usr/local/mycat/conf/schema.xml</code>
+定义逻辑库，表、分片节点等内容。</li>
+<li><code>/usr/local/mycat/conf/rule.xml</code>
+中定义分片规则。</li>
+</ol>
+</li>
+</ul>

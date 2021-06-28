@@ -1,0 +1,46 @@
+<p>[TOC]</p>
+<h2>idea安装JRebel</h2>
+<ul>
+<li>
+<p>安装
+在Settings -&gt; plugins 查找jrebel然后安装</p>
+</li>
+<li>
+<p>激活
+在jrebel server处，写上：
+http://139.199.89.239:1008/88414687-3b91-4286-89ba-2dc813b107ce
+如果出现激活过期的情况，请重新生成guid，替换原来的guid即可
+邮箱随便写，即可激活。
+参考：<a href="https://blog.csdn.net/cjwcjwwjcwjc/article/details/80050633">Jrebel 激活服务</a></p>
+</li>
+<li>
+<p>配置</p>
+</li>
+<li>Idea中ctrl+shift+a ，在弹出浮层中输入registry；</li>
+<li>进入如下界面，将compiler.automake.allow.when.app.running 选中,退出该界面。</li>
+<li>再设置idea为自动编译。
+settings -&gt; Build, Execution, Deployment -&gt; Compiler
+选中：Build project automatically 和 Compile independent modules in parallel</li>
+<li>项目中配置Jrebel：在项目的src/resources文件夹右键,弹出菜单最下边JReble&gt;rebel.xml</li>
+<li>在启动类中右键,使用Jrebel Debug或者Run进行启动
+参考：<a href="https://blog.csdn.net/liuzhigang828/article/details/72875190">使用jRebel在IntelliJ IDEA 中进行 Java 热部署</a></li>
+</ul>
+<h2>eclipse安装JRebel</h2>
+<ul>
+<li>
+<p>安装
+在Eclipse Marketplace 查找jrebel然后安装</p>
+</li>
+<li>
+<p>激活
+在菜单 Help -&gt; JRebel -&gt; Activation -&gt; Connect to License Server  ，写上：
+http://139.199.89.239:1008/88414687-3b91-4286-89ba-2dc813b107ce
+如果出现激活过期的情况，请重新生成guid，替换原来的guid即可
+邮箱随便写，即可激活。</p>
+</li>
+<li>
+<p>配置</p>
+</li>
+<li>在菜单 Help -&gt; JRebel -&gt; Configuration -&gt; Projects 下勾选相关的项目，rebel会自动在项目的src/resources文件夹下生成rebel.xml</li>
+<li>在运行的Application的配置中勾选上【Enable JRebel agent】</li>
+</ul>

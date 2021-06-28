@@ -1,0 +1,646 @@
+<p>[TOC]</p>
+<h1>1. 通用编程</h1>
+<h2>1.1. Java序列化</h2>
+<h3>1.1.1. 什么是序列化</h3>
+<ul>
+<li>序列化：对象--&gt;字节流，用于持久化、网络传输。反序列化：字节流--&gt;对象。</li>
+<li>只需实现java.io.Serializable接口，JDK通过ObjectOutputStream#writeObject完成序列化。</li>
+<li>对象序列号字节流分为三部分：序列化头信息部分、类的描述部分以及属性域的值部分。</li>
+</ul>
+<p><strong>序列化的的基本步骤</strong></p>
+<ol>
+<li>输出序列化的头部信息，包括标识序列化协议的幻数以及协议的版本；</li>
+<li>按照由子类到父类的顺序，递归的输出类的描述信息，直到不再有父类为止；类描述信息按照类元数据，类属性信息的顺序写入序列化流中；</li>
+<li>按照由父类到子类的顺序，递归的输出对象域的实际数据值；而对象的属性信息是按照基本数据类型到java对象类型的顺序写入序列化流中；其中java对象类型的属性会从步骤1 重新开始递归的输出，直到不再存在java对象类型的属性。</li>
+</ol>
+<h3>1.1.2. Java序列化的安全问题</h3>
+<ul>
+<li>Java序列化算法简单且公开的，网络传输时将导致字节流被截获后，可以反序列化，泄露敏感信息；</li>
+<li>反序列化无验证机制，导致截获的字节流容易被篡改；</li>
+<li>反序列化无需构造方法即可创建对象；</li>
+</ul>
+<h3>1.1.3. 自定义序列化</h3>
+<p>Java提供了三种实现方案，前两种方案实际上是自定义第三部分信息(属性域的值部分)的输出方式，而第三种方法不仅可以自定义第三部分信息的输出，还可以自定义第二部分信息（类描述部分）信息的输出。</p>
+<p>java.io.Serializable接口自定义序列化的核心是：在要序列化的类中添加如下签名方式的两个方法： </p>
+<pre><code class="language-java">private void readObject(java.io.ObjectInputStream stream) throws IOException, ClassNotFoundException; 
+private void writeObject(java.io.ObjectOutputStream stream) throws IOException;
+</code></pre>
+<p>JDK中序列化的调用栈与具体代码如下：</p>
+<pre><code class="language-java">java.io.ObjectOutputStream.writeObject ()………………………………………………………………①
+└java.io.ObjectOutputStream.writeObject0()……………………………………………………………②
+  └java.io.ObjectOutputStream.writeOrdinaryObject()…………………………………………③
+     ├java.io.ObjectOutputStream.writeClassDesc()………………………………………………④
+     └java.io.ObjectOutputStream.writeSerialData ()……………………………………………⑤
+</code></pre>
+<p>其中序列化第二部分信息（类的描述部分）由③④完成，而⑤主要完成的就是第三部分信息的序列化。</p>
+<pre><code class="language-java">private void writeSerialData(Object obj, ObjectStreamClass desc) throws IOException{
+    //获取序列化对象由子类到父类的类描述集合
+    ObjectStreamClass.ClassDataSlot[] slots = desc.getClassDataLayout();
+    for (int i = 0; i &lt; slots.length; i++) {
+       ObjectStreamClass slotDesc = slots[i].desc;
+       // 判断序列化类是否实现了writeObject方法
+       if (slotDesc.hasWriteObjectMethod()) {
+            PutFieldImpl oldPut = curPut;
+            curPut = null;
+        // -中略-
+            SerialCallbackContext oldContext = curContext;
+            try {
+                curContext = new SerialCallbackContext(obj, slotDesc);
+                bout.setBlockDataMode(true);
+                //如果实现了wirteObjcet方法，通过反射机制调用该方法
+                slotDesc.invokeWriteObject(obj, this);
+                bout.setBlockDataMode(false);
+                bout.writeByte(TC_ENDBLOCKDATA);
+            } finally {
+            //-中略-
+     } else {
+        //如果序列化类未实现writeObject方法，调用默认的属性值序列化方式
+        defaultWriteFields(obj, slotDesc);
+     }
+</code></pre>
+<h4>1.1.3.1. java.io.Externalizable自定义形式</h4>
+<p>当对象实现了java.io.Externalizable接口时，就可以灵活的控制它的序列化和反序列化过程，该接口继承自java.io.Serializable。Externalizable接口定义了两个方法writeExternal和readExternal。</p>
+<p>Externalizable接口的writeExternal(readExternal)方法的作用仍是序列化第三部分信息(属性域的值部分)。当实现了该接口后，再在该类中添加writeObject(readObjcet)方法，那么writeObject(readObjcet)方法将会失效，具体原因通过阅读源码就了然了。</p>
+<h4>1.1.3.2. 新建一个自己的序列化类</h4>
+<p>自定义一个自己的序列化类需要三个步骤，第一步需要继承ObjectOutputStream(ObjectInputStream)；第二步在构造函数调用父类的无参构造函数；第三步重写父类的writeObjectOverride(readObjcetOverride)方法，在该方法中自定义序列化方案。 </p>
+<p>反序列化类与此类似，这里不再赘述。</p>
+<h4>1.1.3.3. 序列化流验证机制</h4>
+<p>Java序列化提供一套验证机制。序列化类通过实现 java.io.ObjectInputValidation接口，就可以做到验证了。</p>
+<pre><code class="language-Java">public class Apple implements Serializable,ObjectInputValidation{ 
+    public void validateObject() throws InvalidObjectException {
+//添加验证的对象属性的hash值，来判断序列化流是否被篡改。
+    boolean flag = hash(); 
+    if(flag){ 
+    //未被篡改 
+    }else{ 
+    throw new InvalidObjectException(&quot;流信息被篡改了&quot;); 
+    }
+    }
+}
+</code></pre>
+<p>Java序列化验证机制的基本原理：将想要验证的序列化类注册到 
+java.io.ObjectInputStream类的验证回调列表中，将对象从流中反序列化出来后，会遍历回调列表，调用序列化类的validateObject方法来进行验证操作。</p>
+<h2>1.2. 正则表达式</h2>
+<ul>
+<li>查询 ：</li>
+</ul>
+<pre><code class="language-java">String str=&quot;abc efg ABC&quot;;
+String regEx=&quot;a|f&quot;;//表示a或f
+Pattern p=Pattern.compile(regEx);
+Matcher m=p.matcher(str);
+boolean rs=m.find();
+boolean rs=m.find(3); //从指定的字符（第三个字符）开始查找匹配
+
+// 如果str中有regEx，那么rs为true，否则为flase。如果想在查找时忽略大小写，则可以写成：
+Pattern p=Pattern.compile(regEx,Pattern.CASE_INSENSITIVE);
+
+// String类提供的matches()方法也支持正则表达式，返回boolean
+&quot;-1234&quot; .matches( &quot;-?\\d+&quot; )
+</code></pre>
+<ul>
+<li>提取 ：</li>
+</ul>
+<pre><code class="language-java">Pattern p = Pattern.compile( &quot;^java(.+?)\n&quot; ,Pattern.CASE_INSENSITIVE | Pattern.MULTILINE);
+Matcher m = p.matcher( &quot;java has regex\nJava has regex\n&quot;
+    + &quot;JAVA has pretty good regular expressions\n&quot;
+    + &quot;Regular expressions are in Java&quot; );
+
+while  (m.find()) {
+    for  ( int  j =  0 ; j &lt;= m.groupCount(); j++) {
+        //此处可以通过start和end方法取得匹配的位置
+        System.out.print( &quot;[&quot;  + m.group(j) +  &quot;]&quot; );
+    }
+    System.out.println(); 
+}
+</code></pre>
+<p>m.group(i)是指正则表达式中的第i个括号中的内容，m.groupCount()是括号的个数;</p>
+<ul>
+<li>分割 ：</li>
+</ul>
+<pre><code class="language-java">String regEx=&quot;::&quot;;
+Pattern p=Pattern.compile(regEx);
+String[] r=p.split(&quot;xd::abc::cde&quot;);  
+
+// 执行后，r就是{&quot;xd&quot;,&quot;abc&quot;,&quot;cde&quot;}，其实分割时还有更简单的方法：
+String str=&quot;xd::abc::cde&quot;;
+String[] r=str.split(&quot;::&quot;);
+</code></pre>
+<ul>
+<li>替换 （删除）：</li>
+</ul>
+<pre><code class="language-JAVA">String regEx=&quot;a+&quot;; //表示一个或多个a
+Pattern p=Pattern.compile(regEx);
+Matcher m=p.matcher(&quot;aaabbced a ccdeaa&quot;);
+String s=m.replaceAll(&quot;A&quot;);  
+
+// 结果为&quot;Abbced A ccdeA&quot; 。如果写成空串，既可达到删除的功能，比如：
+
+String s=m.replaceAll(&quot;&quot;);
+
+// 结果为&quot;bbced  ccde&quot;
+// String类提供replaceAll()和replaceFirst()方法也支持正则表达式：
+
+String ss = s.replaceFirst( &quot;a+&quot; ,  &quot;A&quot; ); 
+String ss = s.replaceAll( &quot;shrubbery|tree|herring&quot; ,  &quot;banana&quot; );
+</code></pre>
+<h1>2. 对象和类</h1>
+<h2>2.1. 浅拷贝和深拷贝</h2>
+<p>java里的clone分为：
+1. 浅复制（浅克隆）: 浅复制仅仅复制所考虑的对象，而不复制它所引用的对象。
+2. 深复制（深克隆）：深复制把要复制的对象所引用的对象都复制了一遍。</p>
+<p>Java中对象的克隆,为了获取对象的一份拷贝，我们可以利用Object类的clone()方法。必须要遵循下面三点
+1. 在派生类中覆盖基类的clone()方法，并声明为public【Object类中的clone()方法为protected的】。
+2. 在派生类的clone()方法中，调用super.clone()。
+3. 在派生类中实现Cloneable接口。</p>
+<p>Object类里的clone方法是浅复制（浅克隆） </p>
+<p>浅拷贝：</p>
+<pre><code class="language-java">@Override  
+public Object clone() throws CloneNotSupportedException {
+    return super .clone();
+}
+</code></pre>
+<p>深拷贝1：</p>
+<pre><code class="language-java">@Override  
+public Object clone() throws CloneNotSupportedException { 
+    Student student = ( Student ) super .clone(); 
+    //将引用的对象teacher也clone下 
+    student.setTeacher(( Teacher )(student.getTeacher().clone())); 
+    return student; 
+}
+</code></pre>
+<p>深拷贝2：</p>
+<pre><code class="language-java">public Object deepCopy() throws Exception{ 
+    // 将该对象序列化成流,因为写在流里的是对象的一个拷贝，而原对象仍然存在于JVM里面。
+    // 所以利用这个特性可以实现对象的深拷贝 
+    ByteArrayOutputStream bos = new ByteArrayOutputStream (); 
+    ObjectOutputStream oos = new ObjectOutputStream (bos); 
+    oos.writeObject( this ); 
+
+    //将流序列化成对象 
+    ByteArrayInputStream bis = new ByteArrayInputStream (bos.toByteArray()); 
+    ObjectInputStream ois = new ObjectInputStream (bis); 
+    return ois.readObject(); 
+}
+</code></pre>
+<p>深拷贝、浅拷贝</p>
+<p>Implement the Cloneable interface within the class that you want to clone; then call that object's clone
+method to make a copy of it. The following code demonstrates how to make the Team class cloneable:</p>
+<pre><code class="language-java">package  org.tubez.util;
+public   class  Team  implements   TeamType , Cloneable,  Serializable  {
+     private  String  name ;
+     private  String  city ;
+     public  String getName() {
+         return   name ;
+    }
+     public   void  setName(String  name ) {
+         this . name  =  name ;
+    }
+     public  String getCity() {
+         return   city ;
+    }
+     public   void  setCity(String  city ) {
+         this . city  =  city ;
+    }
+     public  String getFullName() {
+         return   this . name  +  &quot; - &quot;  +  this . city ;
+    }
+     /**
+     * Overrides Object's clone method to create a deep copy
+     *
+     *  @return
+     */
+     public  Object clone() {
+        Object  obj  =  null ;
+         try  {
+             ByteArrayOutputStream   baos  =  new   ByteArrayOutputStream ();
+             ObjectOutputStream   oos  =  new   ObjectOutputStream ( baos );
+             oos .writeObject( this );
+             oos .close();
+             ByteArrayInputStream   bais  =  new   ByteArrayInputStream (
+                     baos .toByteArray());
+             ObjectInputStream   ois  =  new   ObjectInputStream ( bais );
+             obj  =  ois .readObject();
+             ois .close();
+        }  catch  ( IOException   e ) {
+             e .printStackTrace();
+        }  catch  (ClassNotFoundException  cnfe ) {
+             cnfe .printStackTrace();
+        }
+         return   obj ;
+    }
+     /**
+     * Overrides Object's clone method to create a shallow copy
+     *
+     *  @return
+     */
+     public  Object shallowCopyClone() {
+         try  {
+             return   super .clone();
+        }  catch  (CloneNotSupportedException  ex ) {
+             return   null ;
+        }
+    }
+     @Override
+     public   boolean  equals(Object  obj ) {
+         if  ( this  ==  obj ) {
+             return   true ;
+        }
+         if  ( obj   instanceof  Team) {
+            Team  other  = (Team)  obj ;
+             return   other .getName().equals( this .getName())
+                    &amp;&amp;  other .getCity().equals( this .getCity());
+        }  else  {
+             return   false ;
+        }
+    }
+}
+</code></pre>
+<p>Next, to make a deep copy of a Team object, the clone() method needs to be called against that
+object. To make a shallow copy of the object, the shallowCopyClone() method must be called. The
+following code demonstrates this technique:</p>
+<pre><code class="language-java">Team team1 = new Team();
+Team team2 = new Team();
+team1.setCity(&quot;Boston&quot;);
+team1.setName(&quot;Bandits&quot;);
+team2.setCity(&quot;Chicago&quot;);
+team2.setName(&quot;Wildcats&quot;);
+Team team3 = team1;
+Team team4 = (Team) team2.clone();
+Team team5 = team1.shallowCopyClone();
+System.out.println(&quot;Team 3:&quot;);
+System.out.println(team3.getCity());
+System.out.println(team3.getName());
+System.out.println(&quot;Team 4:&quot;);
+System.out.println(team4.getCity());
+System.out.println(team4.getName());
+
+// Teams move to different cities
+team1.setCity(&quot;St. Louis&quot;);
+team2.setCity(&quot;Orlando&quot;);
+System.out.println(&quot;Team 3:&quot;);
+System.out.println(team3.getCity());
+System.out.println(team3.getName());
+System.out.println(&quot;Team 4:&quot;);
+System.out.println(team4.getCity());
+System.out.println(team4.getName());
+System.out.println(&quot;Team 5:&quot;);
+System.out.println(team5.getCity());
+System.out.println(team5.getName());
+
+if (team1 == team3){
+    System.out.println(&quot;team1 and team3 are equal&quot;);
+} else {
+    System.out.println(&quot;team1 and team3 are NOT equal&quot;);
+}
+if (team1 == team5){
+    System.out.println(&quot;team1 and team5 are equal&quot;);
+} else {
+    System.out.println(&quot;team1 and team5 are NOT equal&quot;);
+}
+</code></pre>
+<p>Although this code does not do very much, it demonstrates how to make a clone of an object. The
+resulting output would be as follows.</p>
+<p>Team 3:
+Boston
+Bandits
+Team 4:
+Chicago
+Wildcats
+Team 3:
+St. Louis
+Bandits
+Team 4:
+Chicago
+Wildcats
+Team 5:
+Boston
+Bandits
+team1 and team3 are equal
+team1 and team5 are NOT equal</p>
+<h1>3. 泛型</h1>
+<h1>4. 枚举和注解</h1>
+<h1>5. Lambda和Stream</h1>
+<p><code>https://www.jianshu.com/p/613a6118e2e0</code>
+<a href="https://www.mkyong.com/java8/java-8-streams-map-examples/">Java 8 Streams map() examples</a></p>
+<h1>6. 集合</h1>
+<p>Java中Map常见有 HashMap、TreeMap、ConcurrentHashMap、LinkedHashMap、WeakHashMap、IdentityHashMap等。</p>
+<h2>6.1. FAQ</h2>
+<ul>
+<li>字符串hash算法为啥使用31？</li>
+<li>ConcurrentHashMap 和 HashMap 在实现上有什么差异？</li>
+<li>WeakHashMap 使用在哪些场景？</li>
+<li>TreeMap和LinkedHashMap是如何保证它的顺序的？它们两个哪个的有序实现比较好？</li>
+<li>用Map实现缓存有哪些方式？</li>
+</ul>
+<h2>6.2. hash code</h2>
+<p>hash code 是对象导出的一个整数值。
+Object类的hashCode为每一个对象返回一个默认的散列码，其值为对象的存储地址。而字符串的hash code算法是 hash = 31 * hash + charAt(i);
+如果a.equals(b)为true，那么a和b必须具有相同的hash code；</p>
+<p><img alt="" src="_v_images/2019-11-29-17-55-24.png" /></p>
+<p>这就决定了存入HashMap、HashSet的对象必须覆盖实现equals和hashCode方法，当发生散列冲突时，要调用equals方法查看对象是否已经存在。</p>
+<h2>6.3. TreeSet</h2>
+<p>TreeSet是一个有序集合，可以自动地对元素进行排序，排序是用树结构完成（用red-black tree实现），元素被添加到树中，被放置在正确的排序位置上，而迭代器总是以排好序的顺序访问每一个元素。
+将元素添加到树中要比添加到散列表中慢，但是，比将元素添加到数组或链表的正确位置上还是要快很多。（add：hash&gt;tree&gt;arr/linked)
+放入TreeSet中的元素必须实现Comparable或构造treeSet时指定Comparator。</p>
+<pre><code class="language-java">class Item implements Comparable&lt;Item&gt;{
+    public int compareTo(Item other){...... }
+}
+
+public TreeSet(Comparator&lt;? super E&gt; comparator)
+</code></pre>
+<h2>6.4. 队列与双端队列</h2>
+<p>队列是在尾部添加一个元素，在头部删除一个元素。双端队列是可以在头部he [he]尾部同时添加或删除元素。Deque有两个实现ArrayDeque和LinkedDeque。</p>
+<p>优先级队列（PriorityQueue）按照任意的顺序插入，却总是按照排序的顺序进行检索。也就是说，调用remove方法时，总是获取队列最小的元素，但此时并没有对所有的元素进行排序，其排序是迭代完成的。优先级队列使用了堆（heap）这种数据结构。heap是一个可以自我调整的二叉树，对树执行add和remove操作时，可以让最小的元素移动到根，而不必花时间对元素进行排序。
+使用优先级队列的典型示例是任务调度。总是先执行优先级最高的任务（1设为最高）。</p>
+<h2>6.5. Map</h2>
+<p>HashMap对键进行散列，TreeMap的键必须实现Comparable接口。散列或比较函数只能作用于键。</p>
+<p>WeakHashMap的特点是，当除了自身有对key的引用外，此key没有其他对象引用，那么此map会自动丢弃此键值对。</p>
+<pre><code class="language-java">String a = new String(&quot;a&quot;);
+String b = new String(&quot;b&quot;);
+
+Map&lt;String,String&gt; map = new HashMap&lt;&gt;();
+map.put(a, &quot;aaa&quot;);
+map.put(b, &quot;bbb&quot;);
+
+Map&lt;String,String&gt; weakmap = new WeakHashMap&lt;&gt;();
+weakmap.put(a, &quot;aaa&quot;);
+weakmap.put(b, &quot;bbb&quot;);
+
+map.remove(a);
+
+a=null; // a指向null后，除了WeakHashMap中还保存a引用外已经没有指向a的引用了，所以WeakHashMap会自动回收a的键值对
+b=null; // 虽然b对象指向了null，但HashMap中还有指向b的指针，所以b将保留在内存中
+
+System.gc();
+
+for (Map.Entry&lt;String,String&gt; en : map.entrySet()) {
+    System.out.println(&quot;map:&quot;+en.getKey()+&quot;:&quot;+en.getValue());
+}// out: map:b:bbb
+
+for (Map.Entry&lt;String,String&gt; en : weakmap.entrySet()) {
+    System.out.println(&quot;weakmap:&quot;+en.getKey()+&quot;:&quot;+en.getValue());
+}// out: weakmap:b:bbb
+</code></pre>
+<h2>6.6. LinkedHashSet &amp; LinkedHashMap</h2>
+<p><img alt="" src="_v_images/2019-11-29-17-55-39.png" /></p>
+<p>LinkedHash 可以避免元素随机排列，当元素插入hash桶（bucket）中时，就会并入双向链表中。LinkedHashMap的iterator顺序是<em>访问顺序</em>，而不是插入顺序。每次调用get/put方法时，受到影响的元素被移动到链表的尾部（散列桶中不受影响）。</p>
+<p>LinkedHashMap可用来构造高速缓存。 LinkedHashMap最常用元素放在链表尾部，头部是最不常用的元素。遵循缓存“最近最少使用”原则，删除链表头部元素，最近访问元素放在表尾。
+覆盖 LinkedHashMap#removeEldestEntry方法可以判断是否删除最旧的元素。</p>
+<pre><code class="language-java">/**
+ * 返回true时，删除eldest元素，添加一个新元素；
+ * 返回false时，仅调整元素在链表的位置。
+ * 不翻盖时，默认返回false，链表长度不可控。
+ */
+protected boolean removeEldestEntry(Map.Entry&lt;K,V&gt; eldest){
+    return size()&gt;100;     // 超过100个元素时，删除最旧的元素
+
+}
+</code></pre>
+<h2>6.7. IdentityHashMap</h2>
+<p>IdentityHashMap键的散列值不是使用hashCode计算的，而是使用i dentityHashCode计算的（使用键对象的内存地址计算散列码）。 IdentityHashMap元素比较是使用==，而不是equals，即直接比较内存地址。也就是说，不同键对象，即使内容相同，也被视为不同的对象。常用于对象遍历算法（如：对象序列化？<em>不是很明白？</em>）</p>
+<h2>6.8. 视图与包装器</h2>
+<pre><code class="language-java">Card cardDeck = new Card[23];
+......
+//返回一个对象视图（对象引用映射，故不能修改此List），而非ArrayList
+List&lt;Card&gt; cardList = Arrays.asList(cardDeck);
+List&lt;String&gt; names = Arrays.asList(&quot;aa&quot;, &quot;bb&quot;, &quot;cc&quot;);
+
+// public static &lt;T&gt; List&lt;T&gt; nCopies(int n, T o)
+// 创建一个100个字符串的List，每一个串为DEFUALT，次串只被存储一次
+// 返回的List对象不可修改，即add方法不能用
+List&lt;String&gt; strs = Collections.nCopies(100, &quot;DEFAULT&quot;);
+
+// 返回一个视图对象，它是一个不可修改的单元素集合
+public static &lt;T&gt; Set&lt;T&gt; singleton(T o);     // 只有一个元素
+public static &lt;T&gt; List&lt;T&gt; singletonList(T o);
+
+public static &lt;K,V&gt; Map&lt;K,V&gt; singletonMap(K key, V value);
+
+// 不可修改视图，用于查看，防止非法修改
+public static &lt;T&gt; Collection&lt;T&gt; unmodifiableCollection(Collection&lt;? extends T&gt; c);
+public static &lt;T&gt; List&lt;T&gt; unmodifiableList(List&lt;? extends T&gt; list);
+public static &lt;T&gt; Set&lt;T&gt; unmodifiableSet(Set&lt;? extends T&gt; s);
+public static &lt;T&gt; SortedSet&lt;T&gt; unmodifiableSortedSet(SortedSet&lt;T&gt; s);
+public static &lt;K,V&gt; Map&lt;K,V&gt; unmodifiableMap(Map&lt;? extends K, ? extends V&gt; m);
+
+// 同步视图
+public static &lt;K,V&gt; Map&lt;K,V&gt; synchronizedMap(Map&lt;K,V&gt; m);
+
+// 检查视图，用来检查泛型类型不匹配
+public static &lt;E&gt; List&lt;E&gt; checkedList(List&lt;E&gt; list, Class&lt;E&gt; type);
+List&lt;String&gt; safeStrings = Collections.checkedList(list, String.class);
+</code></pre>
+<h2>6.9. 一些用法</h2>
+<ul>
+<li>方法一：倒序遍历</li>
+</ul>
+<p>想遍历又想删除，你应该倒着来</p>
+<pre><code class="language-java">ArrayList&lt;String&gt; list = new ArrayList&lt;String&gt;();
+list.add(&quot;one&quot;);
+int n = list.size();
+for (int i = n - 1; i &gt;= 0; i--)
+{
+    if (list.get(i).equals(&quot;one&quot;))
+    {
+        list.remove(i);
+    }
+}
+System.out.println(list);
+</code></pre>
+<ul>
+<li>方法二： Iterator接口</li>
+</ul>
+<pre><code class="language-java">Iterator&lt;String&gt; itr= list.iterator();
+while(itr.hasNext()){
+       String e = sListIterator.next();
+       if(e.equals(&quot;3&quot;)){
+              it r.remove();
+       }
+}
+</code></pre>
+<h1>7. 文件</h1>
+<h2>7.1. InputStream 转换成 String 的几种方法</h2>
+<ul>
+<li>方法1</li>
+</ul>
+<pre><code class="language-java">InputStream inputStream = new FileInputStream(&quot;d:/sample.txt&quot;);
+Scanner scanner = new Scanner(inputStream, &quot;UTF-8&quot;);
+String text = scanner.useDelimiter(&quot;\\A&quot;).next();
+System.out.println(text);
+scanner.close();
+</code></pre>
+<ul>
+<li>方法2</li>
+</ul>
+<pre><code class="language-java">InputStream inputStream = new FileInputStream(&quot;d:/sample.txt&quot;);
+StringBuilder stringBuilder = new StringBuilder();
+BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+boolean firstLine = true;
+String line = null; ;
+while((line = bufferedReader.readLine()) != null){
+    if(!firstLine){
+        stringBuilder.append(System.getProperty(&quot;line.separator&quot;));
+    }else{
+        firstLine = false;
+    }
+    stringBuilder.append(line);
+}
+System.out.println(stringBuilder.toString());
+</code></pre>
+<ul>
+<li>方法3</li>
+</ul>
+<pre><code class="language-java">InputStream inputStream = new FileInputStream(&quot;d:/sample.txt&quot;);
+
+byte[] buffer = new byte[2048];
+int readBytes = 0;
+StringBuilder stringBuilder = new StringBuilder();
+while((readBytes = inputStream.read(buffer)) &gt; 0){
+    stringBuilder.append(new String(buffer, 0, readBytes));
+}
+
+System.out.println(stringBuilder.toString());
+</code></pre>
+<ul>
+<li>方法4</li>
+</ul>
+<pre><code class="language-java">import org.apache.commons.io.IOUtils;
+
+InputStream inputStream = new FileInputStream(&quot;d:/sample.txt&quot;);
+String text = IOUtils.toString(inputStream);
+System.out.println(text);
+</code></pre>
+<ul>
+<li>方法5</li>
+</ul>
+<pre><code class="language-java">import com.google.common.io.CharStreams;
+
+InputStream inputStream = new FileInputStream(&quot;d:/sample.txt&quot;);
+String text = CharStreams.toString(new InputStreamReader(inputStream, &quot;UTF-8&quot;));
+System.out.println(text);
+</code></pre>
+<ul>
+<li>方法6</li>
+</ul>
+<pre><code class="language-java">byte[] bytes = Files.readAllBytes(Paths.get(&quot;d:/sample.txt&quot;));
+String text = new String(bytes);
+System.out.println(text);
+</code></pre>
+<h2>7.2. java读取classpath下文件的两种方法</h2>
+<p>java读取文件的两种方法：java.io和java.lang.ClassLoader</p>
+<p>（1）java.io:
+相对于当前用户目录的相对路径读取；注重与磁盘文件打交道或者纯java project中使用。（虽然ClassLoader方式更通用，但是如果不是javaEE环境，要定位到classpath路径下去读文件是不合理的。）
+它适用于非Java Web Project。</p>
+<pre><code class="language-JAVA">File file = new File(&quot;...&quot;);
+FileInputStream fis = new FileInputStream(&quot;...&quot;);
+FileReader fr = new FileReader(&quot;...&quot;);
+</code></pre>
+<p>（2）java.lang.ClassLoader:
+相对于classpath的相对路径读取；建议在javaEE环境中都使用这种方式。</p>
+<pre><code class="language-JAVA">ClassLoader loader = XXXClass.class.getClassLoader();
+// or 
+ClassLoader loader = Thread.currentThread().getContextClassLoader();
+URL url = loader.getResource(&quot;...&quot;);
+File file = new File(url.getFile());
+InputStream input = loader.getResourceAsStream(&quot;...&quot;); 
+</code></pre>
+<p>它适用于Web Project 或 jar文件。</p>
+<p><strong>总结：</strong></p>
+<ul>
+<li>推荐使用相对于当前classpath的相对路径来查找资源，也就是ClassLoader方式。</li>
+<li>ClassLoader类的getResource(String name), getResourceAsStream(String name)等方法 。</li>
+<li>读取属性文件常用到的ResourceBundle类的getBundle(String path)也是如此。</li>
+<li>通过查看ClassLoader类及其相关类的源代码，我发现，它实际上还是使用了URI形式的绝对路径。通过得到当前classpath的URI形式的绝对路径，构建了相对路径的URI形式的绝对路径。</li>
+</ul>
+<h2>7.3. 监控目录的变化</h2>
+<p>By using a WatchService, you can subscribe to be notified on events happening on that folder. In this
+example, we subscribe for ENTRY_CREATE, ENTRY_MODIFY, and ENTRY_DELETE events:</p>
+<pre><code class="language-java">System.out.println(&quot;Watch Event, press q&lt;Enter&gt; to exit&quot;);
+FileSystem fileSystem = FileSystems.getDefault();
+WatchService service = fileSystem.newWatchService();
+Path path = fileSystem.getPath(&quot;.&quot;);
+System.out.println(&quot;Watching :&quot; + path.toAbsolutePath());
+path.register(service, StandardWatchEventKinds.ENTRY_CREATE, StandardWatchEventKinds.ENTRY_DELETE, StandardWatchEventKinds.ENTRY_MODIFY);
+
+boolean shouldContinue = true;
+while (shouldContinue) {
+    WatchKey key = service.poll(250, TimeUnit.MILLISECONDS);
+    // Code to stop the program
+    while (System.in.available() &gt; 0) {
+        int readChar = System.in.read();
+        if ((readChar == 'q') || (readChar == 'Q')) {
+            shouldContinue = false;
+            break;
+        }
+    }
+
+    if (key == null)
+        continue;
+
+    for (WatchEvent&lt;?&gt; event : key.pollEvents()) {
+        if (event.kind() == StandardWatchEventKinds.OVERFLOW)
+            continue;
+        WatchEvent&lt;Path&gt; ev = (WatchEvent&lt;Path&gt;) event;
+        Path filename = ev.context();
+        System.out.println(&quot;Event detected :&quot; + filename.toString() + &quot; &quot; + ev.kind());
+    }
+
+    boolean valid = key.reset();
+    if (!valid) {
+        break;
+    }
+}
+</code></pre>
+<h2>7.4. 读取Jar包中的资源文件</h2>
+<p>参考：
+Java: Listing the contents of a resource directory
+Using URLConnection to list files and directories on FTP server</p>
+<pre><code class="language-java">/**
+* List directory contents for a resource folder. Not recursive.
+* This is basically a brute-force implementation.
+* Works for regular files and also JARs.
+* 
+*  @param  clazz Any java class that lives in the same place as the resources you want.
+*  @param  path Should end with &quot;/&quot;, but not start with one.
+*  @return  Just the name of each member item, not the full paths.
+*/
+String []  getResourceListing ( Class clazz, String path )  throws  URISyntaxException, IOException  {
+   URL dirURL = clazz.getClassLoader().getResource ( path ) ;
+   if  ( dirURL !=  null  &amp;&amp; dirURL.getProtocol () .equals ( &quot;file&quot; )) {
+     /* A file path: easy enough */
+     return new  File ( dirURL.toURI ()) .list () ;
+   } 
+
+   if  ( dirURL ==  null ) {
+     /* 
+      * In case of a jar file, we can't actually find a directory.
+      * Have to assume the same jar as clazz.
+      */
+     String me = clazz.getName () .replace ( &quot;.&quot; ,  &quot;/&quot; ) + &quot;.class&quot; ;
+     dirURL = clazz.getClassLoader().getResource ( me ) ;
+   }
+
+   if  ( dirURL.getProtocol () .equals ( &quot;jar&quot; )) {
+     /* A JAR path */
+     String jarPath = dirURL.getPath () .substring ( 5 , dirURL.getPath () .indexOf ( &quot;!&quot; )) ;  //strip out only the JAR file
+     JarFile jar =  new  JarFile ( URLDecoder.decode(jarPath,  &quot;UTF-8&quot; ) ) ;
+     Enumeration&lt;JarEntry&gt; entries = jar.entries () ;  //gives ALL entries in jar
+     Set&lt;String&gt; result =  new  HashSet&lt;String&gt; () ;  //avoid duplicates in case it is a subdirectory
+     while ( entries.hasMoreElements ()) {
+       String name = entries.nextElement () .getName () ;
+       if  ( name.startsWith ( path )) {  //filter according to the path
+         String entry = name.substring ( path.length ()) ;
+         int  checkSubdir = entry.indexOf ( &quot;/&quot; ) ;
+         if  ( checkSubdir &gt;=  0 ) {
+           // if it is a subdirectory, we just return the directory name
+           entry = entry.substring ( 0 , checkSubdir ) ;
+         }
+         result.add ( entry ) ;
+       }
+     }
+     return  result.toArray ( new  String [ result.size ()]) ;
+   } 
+
+   throw new  UnsupportedOperationException ( &quot;Cannot list files for URL &quot; +dirURL ) ;
+}
+</code></pre>

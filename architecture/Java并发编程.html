@@ -1,0 +1,216 @@
+<p><a href="https://www.infoq.cn/article/ftf-java-volatile">聊聊并发（一）——深入分析 Volatile 的实现原理</a>
+<a href="https://www.infoq.cn/article/java-se-16-synchronized">聊聊并发（二）——Java SE1.6 中的 Synchronized</a>
+<a href="https://www.infoq.cn/article/java-threadPool">聊聊并发（三）——JAVA 线程池的分析和使用</a>
+<a href="https://www.infoq.cn/article/ConcurrentHashMap">聊聊并发（四）——深入分析 ConcurrentHashMap</a>
+<a href="https://www.infoq.cn/article/atomic-operation">聊聊并发（五）——原子操作的实现原理</a>
+<a href="https://www.infoq.cn/article/ConcurrentLinkedQueue">聊聊并发（六）——ConcurrentLinkedQueue 的实现原理分析</a>
+<a href="https://www.infoq.cn/article/java-blocking-queue">聊聊并发（七）——Java 中的阻塞队列</a>
+<a href="https://www.infoq.cn/article/fork-join-introduction">聊聊并发（八）——Fork/Join 框架介绍</a>
+<a href="https://www.infoq.cn/article/producers-and-consumers-mode">聊聊并发——生产者消费者模式</a></p>
+<p><a href="https://www.infoq.cn/article/double-checked-locking-with-delay-initialization">双重检查锁定与延迟初始化</a></p>
+<h1>1. Java线程</h1>
+<h3>1.1.1. 进程状态转换</h3>
+<p>http://my.oschina.net/mingdongcheng/blog/139263
+http://www.cnblogs.com/mengdd/archive/2013/02/20/2917966.html
+http://blog.javachen.com/2013/06/08/note-about-java-thread.html
+https://m.oschina.net/blog/83586</p>
+<pre><code class="language-flow">new =&gt;start: 新建
+e=&gt;end: 终止
+runnable =&gt; subroutine : 就绪
+running=&gt; subroutine : 运行
+blocked =&gt;subroutine:  阻塞
+
+new(right) -&gt;r unnable (right)-&gt; running(right)-&gt;e
+r unnable -&gt; blocked-&gt; running
+</code></pre>
+<h3>1.1.2. Java线程基础</h3>
+<p>一个 Java 应用总是从 main() 方法开始运行，mian() 方法运行在一个线程内，它被称为主线程。
+线程总体分两类：用户线程 和守候线程。
+当所有用户线程执行完毕的时候，JVM自动关闭。但是守候线程却不独立于JVM，守候线程一般是由操作系统或者用户自己创建的。</p>
+<h3>1.1.3. 中断线程</h3>
+<p>一旦创建一个新的线程，就产生一个新的调用栈。
+每一个线程都有一个<em>中断状态(interrupted status)</em>，当调用interrupt方法时，<em>中断状态</em>将被置位。每个线程都应该不时检查这个标志，以判断线程是否被中断。</p>
+<pre><code class="language-java">while (!Thread.currentThread.isInterrupted()){
+// do more work
+}
+</code></pre>
+<p>当在一个被阻塞的线程（调用sleep或wait）上调用interrupt方法时，将会抛出InterruptedException异常。</p>
+<h1>2. 一、线程基础知识</h1>
+<h2>2.1. 什么是线程安全</h2>
+<p>当多个线程访问某个类时，不管运行时环境采用何种调度方式或者这些线程将如何交替执行，并且在主调代码中不需要任何额外的同步或协同，这个类都能表现出正确的行为，那么就称这个类是线程安全的。</p>
+<p>1、类的行为与其规范完全一致
+2、在共享访问对象可变状态时需要进行正确的管理
+3、继承Thread与实现Runnable接口
+4、实现线程安全
+1、内置锁
+2、Ad-hoc、栈封闭(ThreadLocal)
+3、状态私有、不变性
+4、只读共享
+5、线程安全共享（对象内部实现线程安全，多线程间通过接口来访问）
+5、设计原则？</p>
+<h2>2.2. 线程间通信方式</h2>
+<p>通信是指线程之间以何种机制来交换信息。在Java中线程之间的通信机制有两种：共享内存和消息传递。       在共享内存的并发模型里，线程之间共享程序的公共状态，线程之间通过写-读内存中的公共状态来隐式进行通信。</p>
+<p>延伸阅读点Java内存模型     在消息传递的并发模型里，线程之间没有公共状态，线程之间必须通过明确的发送消息来显式进行通信。</p>
+<p>1、共享内存
+2、管道流
+3、线程A等待（Wait），线程B唤醒（notify）归属于Object
+4、Thread 类 Join让彼此交替运行的线程顺序执行，线程A 通过调用线程B.join(),线程A需要等线程B执行完再执行
+5、观察者模式 Observable、Observer</p>
+<h2>2.3. 如何实现线程安全</h2>
+<p>1、类不可变、无状态
+2、线程封闭技术：单线程内访问数据，不需要同步。
+      Ad-hoc：维护线程封闭性职责完全有程序实现来担当JDBC的Connection,Swing事件分发线程.
+     栈封闭：使用局部变量，保存在线程栈中不对外共享。
+     延伸阅读点：方法调用和执行是怎样实现的？
+     ThreadLock：线程局部变量副本。
+3、只读共享
+4、synchronized
+5、ReentrantLock
+6、同步工具类：</p>
+<pre><code> CountDownLatch：闭锁，在完成一组正在其他线程中执行的操作之前，它允许一个或多个线程一直等待。
+
+ CyclicBarrier：栅栏，当一个线程到达屏障时（通过调用 CyclicBarrier.await()），它会被阻塞，直到所有线程都到达屏障，然后在该点允许所有线程继续执行。与CountDownLatch不同的是，CyclicBarrier 所有公共线程都到达后，可以继续执行下一个目标点，而CountDownLatch第一次到达指定点后，也就是记数器减制零，就无法再次执行下一目标工作
+
+ Semaphore：信号量，主要用于限制资源允许访问的许可数。
+</code></pre>
+<h1>3. 二、线程同步</h1>
+<h2>3.1. ThreadLocal源码分析理解</h2>
+<h2>3.2. synchronized</h2>
+<h2>3.3. ReentrantLock案例</h2>
+<h2>3.4. ReentrantLock与synchronized区别</h2>
+<h2>3.5. volatile关键字</h2>
+<h2>3.6. CAS</h2>
+<h1>4. 三、集合与JUC框架</h1>
+<p>Java多线程
+1、线程安全？
+1、类的行为与其规范完全一致
+2、在共享访问对象可变状态时需要进行正确的管理
+3、继承Thread与实现Runnable接口
+4、实现线程安全
+1、内置锁
+2、Ad-hoc、栈封闭(ThreadLocal)
+3、状态私有、不变性
+4、只读共享
+5、线程安全共享（对象内部实现线程安全，多线程间通过接口来访问）
+5、设计原则？
+1、
+2、同步
+1、ReentrantLock
+1、CAS
+2、独占锁
+3、锁公平性如何实现？AbstractQueuedSynchronizer
+2、synchronized VS ReentrantLock
+1、Lock 上锁时提供更多的选择性与可见性
+2、synchronized会让获取锁的线程无期限等待，tryLock指定等待时间（独占锁）
+3、Synchronization同步代码简洁易于维护，Lock强制try-finally结构并且要释放锁
+4、synchronized 不提供不公平锁，永远公平
+5、conditions结合LOCK
+3、偏向锁
+4、ReentrantReadWriteLock
+5、ReadWriteLock
+3、CAS原理
+4、原子类
+5、AbstractQueuedSynchronizer
+2、同步
+1、ReentrantLock
+1、CAS
+2、独占锁
+3、锁公平性如何实现？AbstractQueuedSynchronizer
+2、synchronized VS ReentrantLock
+1、Lock 上锁时提供更多的选择性与可见性
+2、synchronized会让获取锁的线程无期限等待，tryLock指定等待时间（独占锁）
+3、Synchronization同步代码简洁易于维护，Lock强制try-finally结构并且要释放锁
+4、synchronized 不提供不公平锁，永远公平
+5、conditions结合LOCK
+3、偏向锁
+4、ReentrantReadWriteLock
+5、ReadWriteLock
+3、CAS原理
+4、原子类
+5、AbstractQueuedSynchronizer</p>
+<h1>5. BIO、NIO、AIO</h1>
+<h3>5.1.1. 同步vs异步、阻塞vs非阻塞</h3>
+<p><u>一个IO操作其实分成了两个步骤：发起IO请求和实际的IO操作。</u></p>
+<p>同步IO和异步IO的区别就在于第二个步骤是否阻塞，如果实际的IO读写阻塞请求进程，那么就是同步IO。
+阻塞IO和非阻塞IO的区别在于第一步，发起IO请求是否会被阻塞，如果阻塞直到完成那么就是传统的阻塞IO，如果不阻塞，那么就是非阻塞IO。</p>
+<p>同步和异步是针对应用程序和OS内核的交互而言的，同步指的是用户进程触发IO操作并等待或者轮询的去查看IO操作是否就绪，而异步是指用户进程触发IO操作以后便开始做自己的事情，而当IO操作已经完成的时候会得到IO完成的通知。而阻塞和非阻塞是针对于进程在访问数据的时候，根据IO操作的就绪状态来采取的不同方式，说白了是一种读取或者写入操作函数的实现方式，阻塞方式下读取或者写入函数将一直等待，而非阻塞方式下，读取或者写入函数会立即返回一个状态值。</p>
+<p>所以，IO操作可以分为3类：同步阻塞（即早期的IO操作）、同步非阻塞（NIO）、异步（AIO）。</p>
+<p><strong>同步阻塞</strong>：
+在此种方式下，用户进程在发起一个IO操作以后，必须等待IO操作的完成，只有当真正完成了IO操作以后，用户进程才能运行。JAVA传统的IO模型属于此种方式。</p>
+<p><strong>同步非阻塞</strong>：
+在此种方式下，用户进程发起一个IO操作以后边可返回做其它事情，但是用户进程需要时不时的询问IO操作是否就绪，这就要求用户进程不停的去询问，从而引入不必要的CPU资源浪费。其中目前JAVA的NIO就属于同步非阻塞IO。</p>
+<p><strong>异步</strong>：
+此种方式下是指应用发起一个IO操作以后，不等待内核IO操作的完成，等内核完成IO操作以后会通知应用程序。”</p>
+<h3>5.1.2. Reactor vs Proactor</h3>
+<p>一、 Reactor and Proactor</p>
+<p>IO读写时，多路复用机制都会依赖一个事件多路分离器，它负责把源事件的IO事件分离出来，分别到相应的read/write事件分离器。涉及到事件分离器的两种模式分别就是 Reactor和Proactor，Reactor是基于同步IO的，Proactor是基于异步IO的。</p>
+<p>在Reactor模式中，事件分离者等待某个事件或者可应用或个操作的状态发生(比如文件描述符可读写，或者是socket可读写),事件分离者就把这个事件传给事先注册的事件处理函数或者回调函数，由后者来做实际的读写操作。</p>
+<p>在Proactor模式中，事件处理者(或者代由事件分离者发起)直接发起一个异步读写操作(相当于请求)，而实际的工作是由操作系统来完成的。发起时，需要提供的参数包括用于存放读到数据的缓存区，读的数据大小，或者用于存放外发数据的缓存区，以及这个请求完后的回调函数等信息。事件分离者得知了这个请求，它默默等待这个请求的完成，然后转发完成事件给相应的事件处理者或者回调。举例来说，
+在Windows上事件处理者投递了一个异步IO操作(称有 overlapped的技术)，事件分离者等IOCompletion事件完成. 这种异步模式的典型实现是基于操作系统底层异步API的，所以我们可称之为“系统级别”的或者“真正意义上”的异步，因为具体的读写是由操作系统代劳的。</p>
+<p>举个例子，将有助于理解Reactor与Proactor二者的差异，以读操作为例(类操作类似)。</p>
+<p>在Reactor中实现读：</p>
+<ul>
+<li>注册读就绪事件和相应的事件处理器</li>
+<li>事件分离器等待事件</li>
+<li>事件到来，激活分离器，分离器调用事件对应的处理器。</li>
+<li>事件处理器完成实际的读操作，处理读到的数据，注册新的事件，然后返还控制权。</li>
+</ul>
+<p>与如下Proactor(真异步)中的读过程比较：</p>
+<ul>
+<li>处理器发起异步读操作(注意：操作系统必须支持异步IO)。在这种情况下，处理器无视IO就绪事件，它关注的是完成事件。</li>
+<li>事件分离器等待操作完成事件</li>
+<li>在分离器等待过程中，操作系统利用并行的内核线程执行实际的读操作，并将结果数据存入用户自定义缓冲区，最后通知事件分离器读操作完成。</li>
+<li>事件分离器呼唤处理器。</li>
+<li>事件处理器处理用户自定义缓冲区中的数据，然后启动一个新的异步操作，并将控制权返回事件分离器。</li>
+</ul>
+<p>可以看出，两个模式的相同点，都是对某个IO事件的事件通知(即告诉某个模块，这个IO操作可以进行或已经完成)。在结构<br />
+上，两者也有相同点：demultiplexor负责提交IO操作(异步)、查询设备是否可操作(同步)，然后当条件满足时，就回调handler;</p>
+<p>不同点在于，异步情况下(Proactor)，当回调handler时，表示IO操作已经完成;同步情况下(Reactor)，回调handler时，表示 IO设备可以进行某个操作(can read or can write)，handler这个时候开始提交操作。</p>
+<p><u>NIO通常采用Reactor模式，AIO通常采用Proactor模式。AIO简化了程序的编写，stream的读取和写入都有OS来完成，不需要像NIO那样子遍历Selector。Windows基于IOCP实现AIO，Linux只有eppoll模拟实现了AIO。</u></p>
+<h3>5.1.3. BIO、NIO、AIO适用场景分析</h3>
+<p>BIO方式适用于连接数目比较小且固定的架构，这种方式对服务器资源要求比较高，并发局限于应用中，JDK1.4以前的唯一选择，但程序直观简单易理解。
+NIO方式适用于连接数目多且连接比较短（轻操作）的架构，比如聊天服务器，并发局限于应用中，编程比较复杂，JDK1.4开始支持。
+AIO方式使用于连接数目多且连接比较长（重操作）的架构，比如相册服务器，充分调用OS参与并发操作，编程比较复杂，JDK7开始支持。</p>
+<p>GitHub项目：
+https://github.com/Hellblazer/Pinkie
+https://github.com/rfqu/df4j
+https://github.com/dublintech/async_nio2_java7_examples
+https://github.com/killme2008/gecko
+https://github.com/koush/AndroidAsync
+https://github.com/kilim/kilim</p>
+<p>帖子：
+http://stackoverflow.com/questions/16580914/java-nio-http-client-requests-with-thread-pools
+http://chenkangxian.iteye.com/blog/1288246
+http://weixiaolu.iteye.com/blog/1479656
+http://nobywhy1.iteye.com/blog/1508412
+http://www.ibm.com/developerworks/cn/java/j-javaio/</p>
+<p>ByteBuffer</p>
+<p>仔细阅读TIJ相关章节：
+TIJ4 英文版： New I/O P701页； 中文版： 18.10 新I/O P584页
+网文： 
+http://blog.csdn.net/wfeng007/article/details/5308614
+http://cuisuqiang.iteye.com/blog/1443212</p>
+<p>volatile </p>
+<p>用在多线程，同步变量。 线程为了提高效率，将某成员变量(如A)拷贝了一份（如B），线程中对A的访问其实访问的是B。只在某些动作时才进行A和B的同步。因此存在A和B不一致的情况。volatile就是用来避免这种情况的。volatile告诉jvm， 它所修饰的变量不保留拷贝，直接访问主内存中的（也就是上面说的A) 
+参考：
+http://sakyone.iteye.com/blog/668091
+http://www.infoq.com/cn/articles/ftf-java-volatile
+http://www.ibm.com/developerworks/cn/java/j-jtp06197.html</p>
+<p>ExecutorService 线程池
+http://my.oschina.net/20076678/blog/33392
+http://blog.csdn.net/peachpi/article/details/6771946</p>
+<p>ReentrantLock 可重入锁
+http://tenyears.iteye.com/blog/48750
+http://www.blogjava.net/killme2008/archive/2007/09/14/145195.html
+http://my.oschina.net/noahxiao/blog/101558</p>
+<p>LinkedBlockingDeque
+http://blog.csdn.net/guangcigeyun/article/details/8278355</p>
+<h3>5.1.4. 常用异步框架</h3>
+<h4>5.1.4.1. Akka</h4>
+<p>网络间异步调用。
+应用场景：服务端要处理大量的客户端的请求，并且处理请求耗费较长的时间。这时就需要使用并发处理。多线程是一种方法，这里使用Akka框架处理并发。</p>
+<p>Akka有三个角色：Client、Master、Worker
+- Client傻乎乎地发同步请求给Master，一直等到结果返回客户端才离开。
+- Master接收客户端发来的请求，然后将请求交给Worker处理，处理完成之后将结果返回给Client。
+- Worker负责具体的业务处理，它耗费的事件比较长。</p>
+<p>参考：<a href="http://blog.csdn.net/jmppok/article/details/17264495">分布式应用框架Akka快速入门</a></p>

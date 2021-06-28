@@ -1,0 +1,433 @@
+<p>[TOC]</p>
+<h1>学习过程</h1>
+<p><a href="https://blog.csdn.net/yinanmo5569/article/details/80313710">区块链（Block Chain）结构解析</a></p>
+<h2>Python开发区块链</h2>
+<ul>
+<li><a href="https://mp.weixin.qq.com/s?src=11&amp;timestamp=1570764209&amp;ver=1905&amp;signature=Fo09EY6xZp2oEL6cH7XjnOhKIiPn63xU0ey2*Ws3yCEzOEZ0nfrStidxbVzmWcaAIQeyvzxbCJn5CfgCZZ-7KVM2liEKThiiXCPeYqttVPBFUhj893uKxmmxC9T5ibKr&amp;new=1">Python 实现最简单的区块链</a></li>
+<li><a href="https://learnblockchain.cn/2017/10/27/build_blockchain_by_python/">用 Python 从零开始创建区块链</a></li>
+</ul>
+<h1>1 第1课</h1>
+<h2>1.1 比特币</h2>
+<h3>1.1.1 比特币-起源</h3>
+<ul>
+<li>Bitcoin(BTC): A Peer-to-Peer Electronic Cash  System( 点对点电子现金系统 )</li>
+<li>中本聪在 2009 年初挖出第一批比特币</li>
+<li>总量不超过 2100 万枚</li>
+</ul>
+<h3>1.1.2 比特币-底层机制</h3>
+<ul>
+<li>去中心化， P2P 分布式数字货币系统</li>
+<li>共识机制 -POW 工作量证明</li>
+<li>非对称加密算法 - 数字签名</li>
+<li>区块链账本技术</li>
+</ul>
+<h3>1.1.3 比特币-特性</h3>
+<ul>
+<li>硬通货 - 跨境交易</li>
+<li>易携带 - 只需一个私钥</li>
+<li>隐秘性 - 只暴露钱包地址</li>
+<li>无货币超发</li>
+</ul>
+<h3>1.1.4 比特币-钱包</h3>
+<ul>
+<li>钱包就是 P2P 里的 P( 节点 ) ，主要用来管理私钥和比特币转账地 址</li>
+<li>钱包分类</li>
+<li>轻钱包 - 只存储维护跟你自己交易相关的数据</li>
+<li>中心化钱包 - 数字货币交易所</li>
+<li>钱包下载地址： https://bitcoin.org/zh_CN/download</li>
+</ul>
+<h3>1.1.5 比特币-产生</h3>
+<ul>
+<li>比特币由矿工挖矿产生</li>
+<li>生成的比特币被记录在矿工的名下</li>
+<li>比特币通过矿工的公钥哈希值锁定</li>
+<li>比特币通过交易 (UTXO) 在节点之间转移</li>
+<li>UTXO- 未花费的交易</li>
+</ul>
+<h2>1.2 区块链</h2>
+<h3>1.2.1 区块链-分布式账本系统</h3>
+<p><img alt="" src="_v_images/2019-11-20-20-37-05.png" /></p>
+<ul>
+<li>共识机制 -POW 工作量证明<ul>
+<li>通过挖矿证明自己是善意节点，并获得生成区块和在该区块记账的权利</li>
+</ul>
+</li>
+<li>基于 P2P 网络，每个全节点都存储着最全的比特币交易记录</li>
+<li>新区块通过包含前一个区块头部的哈希值 ( 区块的唯一标识 ) 建立链接关系</li>
+<li>区块里装的就是所有的比特币交易记录 (UTXO)</li>
+</ul>
+<h3>1.2.2  区块链网络</h3>
+<ul>
+<li>区块链节点<ul>
+<li>矿工-运行于强大或专用的硬件（比如 ASIC）之上，主要目的是挖矿</li>
+<li>全节点-这些节点验证矿工挖出来的块的有效性，并对交易进行确认。</li>
+<li>SPV节点-简单支付验证，如钱包节点</li>
+</ul>
+</li>
+</ul>
+<h3>1.2.3  区块链-挖矿</h3>
+<ul>
+<li>在全网中和其他节点竞争计算 ( 解一个难题 ) 的过程<ul>
+<li>证明自己是非恶意节点</li>
+</ul>
+</li>
+<li>获得的权利和义务<ul>
+<li>记账权 - 把交易写入区块里</li>
+<li>广播义务 - 把区块在全网广播</li>
+</ul>
+</li>
+<li>获得的奖励<ul>
+<li>挖矿奖励 -12.5BTC</li>
+<li>收取交易手续费</li>
+</ul>
+</li>
+</ul>
+<h3>1.2.4  区块链-共识机制</h3>
+<ul>
+<li>
+<p>拜占庭将军问题 - 共识机制之一
+<img alt="" src="_v_images/2019-11-20-20-37-27.png" /></p>
+</li>
+<li>
+<p>POW(Proof of Work)-工作量证明</p>
+<ul>
+<li>通过付出大量工作代价证明自己是非恶意节点</li>
+<li>计算一个随机数 (nonce) ，算出的正确随机数即 POW</li>
+<li>获取记账权利</li>
+<li>打包交易并通知其它节点</li>
+</ul>
+</li>
+<li>理性人都是逐利的， POW 抑制了节点的恶意动机</li>
+</ul>
+<h3>1.2.5  区块链-交易确认</h3>
+<ul>
+<li>当一项交易被链上的区块收录后，就是交易确认</li>
+<li>在此区块之后每产生一个区块，此项交易的确认数相应加 1</li>
+<li>经过 6 个以上区块确认的交易才是安全确认的，因为篡改成本巨大</li>
+<li>比特币钱包可以设置交易确认数</li>
+</ul>
+<h3>1.2.6  区块链-区块生成</h3>
+<p><img alt="" src="_v_images/2019-11-20-20-37-48.png" /></p>
+<ul>
+<li>
+<p>矿工在挖矿前要组建区块</p>
+<ul>
+<li>将 coinbase 交易打包进区块</li>
+<li>将交易池中高优先级的交易打包进区块</li>
+<li>创建区块头部
+<img alt="" src="_v_images/2019-11-20-20-38-04.png" /></li>
+</ul>
+</li>
+<li>
+<p>挖矿成功后，将计算出来的随机数 nonce(POW) 填入区块头部， 并向临近节点传播</p>
+</li>
+</ul>
+<h3>1.2.7  区块链-区块验证</h3>
+<ul>
+<li>相邻节点收到新区块后，立即做以下验证<ul>
+<li>验证 POW 的 nonce 值是否符合难度值</li>
+<li>检查时间戳是否小于当前时间两小时</li>
+<li>检查 merkle 树根是否正确</li>
+<li>检查区块 size 要小于区块 size 的上限</li>
+<li>第一笔交易必须是 coinbase 交易</li>
+<li>验证每个交易</li>
+</ul>
+</li>
+</ul>
+<h3>1.2.8  区块链-分类</h3>
+<ul>
+<li>公有链<ul>
+<li>任何人都可以参与使用和维护，信息公开，如比特币，以太坊等</li>
+</ul>
+</li>
+<li>联盟链<ul>
+<li>若干组织共同维护，使用有权限限制，信息受保护，如银联组织</li>
+</ul>
+</li>
+<li>私有链<ul>
+<li>集中管理者进行限制，内部少数人可以使用，信息不公开</li>
+</ul>
+</li>
+</ul>
+<h3>1.2.9  区块链-篡改账本</h3>
+<ul>
+<li>双花问题：同一笔比特币被支付多次</li>
+</ul>
+<p><img alt="" src="_v_images/2019-11-20-20-38-25.png" /></p>
+<p><img alt="" src="_v_images/2019-11-20-20-40-08.png" /></p>
+<p><img alt="" src="_v_images/2019-11-20-20-40-32.png" /></p>
+<p><img alt="" src="_v_images/2019-11-20-20-40-51.png" /></p>
+<h2>1.3 密码学</h2>
+<h3>1.3.1 密码学-对称加密</h3>
+<ul>
+<li>对称加密 - 加解密钥相同</li>
+<li>缺点：无法确保密钥被安全传递</li>
+<li>常用算法： DES 、 3DES （ TripleDES ）、 AES 等</li>
+</ul>
+<p><img alt="" src="_v_images/2019-11-20-20-43-11.png" /></p>
+<h3>1.3.2  密码学-非对称加密</h3>
+<ul>
+<li>非对称加密 - 公私钥加密对，公钥加密，私钥解密</li>
+</ul>
+<p><img alt="" src="_v_images/2019-11-20-20-43-22.png" /></p>
+<p><img alt="" src="_v_images/2019-11-20-20-43-33.png" /></p>
+<ul>
+<li>公钥由私钥生成，私钥可以推导出公钥</li>
+<li>从公钥无法推导出私钥</li>
+<li>优点：解决了密钥传输中的安全行问题</li>
+<li>常用算法： RSA 、 ECC （椭圆曲线加密算法 )</li>
+<li>使用场景： SSH 安全验证等</li>
+<li>问题：解决了信息传送的问题，如何验证发送方是正确的了 ?</li>
+</ul>
+<h3>1.3.3  密码学-哈希(Hash)</h3>
+<ul>
+<li>哈希 - 将一段数据 ( 任意长度 ) 经过计算转换成一段定长的数据</li>
+<li>不可逆性 - 几乎无法通过哈希的结果推导出原文</li>
+<li>无碰撞性 - 两个不同原文哈希后的结果一定不同</li>
+<li>常用算法： MD5 ， SHA256</li>
+<li>使用场景<ul>
+<li>数据库中的用户密码存储 (MD5)</li>
+<li>挖矿计算 (SHA256)</li>
+</ul>
+</li>
+</ul>
+<h3>1.3.4  密码学-数字签名</h3>
+<ul>
+<li>数字签名 - 公私钥加密对，私钥签名，公钥解签名</li>
+<li>使用场景 - 比特币交易验证等</li>
+</ul>
+<p><img alt="" src="_v_images/2019-11-20-20-43-46.png" /></p>
+<h3>1.3.5  Java实现区块链与比特币</h3>
+<ul>
+<li>区块链结构</li>
+<li>挖矿生成新区块</li>
+<li>共识机制</li>
+<li>比特币交易</li>
+<li>比特币钱包 </li>
+<li>区块链 P2P 网络通讯</li>
+</ul>
+<p><img alt="" src="_v_images/2019-11-20-20-44-02.png" /></p>
+<p>比特派</p>
+<h1>第2课</h1>
+<ul>
+<li>区块链整体结构设计与实现</li>
+<li>
+<p>共识机制</p>
+<ul>
+<li>
+<p>工作量证明原理</p>
+</li>
+<li>
+<p>挖矿算法</p>
+</li>
+</ul>
+</li>
+</ul>
+<p><img alt="" src="_v_images/2019-11-20-20-44-16.png" /></p>
+<pre><code class="language-java">// 挖矿算法
+//创建一个空的区块链
+List&lt;Block&gt; blockchain = new ArrayList&lt;&gt;();
+//生成创世区块
+Block block = new Block(1, System.currentTimeMillis(), new ArrayList&lt;Transaction&gt;(), 1, &quot;1&quot;, &quot;1&quot;);
+//加入创世区块到区块链里
+blockchain.add(block);
+System.out.println(JSON.toJSONString(blockchain));
+
+
+//创建一个空的交易结合
+List&lt;Transaction&gt; txs = new ArrayList&lt;&gt;();
+Transaction tx1 = new Transaction();
+Transaction tx2 = new Transaction();
+Transaction tx3 = new Transaction();
+txs.add(tx1);
+txs.add(tx2);
+txs.add(tx3);
+//加入系统奖励的交易
+Transaction sysTx = new Transaction();
+txs.add(sysTx);
+//获取当前区块链里的最后一个区块
+Block latestBlock = blockchain.get(blockchain.size() - 1);
+
+
+int nonce = 1;
+String hash = &quot;&quot;;
+while(true){
+ hash = CryptoUtil.SHA256(latestBlock.getHash() + JSON.toJSONString(txs) + nonce);
+ if (hash.startsWith(&quot;0000&quot;)) {
+        System.out.println(&quot;=====计算结果正确，计算次数为：&quot; +nonce+ &quot;,hash:&quot; + hash);
+        break;
+    }
+ nonce++;
+ System.out.println(&quot;计算错误，hash:&quot; + hash); 
+}
+
+
+Block newBlock = new Block(latestBlock.getIndex() + 1, System.currentTimeMillis(), txs, nonce, latestBlock.getHash(), hash);
+blockchain.add(newBlock);
+System.out.println(&quot;挖矿后的区块链：&quot; + JSON.toJSONString(blockchain));
+</code></pre>
+<p><img alt="" src="_v_images/2019-11-20-20-44-37.png" /></p>
+<h3>密码学--非对称加密</h3>
+<ul>
+<li>非对称加密--公私钥加密对，共要加密，私钥解密</li>
+<li>公钥由私钥生成，私钥可以推到出公钥</li>
+<li>从公钥无法推导出私钥</li>
+<li>优点：解决了密钥传输中的安全问题</li>
+<li>常用算法：RSA、ECC（椭圆曲线加密算法）</li>
+<li>使用场景：SSH安全验证等</li>
+<li>问题：解决了信息传送的问题，如何验证发送方是正确的？
+<img alt="" src="_v_images/2019-11-20-20-45-16.png" /></li>
+</ul>
+<pre><code class="language-JAVA">@Test
+public void testEncrypt() throws Exception {
+ System.err.println(&quot;公钥加密——私钥解密&quot;);
+ String inputStr = &quot;abc&quot;;
+ byte[] data = inputStr.getBytes();
+
+
+ byte[] encodedData = RSACoder.encryptByPublicKey(data, publicKey);
+
+
+ byte[] decodedData = RSACoder.decryptByPrivateKey(encodedData, privateKey);
+
+
+ String outputStr = new String(decodedData);
+ System.err.println(&quot;加密前: &quot; + inputStr + &quot;\n\r&quot; + &quot;解密后: &quot; + outputStr);
+ assertEquals(inputStr, outputStr);
+}
+</code></pre>
+<h3>密码学--哈希（Hash）</h3>
+<ul>
+<li>哈希--讲一段数据（任意长度）经过计算转换成一段定长的数据</li>
+<li>不可逆性--几乎无法通过哈希的结果推导出原文</li>
+<li>无碰撞行--两个不同原文哈希后的结果一定不同</li>
+<li>常用算法：MD5、SHA256</li>
+<li>使用场景：<ul>
+<li>数据库中的用户密码存储（MD5）</li>
+<li>挖矿计算（SHA256）</li>
+</ul>
+</li>
+</ul>
+<h3>密码学--数字签名</h3>
+<p>1、数字签名：公私钥加密对，私钥签名，公钥验证签名。
+2、使用场景：比特币交易验证等。</p>
+<p><img alt="" src="_v_images/2019-11-20-20-45-42.png" /></p>
+<pre><code class="language-JAVA">@Test
+public void testSign() throws Exception {
+ System.err.println(&quot;私钥签名——公钥验证签名&quot;);
+ String inputStr = &quot;sign&quot;;
+ byte[] data = inputStr.getBytes();
+
+
+ // 产生签名
+ String sign = RSACoder.sign(data, privateKey);
+ System.err.println(&quot;签名:\r&quot; + sign);
+
+
+ // 验证签名
+ boolean status = RSACoder.verify(data, publicKey, sign);
+ System.err.println(&quot;状态:\r&quot; + status);
+ assertTrue(status);
+}
+</code></pre>
+<h2>生成钱包</h2>
+<pre><code class="language-JAVA">// 本地生成公私钥对
+Map&lt;String, Object&gt; initKey = RSACoder.initKey();
+String publicKey = RSACoder.getPublicKey(initKey);
+String privateKey = RSACoder.getPrivateKey(initKey);
+return new Wallet(publicKey, privateKey);
+</code></pre>
+<p># 3 第3课：比特币的设计与实现
+比特币交易UTXO
+    - 交易输出</p>
+<pre><code>- 交易输入
+</code></pre>
+<p>比特币余额</p>
+<h2>3.1 比特币--UTXO</h2>
+<ul>
+<li>UTXO(unspent transaction output) - 未花费交易输出<ul>
+<li>比特币拥有者的公钥锁定（加密）的一个数字</li>
+<li>UTXO就是比特币，比特币系统中只有UTXO,没有比特币</li>
+<li>新的UTXO由挖矿或交易产生</li>
+</ul>
+</li>
+<li>UTXO存在全节点的数据库里</li>
+<li>转账交易消耗自己的UTXO,同时生成新的UTXO,并用接受者的公钥锁定</li>
+<li>比特币系统中用户的“余额”实际上并不直接存在，而是通过计算得来</li>
+</ul>
+<h3>3.2 比特币--交易模型</h3>
+<ul>
+<li>交易输出（UTXO）<ul>
+<li>锁定的比特币数量</li>
+<li>锁定脚本（用接收者的公钥哈希）</li>
+</ul>
+</li>
+<li>交易输入（UTXO+解锁脚本）<ul>
+<li>解锁脚本（发送者的签名和公钥）</li>
+</ul>
+</li>
+<li>签名--对发送者和接收者的公钥哈希以及整个交易签名</li>
+</ul>
+<p><img alt="" src="_v_images/2019-11-20-20-46-24.png" />
+<img alt="" src="_v_images/2019-11-20-20-46-43.png" /></p>
+<h3>3.2 比特币--交易全流程</h3>
+<p><img alt="" src="_v_images/2019-11-20-20-47-01.png" /></p>
+<p>coinbase的系统交易，input为空。</p>
+<h3>3.3 交易代码</h3>
+<pre><code class="language-JAVA">//交易发起方
+Wallet walletSender = Wallet.generateWallet();
+//交易接收方
+Wallet walletReciptent = Wallet.generateWallet();
+
+
+TransactionInput txIn = new TransactionInput(tx2.getId(), 10, null, walletSender.getPublicKey());
+TransactionOutput txOut = new TransactionOutput(10, walletReciptent.getHashPubKey());
+Transaction tx3 = new Transaction(CryptoUtil.UUID(), txIn , txOut);
+
+
+//假定tx2之前已经被打包进区块，也就是已经被记录进账本了
+tx3.sign(walletSender.getPrivateKey(), tx2);
+txs.add(tx3);
+</code></pre>
+<h3>3.4 签名代码</h3>
+<p>对发送者和接收者的公钥哈希以及整个交易签名</p>
+<pre><code class="language-java">/**
+ * 用私钥生成交易签名
+ * 
+ * @param privateKey
+ * @param prevTx
+ */
+public void sign(String privateKey, Transaction prevTx) {
+ if (coinbaseTx()) {
+  return;
+ }
+
+
+ if (!prevTx.getId().equals(txIn.getTxId())) {
+  System.err.println(&quot;交易签名失败：当前交易输入引用的前一笔交易与传入的前一笔交易不匹配&quot;);
+ }
+
+
+ Transaction txClone = cloneTx();
+ txClone.getTxIn().setPublicKey(prevTx.getTxOut().getPublicKeyHash());
+ String sign = &quot;&quot;;
+ try {
+  sign = RSACoder.sign(txClone.hash().getBytes(), privateKey);
+ } catch (Exception e) {
+  e.printStackTrace();
+ }
+ txIn.setSignature(sign);
+}
+
+
+/**
+ * 生成用于交易签名的交易记录副本
+ * 
+ * @return
+ */
+public Transaction cloneTx() {
+ TransactionInput transactionInput = new TransactionInput(txIn.getTxId(), txIn.getValue(), null, null);
+ TransactionOutput transactionOutput = new TransactionOutput(txOut.getValue(), txOut.getPublicKeyHash());
+ return new Transaction(id, transactionInput, transactionOutput);
+}
+</code></pre>

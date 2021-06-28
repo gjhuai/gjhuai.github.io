@@ -1,0 +1,181 @@
+<p>[TOC]</p>
+<h2>CentOS7 查看硬盘情况</h2>
+<p>lsblk 查看分区和磁盘 
+df -h 查看空间使用情况
+fdisk -l 分区工具查看分区信息
+cfdisk /dev/sda 查看分区
+blkid 查看硬盘label（别名）</p>
+<hr />
+<h2>CentOS7自启动设置</h2>
+<p>参考：<a href="http://blog.csdn.net/looksun/article/details/50668492">CentOS 7.x设置自定义开机启动,添加自定义系统服务</a></p>
+<p>CentOS7自启服务分为两种：系统（system）和用户（user），目录分别为：/usr/lib/systemd/system 和 /usr/lib/systemd/user 。服务文件以.service结尾，常用命令如下：</p>
+<pre><code class="language-shell"># 启动nginx服务
+systemctl start nginx.service
+# 设置开机自启动（service文件在/etc/systemd/system/下创建，enbale后，在/etc/systemd/system/建立链接文件）
+systemctl enable nginx.service
+
+# [root@zhifei]~# systemctl enable jira
+# Created symlink from /etc/systemd/system/multi-user.target.wants/jira.service to /etc/systemd/system/jira.service.
+
+# 停止开机自启动
+systemctl disable nginx.service  
+# 查看服务当前状态
+systemctl status nginx.service  
+# 重新启动服务
+systemctl restart nginx.service  
+# 查看所有已启动的服务
+systemctl list-units --type=service
+</code></pre>
+<hr />
+<h2>CentOS7防火墙及端口设置</h2>
+<p>防火墙服务默认使用的是 firewalld ，而不是 iptables 。启动/停止iptables或firewalld使用：
+systemctl enable/start/stop iptables/firewalld
+参考：<a href="http://blog.csdn.net/qq_34409701/article/details/52777197">禁用firewalld&amp;开启iptables&amp;systemctl使用简介</a>
+<a href="http://www.cnblogs.com/moxiaoan/p/5683743.html">CentOS7使用firewalld打开关闭防火墙与端口</a></p>
+<p>使用firewalld时，开放端口设置如下：</p>
+<pre><code class="language-shell"># 启动： 
+systemctl start firewalld
+# 查看状态： 
+systemctl status firewalld
+# 停止： 
+systemctl stop firewalld
+# 禁用： 
+systemctl disable firewalld 
+
+firewall-cmd --zone=public --permanent --add-port=80/tcp
+# 命令含义：
+#    --zone #作用域
+#    --permanent #永久生效，没有此参数重启后失效
+#    --add-port=80/tcp  #添加端口，格式为：端口/通讯协议
+
+# 查看所有打开的端口： 
+firewall-cmd --zone=public --list-ports
+# 查看
+firewall-cmd --zone= public --query-port=80/tcp
+# 删除
+firewall-cmd --zone=public --remove-port=80/tcp --permanent
+
+# 重启防火墙
+firewall-cmd --reload
+</code></pre>
+<hr />
+<h2>Centos7网络配置</h2>
+<p>centos7取消了ifconfig命令，使用ip addr命令查看IP地址</p>
+<p>修改文件： /etc/sysconfig/network-scripts/ifcfg-enp2s0</p>
+<pre><code class="language-shell">TYPE=&quot;Ethernet&quot;
+BOOTPROTO=&quot;static&quot;
+DEFROUTE=&quot;yes&quot;
+IPV4_FAILURE_FATAL=&quot;no&quot;
+IPV6INIT=&quot;yes&quot;
+IPV6_AUTOCONF=&quot;yes&quot;
+IPV6_DEFROUTE=&quot;yes&quot;
+IPV6_FAILURE_FATAL=&quot;no&quot;
+IPV6_ADDR_GEN_MODE=&quot;stable-privacy&quot;
+NAME=&quot;enp2s0&quot;
+UUID=&quot;1b2b9785-959a-4c35-a2a8-04ab32ef2855&quot;
+DEVICE=&quot;enp2s0&quot;
+ONBOOT=&quot;yes&quot;
+PEERDNS=&quot;yes&quot;
+PEERROUTES=&quot;yes&quot;
+IPV6_PEERDNS=&quot;yes&quot;
+IPV6_PEERROUTES=&quot;yes&quot;
+IPV6_PRIVACY=&quot;no&quot;
+IPADDR=192.168.31.200
+GATEWAY=192.168.31.1
+NETMASK=255.255.255.0
+NM_CONTROLLED=no
+DNS1=192.168.31.1
+ZONE=public
+</code></pre>
+<hr />
+<h2>CentOS的SSH安装</h2>
+<p>https://www.cnblogs.com/kaid/p/7985568.html</p>
+<ol>
+<li>检查是否安装SSH服务端软件包：
+        rpm -qa|grep openssh
+        若显示结果中包括 openssh-server-*. 则已安装，直接启动</li>
+<li>安装缺失的软件
+        sudo yum install openssh*</li>
+<li>注册、启动sshd服务
+        systemctl enable sshd<br />
+        systemctl start sshd 或者
+        service sshd start </li>
+<li>开启防火墙的22端口： 
+        具体防火墙使用可以参见：http://www.cnblogs.com/moxiaoan/p/5683743.html
+        firewall-cmd --zone=public --add-port=22/tcp --permanent<br />
+        service firewalld restart  </li>
+<li>测试：
+         本机测试： ssh username@localhost 测试，（但必须要先安装linux的ssh客户端软件包）</li>
+</ol>
+<hr />
+<h2>CentOS修改系统环境变量</h2>
+<h3>方法一： 在/etc/profile文件中添加变量【对所有用户生效（永久的）】</h3>
+<p>用VI在文件/etc/profile文件中增加变量，该变量将会对Linux下所有用户有效，并且是“永久的”。</p>
+<p>[root@CentOS ~]# vi /etc/profile
+在文件末尾加上如下两行代码
+PATH=/usr/local/webserver/php/bin:$PATH
+export PATH</p>
+<p>要是刚才的修改马上生效，需要执行以下代码</p>
+<p>[root@CentOS ~]# source /etc/profile</p>
+<p>这时再查看系统环境变量，就能看见刚才加的东西已经生效了</p>
+<h3>方法二：在用户目录下的.bash_profile文件中增加变量【对单一用户生效（永久的）】</h3>
+<p>用VI在用户目录下的.bash_profile文件中增加变量，改变量仅会对当前用户有效，并且是“永久的”。具体操作和方法1一样，这里就不在列举代码了。</p>
+<h3>方法三：直接运行export命令定义变量【只对当前shell（BASH）有效（临时的）】</h3>
+<p>在shell的命令行下直接使用[export变量名=变量值]定义变量，该变量只在当前的shell（BASH）或其子shell（BASH）下是有效的，shell关闭了，变量也就失效了，再打开新shell时就没有这个变量，需要使用的话还需要重新定义。例如</p>
+<p>export PATH=/usr/local/webserver/php/bin:$PATH</p>
+<hr />
+<h2>yum &amp; rpm</h2>
+<h3>安装</h3>
+<pre><code class="language-shell">rpm -i example.rpm     # 安装 example.rpm 包；
+rpm -iv example.rpm     # 安装 example.rpm 包并在安装过程中显示正在安装的文件信息；
+rpm -ivh example.rpm     # 安装 example.rpm 包并在安装过程中显示正在安装的文件信息及安装进度；
+</code></pre>
+<h3>yum安装路径查询</h3>
+<pre><code class="language-shell">rpm -qa | grep xxx         # 查询要找的软件名称
+rpm -ql  软件名称          # 显示软件的安装路径
+</code></pre>
+<h3>卸载软件</h3>
+<pre><code class="language-shell">rpm -e --nodeps  要卸载的软件包
+# rpm -e --nodeps java-1.6.0-openjdk-1.6.0.0-1.66.1.13.0.el6.i686
+</code></pre>
+<h3>centos7 yum 404错误</h3>
+<pre><code class="language-shell">yum clean all
+rpm --rebuilddb
+yum update
+</code></pre>
+<hr />
+<h2>忘记密码</h2>
+<p>https://www.linuxidc.com/Linux/2018-01/150211.htm</p>
+<hr />
+<h2>升级内核</h2>
+<ul>
+<li>查看内核版本</li>
+</ul>
+<p>uname -r</p>
+<ul>
+<li>通过yum升级内核</li>
+</ul>
+<p>yum install -y kernel</p>
+<ul>
+<li>删除多余的kernel</li>
+</ul>
+<pre><code class="language-shell">#查看系统中全部的内核RPM包:
+rpm -qa | grep kernel
+erlang-kernel-18.3.3-1.el7.x86_64
+kernel-devel-3.10.0-123.el7.x86_64
+abrt-addon-kerneloops-2.1.11-36.el7.centos.x86_64
+kernel-3.10.0-327.28.3.el7.x86_64
+kernel-3.10.0-123.el7.x86_64
+#删除旧内核的RPM包
+yum remove xxxx
+#重启系统
+reboot
+</code></pre>
+<ul>
+<li>通过源码升级内核</li>
+</ul>
+<p>比较复杂，不作介绍</p>
+<ul>
+<li>重启系统</li>
+</ul>
+<p>一定不要忘记，否则不生效。</p>

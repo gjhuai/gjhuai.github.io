@@ -1,0 +1,140 @@
+<h3>Jackson：自定义处理序列化和反序列化</h3>
+<p><a href="http://jackyrong.iteye.com/blog/2005323">jackson中自定义处理序列化和反序列化</a></p>
+<pre><code class="language-java">public class ItemSerializer extends JsonSerializer&lt;Item&gt; {  
+    @Override  
+    public void serialize(Item value, JsonGenerator jgen, SerializerProvider provider)   
+      throws IOException, JsonProcessingException {  
+        jgen.writeStartObject();  
+        jgen.writeNumberField(&quot;id&quot;, value.id);  
+        jgen.writeStringField(&quot;itemName&quot;, value.itemName);  
+        jgen.writeNumberField(&quot;owner&quot;, value.owner.id);  
+        jgen.writeEndObject();  
+    }  
+}  
+
+
+......
+
+
+Item myItem = new Item(1, &quot;theItem&quot;, new User(2, &quot;theUser&quot;));  
+ObjectMapper mapper = new ObjectMapper();  
+
+SimpleModule module = new SimpleModule();  
+module.addSerializer(Item.class, new ItemSerializer());  
+mapper.registerModule(module);  
+
+String serialized = mapper.writeValueAsString(myItem);  
+
+
+</code></pre>
+<p>更简单的方法：</p>
+<pre><code class="language-java">
+@JsonSerialize(using = ItemSerializer.class)  
+public class Item {  
+    ...  
+}  
+</code></pre>
+<h3>Jackson：自定义忽略规则</h3>
+<p><a href="http://stackoverflow.com/questions/26945580/jackson-serialization-how-to-ignore-superclass-properties">Jackson serialization: how to ignore superclass properties</a></p>
+<pre><code class="language-java">private static class IgnoreInheritedIntrospector extends JacksonAnnotationIntrospector {
+    @Override
+    public boolean hasIgnoreMarker(final AnnotatedMember m) {
+        return m.getDeclaringClass() == Base.class || super.hasIgnoreMarker(m);
+    }
+}
+
+
+public static void main(String[] args) throws JsonProcessingException {
+    final ObjectMapper mapper = new ObjectMapper();
+    mapper.setAnnotationIntrospector(new IgnoreInheritedIntrospector());
+    final Bean bean = new Bean(&quot;a&quot;, &quot;b&quot;);
+    System.out.println(mapper
+                    .writerWithDefaultPrettyPrinter()
+                    .writeValueAsString(bean));
+}
+</code></pre>
+<h3>Jackson：在POJO的json序列化字符串中加入自定义属性</h3>
+<p><a href="http://stackoverflow.com/questions/14714328/jackson-how-to-add-custom-property-to-the-json-without-modifying-the-pojo">Jackson: How to add custom property to the JSON without modifying the POJO</a></p>
+<pre><code class="language-java">public class JacksonSerializeWithExtraField {
+
+    @Test
+    public void testAddExtraField() throws Exception
+    {
+        ObjectMapper mapper = new ObjectMapper();
+
+        mapper.registerModule(new SimpleModule() {
+
+            public void setupModule(SetupContext context) {
+                super.setupModule(context);
+
+                context.addBeanSerializerModifier(new BeanSerializerModifier() {
+
+                    public JsonSerializer&lt;?&gt; modifySerializer(
+                            SerializationConfig config,
+                            BeanDescription beanDesc,
+                            JsonSerializer&lt;?&gt; serializer) {
+                        if (serializer instanceof BeanSerializerBase) {
+                              return new ExtraFieldSerializer(
+                                   (BeanSerializerBase) serializer);
+                        }
+                        return serializer;
+
+                    }                  
+                });
+            }          
+        });
+
+        mapper.writeValue(System.out, new MyClass());      
+        //prints {&quot;classField&quot;:&quot;classFieldValue&quot;,&quot;extraField&quot;:&quot;extraFieldValue&quot;}
+    }
+
+
+    class MyClass {
+
+        private String classField = &quot;classFieldValue&quot;;
+
+        public String getClassField() {
+            return classField;
+        }
+        public void setClassField(String classField) {
+            this.classField = classField;
+        }
+    }
+
+
+    class ExtraFieldSerializer extends BeanSerializerBase {
+
+        ExtraFieldSerializer(BeanSerializerBase source) {
+            super(source);
+        }
+
+        ExtraFieldSerializer(ExtraFieldSerializer source,
+                ObjectIdWriter objectIdWriter) {
+            super(source, objectIdWriter);
+        }
+
+        ExtraFieldSerializer(ExtraFieldSerializer source,
+                String[] toIgnore) {
+            super(source, toIgnore);
+        }
+
+        protected BeanSerializerBase withObjectIdWriter(
+                ObjectIdWriter objectIdWriter) {
+            return new ExtraFieldSerializer(this, objectIdWriter);
+        }
+
+        protected BeanSerializerBase withIgnorals(String[] toIgnore) {
+            return new ExtraFieldSerializer(this, toIgnore);
+        }
+
+        public void serialize(Object bean, JsonGenerator jgen,
+                SerializerProvider provider) throws IOException,
+                JsonGenerationException {          
+            jgen.writeStartObject();                       
+            serializeFields(bean, jgen, provider);
+            jgen.writeStringField(&quot;extraField&quot;, &quot;extraFieldValue&quot;);
+            jgen.writeEndObject();
+        }
+    }
+}
+</code></pre>

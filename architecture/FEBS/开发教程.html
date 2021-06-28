@@ -1,0 +1,99 @@
+<p>[toc]</p>
+<h1>项目目录结构</h1>
+<p>https://www.kancloud.cn/mrbird/spring-cloud/1265031
+后端项目结构如下所示：</p>
+<p>├─febs-apm                        ------ 微服务APM模块
+│  ├─febs-admin                   ------ 微服务监控中心
+│  ├─prometheus-grafana           ------ prometheus grafana apm相关配置，docker文件
+│  └─skywalking-elk               ------ skywalking elk相关配置，docker文件
+├─febs-auth                       ------ 微服务认证服务器
+├─febs-cloud                      ------ 整个项目的父模块
+│  ├─sql                          ------ SQL脚本
+│  ├─postman                      ------ postman脚本
+│  └─docker compose               ------ 项目相关docker compose文件
+├─febs-common                     ------ 通用模块
+│  ├─febs-common-core                   ------ 系统核心依赖包
+│  ├─febs-common-datasource-starter     ------ 系统数据库自动装配starter
+│  ├─febs-common-doc                    ------ 文档模块的核心依赖包
+│  ├─febs-common-doc-gateway-starter    ------ 网关聚合微服务子系统api文档自动装配starter
+│  ├─febs-common-doc-starter            ------ 微服务子系统api文档自动装配starter
+│  ├─febs-common-redis-starter          ------ 系统Redis自动装配starter
+│  └─febs-common-security-starter       ------ 微服务子系统安全配置自动装配starter
+├─febs-gateway                    ------ 微服务网关
+├─febs-server                     ------ 微服务子系统
+│  ├─ebs-server-system            ------ 微服务子系统系统核心模块
+│  ├─febs-server-test             ------ 微服务子系统demo模块
+│  ├─febs-server-generator        ------ 微服务子系统代码生成模块
+│  └─febs-server-job              ------ 微服务子系统任务调度模块
+└─febs-tx-manager                 ------ 微服务分布式事务控制器</p>
+<h1>如何添加自己的子系统</h1>
+<p>https://www.kancloud.cn/mrbird/spring-cloud/1647291
+为了规范，建议将微服务子系统添加到febs-server层级下。</p>
+<pre><code class="language-xml">    &lt;parent&gt;
+        &lt;groupId&gt;cc.mrbird&lt;/groupId&gt;
+        &lt;artifactId&gt;febs-server&lt;/artifactId&gt;
+        &lt;version&gt;2.1-RELEASE&lt;/version&gt;
+        &lt;relativePath&gt;../pom.xml&lt;/relativePath&gt;
+    &lt;/parent&gt;
+    &lt;dependencies&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;cc.mrbird&lt;/groupId&gt;
+            &lt;artifactId&gt;febs-common-core&lt;/artifactId&gt;
+            &lt;version&gt;${febs-cloud.version}&lt;/version&gt;
+        &lt;/dependency&gt;
+    &lt;/dependencies&gt;
+</code></pre>
+<pre><code class="language-yaml">febs:
+  cloud:
+    security:
+      enable: true
+security:
+  oauth2:
+    resource:
+      id: ${spring.application.name}
+      user-info-uri: http://${febs-gateway}:8301/auth/user
+</code></pre>
+<h1>如何控制权限</h1>
+<p>https://www.kancloud.cn/mrbird/spring-cloud/1265033</p>
+<ul>
+<li>后端控制
+后端资源权限控制使用Spring Cloud Security权限注解控制，比如下面这个资源只有拥有"user:add"权限的用户可以访问：</li>
+</ul>
+<pre><code class="language-JAVA">@PostMapping
+@PreAuthorize(&quot;hasAnyAuthority('user:add')&quot;)
+public void addUser(User user) throws FebsException {
+     this.userService.createUser(user);
+}
+</code></pre>
+<ul>
+<li>前端控制</li>
+</ul>
+<pre><code class="language-XML">&lt;button v-has-permission=&quot;['user:add']&quot;&gt;新增用户&lt;/button&gt;
+</code></pre>
+<h1>项目打包</h1>
+<p>https://www.kancloud.cn/mrbird/spring-cloud/1268277</p>
+<p>mvn clean 和 mvn package</p>
+<h1>PostMan测试</h1>
+<h1>第三方登录使用指南</h1>
+<p>以GitHub登录为例</p>
+<h1>数据权限</h1>
+<p>数据权限通常是通过部门或者组织架构来绑定的，目前系统没有组织架构，只有部门数据，所以在FEBS Cloud中，数据权限通过部门ID绑定。</p>
+<p><code>@DataPermission(methods = {"selectPage"})</code> 注解用于控制数据权限，含义是：DataPermissionTestMapper的selectPage方法开启数据权限。
+开启后，数据查询前系统会在原始查询SQL中拼接xx.dept_id in (xxx)语句：</p>
+<h1>Feign的使用</h1>
+<p>Feign用于一个微服务子系统调用另一个微服务子系统的接口，本质就是http请求。但是我们的微服务都是受保护的，没有合法的令牌是无法获取到数据的，并且Fein默认并不会帮我们传递令牌。</p>
+<h1>获取当前用户信息</h1>
+<p>febs-common-core包下的FebsUtil工具类中。<code>getCurrentUser</code>、 <code>getCurrentUsername</code>、<code>getCurrentUserAuthority</code>、<code>getCurrentTokenValue</code></p>
+<h1>全局异常控制</h1>
+<p>所谓的全局异常捕获指的是系统的最外层Controller层的异常捕获。febs-common-core包中的BaseExceptionHandler类中定义了系统中几种常见的异常处理</p>
+<h1>开启系统API文档</h1>
+<p>目前较为流行的自动api生成框架为swagger，不过UI界面并不怎么适合国人的使用习惯，FEBS Cloud集成的是Knife4J，下面演示下如何开启微服务API文档生成。</p>
+<h1>starter使用介绍</h1>
+<p><code>febs-common-security-starter</code>
+<code>febs-common-doc-starter</code>
+<code>febs-common-redis-starter</code>
+<code>febs-common-datasource-starter</code></p>
+<h1>分布式事务演示</h1>
+<p>演示前，请确保已经启动了febs-tx-manager、febs-auth、febs-gateway、febs-server-system和febs-server-test。</p>
+<h1>演示5种获取令牌方式</h1>
+<p>OAuth2协议规范了4种获取令牌的方式：授权码模式、密码模式、客户端模式和简化模式，具体可以参考https://tools.ietf.org/html/rfc6749#section-4.1。Spring Cloud OAuth2在此基础上添加了刷新令牌方式。</p>

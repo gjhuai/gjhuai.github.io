@@ -1,0 +1,915 @@
+<p>[TOC]</p>
+<h3>递归之逆序打印</h3>
+<hr />
+<p>输入一组数，然后以相反的顺序输出。</p>
+<p>分析:根据函数递归调用的进栈和出栈基本原理，即读入数据，进栈，遇到结束递归条件，出栈，输出数据。因为读入数据和输出数据恰好相反，实现了逆序。</p>
+<pre><code class="language-c">
+#include &lt;stdio.h&gt;
+
+
+
+
+void reversePrint(){
+
+ int n;
+
+ scanf(&quot;%d&quot;,&amp;n);
+
+ if (n!=0){
+
+ reversePrint();
+
+ printf(&quot;%4d&quot;,n);
+
+ }
+
+ else {
+
+ printf(&quot;\n输出一组反序数：\n&quot;);
+
+ }
+
+}
+
+
+
+
+void main(){
+
+ printf(&quot;输入一组整数（以0结束）：&quot;);
+
+ reversePrint();
+
+}
+
+</code></pre>
+<h3>汉诺塔</h3>
+<hr />
+<p>汉诺塔问题（又称河内塔问题）是根据一个传说形成的一个问题：</p>
+<p>有三根杆子A，B，C。A杆上有N个(N&gt;1)穿孔圆盘，盘的尺寸由下到上依次变小。要求按下列规则将所有圆盘移至C杆：</p>
+<p>每次只能移动一个圆盘；</p>
+<p>大盘不能叠在小盘上面。</p>
+<p>提示：可将圆盘临时置于B杆，也可将从A杆移出的圆盘重新移回A杆，但都必须尊循上述两条规则。</p>
+<p>问：如何移？最少要移动多少次？</p>
+<pre><code class="language-C">
+#include &lt;stdio.h&gt;
+
+
+
+
+void hanoi(int n,char A,char B,char C){
+
+  if(n==1){
+
+    printf(&quot;Move disk %d from %c to %c\n&quot;,n,A,C); //把第n个盘子从A移到C
+
+  } else {
+
+    hanoi(n-1,A,C,B);     //把剩下的n-1个盘子借助C从A移到B
+
+    printf(&quot;Move disk %d from %c to %c\n&quot;,n,A,C);
+
+    hanoi(n-1,B,A,C);     //把剩下的n-1个盘子借助A从B移到C
+
+  }
+
+}
+
+
+
+
+void main(){
+
+  int n; 
+
+  printf(&quot;请输入数字n以解决n阶汉诺塔问题：\n&quot;); 
+
+  scanf(&quot;%d&quot;,&amp;n); 
+
+  hanoi(n,'A','B','C');  
+
+}
+
+</code></pre>
+<h3>枚举法</h3>
+<hr />
+<p>下列问题具有的共同特点是：不能用方程求解，只能一一列举各种情况，选取满足要求的解。</p>
+<p>（1）鸡翁一值钱五，鸡母一值钱三，鸡雏三值钱一。百钱买百鸡，问鸡翁、母、雏各几何？</p>
+<p>分析：公鸡-i ,母鸡-j,小鸡-k   </p>
+<pre><code>     i + j + k = 100
+
+     5*i + 3*j + k/3 = 100
+</code></pre>
+<pre><code class="language-C">
+
+
+
+#include &lt;stdio.h&gt;
+
+
+
+
+void main() {
+
+  int i, j, k;
+
+  printf (&quot;鸡翁 母鸡 鸡雏\n&quot;);
+
+  printf (&quot;-------------------\n&quot;);
+
+
+
+
+  for(i=1;i&lt;20;i++)
+
+  {
+
+    for(j=0;j &lt;33;j++)
+
+    {
+
+      k = 100 - i - j;
+
+      if ( i * 15 + j * 9 + k == 300 )
+
+        printf (&quot;%5d %5d %5d\n&quot;, i, j, k);
+
+    }
+
+  }
+
+}
+
+</code></pre>
+<h3>最大公约数和最小公倍数</h3>
+<hr />
+<p>使用辗转相除法求最大公约数；然后，利用最大公约数和最小公倍数的关系：</p>
+<p>lcm(m,n) * gcd(m,n) = m*n</p>
+<p>来求最小公倍数</p>
+<pre><code class="language-C">
+#include &lt;stdio.h&gt;
+
+
+
+
+// 辗转相除法求最大公约数（基于递归）
+
+int gcd(int m,int n){
+
+  int mod = m%n;  //求m和n的余数
+
+  if (mod==0){  //mod==0,则n为最大公约数,否则求（n,mod)的最大公约数
+
+    return n;
+
+  } else {
+
+    return gcd(n,mod);
+
+  }
+
+}
+
+
+
+
+// 辗转相除法求最大公约数（基于循环）
+
+int gcd2(int m,int n){
+
+  int mod;
+
+  do{
+
+    mod = m%n;//求m和n的余数
+
+    m=n;n=mod;  //修改m, n的值
+
+  }while (mod!=0);
+
+  return m;
+
+}
+
+
+
+
+int lcm(int m,int n){
+
+  return m*n/gcd(m,n);
+
+}
+
+
+
+
+void main(){
+
+  int result = gcd2(6,9);
+
+  printf(&quot;\ngcd=%d\n&quot;,result);
+
+}
+
+</code></pre>
+<h3>对字符数组进行排序(非字典顺序)</h3>
+<hr />
+<pre><code class="language-java">
+/*
+
+ * 在JAVA中对数组[K,q,a,F,j,A,f]排序，要求排序结果为：[A,a,F,f,K,q].
+
+ */
+
+import java.util.*;
+
+
+
+
+public class CharCaseSort {
+
+
+
+
+  public static void main(String[] args) {
+
+    char[] array = new char[] { 'K', 'q', 'a', 'F', 'j', 'A', 'f' };
+
+    new CharCaseSort().doSort(array);
+
+    System.out.println(array);// 输出: AaFfjKq
+
+  }
+
+
+
+
+  // 排序,采用最简单的冒泡排序
+
+  public char[] doSort(char[] array) {
+
+    char ch;
+
+    for (int i = 0; i &lt; array.length; ++i) {
+
+      for (int j = 0; j &lt; array.length - i - 1; ++j) {
+
+        if (this.compare(array[j], array[j + 1]) &gt; 0) {
+
+          ch = array[j];
+
+          array[j] = array[j + 1];
+
+          array[j + 1] = ch;
+
+        }
+
+      }
+
+    }
+
+    return array;
+
+  }
+
+
+
+
+  // 比较 a 和 b[忽略大小写,同时同一个大小写字母,大写的小于小写的]
+
+  private int compare(char a, char b) {
+
+    char aa = (char) (a | 32);
+
+    char bb = (char) (b | 32);
+
+
+
+
+    if (aa == bb) {
+
+      return a &lt; b ? -1 : 1;
+
+    } else if (aa &lt; bb) {
+
+      return -1;
+
+    } else {
+
+      return 1;
+
+    }
+
+  }
+
+}
+
+</code></pre>
+<h3>字符串反转的函数</h3>
+<hr />
+<p>分析：把字符串数组的从两端向中心对调。</p>
+<pre><code class="language-C">
+#include &lt;stdio.h&gt;
+
+#include &lt;string.h&gt;
+
+
+
+
+void reverse_str(char * ch);
+
+void reverse_str2(char *ch);
+
+
+
+
+int main(void){
+
+  char c[] = &quot;Can you reverse me?&quot;;
+
+  printf(&quot;original string c: \n%s\n&quot;, c);
+
+  reverse_str(c);
+
+  printf(&quot;reversed string after calling reverse_str: \n%s\n&quot;, c);
+
+  reverse_str2(c);
+
+  printf(&quot;reversed string after calling reverse_str2: \n%s\n&quot;, c);
+
+  system(&quot;pause&quot;);
+
+  return 0;
+
+}
+
+
+
+
+void reverse_str(char *ch) /*使用中间变量*/{
+
+  int len;
+
+  int i;
+
+  len = strlen(ch)-1;
+
+  char ctemp;
+
+  for(i = 0; i &lt; len-i; i++) {
+
+    ctemp = ch[i];
+
+    ch[i] = ch[len-i];
+
+    ch[len-i] = ctemp;
+
+  }
+
+  ch[len+1] = 0;
+
+}
+
+
+
+
+void reverse_str2(char *ch) /*不用中间变量*/{
+
+  int len;
+
+  int i;
+
+  len = strlen(ch)-1;
+
+  char ctemp;
+
+  for(i = 0; i &lt; len-i; i++) {
+
+    ch[i] = ch[i] ^ ch[len-i];
+
+    ch[len-i] = ch[i] ^ ch[len-i];
+
+    ch[i] = ch[i] ^ ch[len-i];
+
+  }
+
+  ch[len+1] = 0;
+
+}
+
+</code></pre>
+<h3>Fibonacci数列与兔子繁殖问题</h3>
+<hr />
+<p>一般而言，兔子在出生两个月后，就有繁殖能力，此后一对兔子每个月能生出一对小兔子来。小兔长两个月，第三个月生小兔子，如此类推，如果所有兔都不死，那么一年以后可以繁殖多少对兔子？</p>
+<p>分析：</p>
+<p>假设在n月有新生及可生育的兔子总共a对，n+1月就总共有b对。在n+2月必定总共有a+b对：因为在n+2月的时候，所有在n月就已存在的a对兔子皆已可以生育并诞下a对后代；同时在前一月(n+1月)之b对兔子中，有b-a对在当月属于新诞生的兔子尚不能生育，所以n+2月兔子数为a+a+(b-a)=a+b。</p>
+<p>这正是一个Fibonacci数列，递推公式为：f(n)=f(n-1)+f(n-2) 。所以可以用递归程序来解答。</p>
+<pre><code class="language-C">
+#include &lt;stdio.h&gt;
+
+
+
+
+long f(long n)
+
+{
+
+  if (n&lt;3) return 1;
+
+  else return f(n-2)+f(n-1);
+
+}
+
+
+
+
+void main()
+
+{
+
+  printf(&quot;一年后，有兔子%ld对.\n&quot;, f(12));
+
+  getch();
+
+}
+
+</code></pre>
+<p>1 1 2 3 5 8 13 21 34 55 89 ...</p>
+<p>可以把递归改写为循环：</p>
+<pre><code class="language-C">
+#include &lt;stdio.h&gt;
+
+
+
+
+f2(int n)
+
+{
+
+  long f1,f2;
+
+  int i;
+
+  f1=f2=1;
+
+  for (i=1;i&lt;=n/2;i++)
+
+  {
+
+    printf(&quot;%12ld %12ld&quot;,f1,f2);
+
+    if (i%2==0)
+
+      printf(&quot;\n&quot;); /*控制输出，每行四个*/
+
+    f1=f1+f2;     /*前两个月加起来赋值给第三个月*/
+
+    f2=f1+f2;     /*前两个月加起来赋值给第四个月*/
+
+  }
+
+}
+
+
+
+
+void main()
+
+{
+
+  printf(&quot;一年后，有兔子%ld对.\n&quot;, f2(12));
+
+  getch();
+
+}
+
+````
+
+```java
+
+public class Fibonacci ...{
+
+  public static void main(String[] args) ...{
+
+    int[] fib = new int[20]; 
+
+
+
+
+    fib[0] = 0; 
+
+    fib[1] = 1; 
+
+
+
+
+    for(int i = 2; i &lt; fib.length; i++) 
+
+      fib[i] = fib[i-1] + fib[i-2]; 
+
+
+
+
+    for(int i = 0; i &lt; fib.length; i++) 
+
+      System.out.print(fib[i] + &quot; &quot;); 
+
+    System.out.println();
+
+  }
+
+}
+
+</code></pre>
+<h3>求素数算法分析</h3>
+<hr />
+<p>求某一个范围内的素数（质数）。素数是指只能被 1 和自身整除的整数。</p>
+<p>分析：检查一个正整数N是否为素数，最简单的方法就是试除法，将该数N用小于等于sqrt(N)的所有素数去试除，若均无法整除，则N为素数。</p>
+<p>那么，我们先来一个算法简单的，将该数N用小于等于sqrt(N)的所有整数去试除：</p>
+<pre><code class="language-C">
+#include &lt;stdio.h&gt;
+
+#include &quot;math.h&quot;
+
+
+
+
+prime_number1(int begin,int end)
+
+{
+
+  int m,i,k,h=0,leap=1;
+
+
+
+
+  for (m=begin;m&lt;=end;m++)
+
+  {
+
+    k=sqrt(m+1);
+
+    for (i=2;i&lt;=k;i++)
+
+      if (m%i==0)
+
+      {
+
+        leap=0;
+
+        break;
+
+      }
+
+    if (leap)
+
+    {
+
+      printf(&quot;%-4d&quot;,m);
+
+      h++;
+
+      if (h%10==0)
+
+        printf(&quot;\n&quot;);
+
+    }
+
+    leap=1;
+
+  }
+
+  printf(&quot;\nThe total is %d&quot;,h);
+
+}
+
+
+
+
+int main(){
+
+  prime_number1(100,200);
+
+  return 0;
+
+}
+
+</code></pre>
+<p>用小于等于sqrt(N)的所有整数去试除，有点浪费，我们用小于等于sqrt(N)的所有素数去试除该数，程序如下：</p>
+<pre><code class="language-C">
+#include &lt;stdio.h&gt;
+
+#include &quot;math.h&quot;
+
+
+
+
+#define true  1
+
+#define false 0
+
+
+
+
+_Bool divisible(int n, int primes[])
+
+{
+
+  int i;
+
+  for (i=0;primes[i]&gt;0;i++)
+
+  {
+
+    if (n % primes[i] == 0)
+
+    {
+
+      return true;
+
+    }
+
+  }
+
+  return false;
+
+}
+
+
+
+
+void get_primes(int LIMIT)
+
+{
+
+  int i,j,primes[LIMIT];
+
+  j=0,primes[0]=2;
+
+
+
+
+  for (i = 3; i &lt;= LIMIT; i += 2)
+
+  {
+
+    if (!divisible(i, primes))  //用小于等于sqrt(N)的所有素数去试除该数
+
+      primes[++j] = i;
+
+  }
+
+
+
+
+  for (i=j+1;i&lt;LIMIT;i++)
+
+    primes[i]=0;
+
+
+
+
+  // 输出结果
+
+  for (i=0;primes[i]&gt;0;i++)
+
+  {
+
+    printf(&quot;%8d&quot;, primes[i]);
+
+    if (i % 10 == 9) printf(&quot;\n&quot;);
+
+  }
+
+}
+
+
+
+
+int main()
+
+{
+
+  get_primes(150);
+
+  printf(&quot;\n-------------------\n&quot;);
+
+  return 0;
+
+}
+
+</code></pre>
+<p>下面说说，筛法求1-n(n≤200)以内素数。</p>
+<p>分析:由希腊著名数学家埃拉托色尼提出的所谓“筛法”，步骤如下： </p>
+<p>①将所有候选数放入筛中； </p>
+<p>②找筛中最小数（必为素数）next，放入集合primes中； </p>
+<p>③将next的所有倍数从筛中筛去； </p>
+<p>④重复②～④直到筛空。</p>
+<p>程序如下：</p>
+<pre><code class="language-C">
+#include &lt;stdio.h&gt;
+
+#include &quot;math.h&quot;
+
+
+
+
+#define true  1
+
+#define false 0
+
+
+
+
+void prime2()
+
+{
+
+  int i,j,h,k=0,p[100]={0},a[200]={0};
+
+  for (i=1;i&lt;200;i++)a[i]=i+1;/*将所有候选数放入筛中*/
+
+  for (i=0;i&lt;200;i++)
+
+    for (j=0;j&lt;200;j++)
+
+      if (a[i]!=0)
+
+      {
+
+        p[k]=a[i];/*将最小数放入素数集合p中*/
+
+        for (h=k;h&lt;200;h++)
+
+          if (a[h]%p[k]==0)a[h]=0;/*将这个素数的倍数从筛中删去*/
+
+        k++;
+
+      }
+
+  i=0;
+
+  printf(&quot;primes:&quot;);
+
+  while (p[i]!=0)
+
+  {
+
+    printf(&quot;%5d&quot;,p[i]);  /*打印出所有素数*/
+
+    i++;
+
+  }
+
+}
+
+
+
+
+int main()
+
+{
+
+  prime2();
+
+  printf(&quot;\n-------------------\n&quot;);
+
+  return 0;
+
+}
+
+</code></pre>
+<p>在 zh.wikipedia.org 上看到一种效率更高的算法，大致看了一下，应该可行，但是求100以内的素数，会丢掉97这个素数。具体算法如下：</p>
+<p>欲求出小于x的所有素数……</p>
+<p>根据素数分布特性可以把数除以6，得其余数（ n为大于0, 小于 ( (x 的平方根) /6 )的正整数。）：</p>
+<p>6n + 0……偶数（2的倍数）。</p>
+<p>6n + 1……可能為素数？</p>
+<p>6n + 2……偶数（2的倍数）。</p>
+<p>6n + 3……3的倍数。</p>
+<p>6n + 4……偶数（2的倍数）。</p>
+<p>6n + 5……可能为素数？</p>
+<p>所以，如果预先排除了 2 与 3 的話，那只要算 6n + 1 與 6n + 5 是否為素数就可以了。这样，搜寻范围减少至原先的2/3，也比单独排除偶数少了1/3。</p>
+<p>程序如下：</p>
+<pre><code class="language-C">
+#include &lt;stdio.h&gt;
+
+#include &quot;math.h&quot;
+
+
+
+
+#define true  1
+
+#define false 0
+
+
+
+
+int prime(int LIMIT)
+
+{
+
+  _Bool sieve[LIMIT+1];
+
+  int i,p, j, p2;
+
+
+
+
+  int nLIMIT = LIMIT -6;
+
+  for (i = 7 ; i &lt;= nLIMIT ; i+=6)
+
+  {
+
+    sieve[i] = true;
+
+    sieve[i+2] = false;
+
+    sieve[i+4] = true;
+
+  }
+
+
+
+
+  p = 5;
+
+  while ((j = p*p) &lt;= LIMIT)
+
+  {
+
+    p2 = p &lt;&lt; 1;
+
+    while (j &lt;= LIMIT)
+
+    {
+
+      sieve[j] = false;
+
+      j += p2;
+
+    }
+
+
+
+
+    do
+
+    {
+
+      p += 2;
+
+    }
+
+    while (sieve[p] == false);
+
+  }
+
+
+
+
+  printf(&quot;Prime numbers:\n&quot;);
+
+  printf(&quot;2,3,5&quot;);
+
+
+
+
+  nLIMIT = LIMIT -4;
+
+  for (i = 7 ; i &lt;= nLIMIT ; i += 2)
+
+  {
+
+    if (sieve[i]) printf(&quot;,%d&quot;,i);
+
+    i+=4;
+
+    if (sieve[i]) printf(&quot;,%d&quot;,i);
+
+  }
+
+
+
+
+  return 0;
+
+}
+
+
+
+
+int main()
+
+{
+
+  prime(100);
+
+  printf(&quot;\n-------------------\n&quot;);
+
+  return 0;
+
+}
+
+</code></pre>

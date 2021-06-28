@@ -1,0 +1,38 @@
+<p>[TOC]</p>
+<h2>Git 推送和删除远程标签</h2>
+<p>Git 的推送和删除远程标签命令是相同的，删除操作实际上就是推送空的源标签refs。
+git push origin 标签名<br />
+等同于如下操作：<br />
+git push origin refs/tags/源标签名:refs/tags/目的标签名</p>
+<p>1、推送标签：
+git push origin 标签名  </p>
+<p>2、删除本地标签：
+git tag -d 标签名  </p>
+<p>3、删除远程标签：
+git push origin :refs/tags/标签名<br />
+例：git push origin :refs/tags/V3.0.1-Release </p>
+<p>4、其他本地操作
+打标签 ：git tag -a V3.0.1-Release -m "Tagging version 3.0.1-Release "<br />
+删除本地仓库标签 ：git tag -d V3.0.1-Release <br />
+列出标签：git tag</p>
+<h2>升级git后，出现 fatal: NullReferenceException encountered.</h2>
+<p>出现错误：</p>
+<pre><code>fatal: NullReferenceException encountered.
+error: unable to read askpass response from 'C:\Program Files\TortoiseGit\bin\SshAskPass.exe'
+</code></pre>
+<p>git和tortoiseGit都不能记住用户名密码了。修复方法如下：</p>
+<pre><code class="language-shell">git config credential.helper store
+git config --unset credential.helper
+git config --global credential.helper store    
+</code></pre>
+<p>升级后的git版本为2.19.1，参考： https://stackoverflow.com/questions/5343068/is-there-a-way-to-skip-password-typing-when-using-https-on-github</p>
+<h2>checkout 子目录</h2>
+<p>以https://github.com/geekhac/to...子目录为例：</p>
+<p>git init todomvc &amp;&amp; cd todomvc</p>
+<p>git config core.sparsecheckout true //设置允许克隆子目录</p>
+<p>echo '/examples/react/*' &gt;&gt; .git/info/sparse-checkout //设置要克隆的仓库的子目录路径</p>
+<p>git remote add origin https://github.com/geekhac/to...</p>
+<p>git pull origin master</p>
+<h2>强制更新</h2>
+<p>git fetch --all
+git reset --hard origin/master</p>

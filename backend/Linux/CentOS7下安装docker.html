@@ -1,0 +1,98 @@
+<p>[TOC]</p>
+<h2>安装docker</h2>
+<p>参考：
+<a href="https://www.cnblogs.com/yufeng218/p/8370670.html">Centos7上安装docker</a>
+<a href="https://docs.docker.com/install/linux/docker-ce/centos/#install-docker-ce">Install Docker CE for GentOS</a>
+<a href="https://blog.csdn.net/we_shell/article/details/38368137">Docker学习笔记(2)--Docker常用命令</a></p>
+<p>1、安装需要的软件包， yum-util 提供yum-config-manager功能，另外两个是devicemapper驱动依赖的</p>
+<pre><code class="language-shell">$ sudo yum install -y yum-utils device-mapper-persistent-data lvm2
+</code></pre>
+<p>2、设置yum源</p>
+<pre><code class="language-shell">$ sudo yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+</code></pre>
+<p>3、可以查看所有仓库中所有docker版本，并选择特定版本安装</p>
+<pre><code class="language-shell">$ yum list docker-ce --showduplicates | sort -r
+</code></pre>
+<p>4、安装docker</p>
+<pre><code class="language-shell">$ sudo yum install docker-ce #由于repo中默认只开启stable仓库，故这里安装的是最新稳定版17.12.0
+$ sudo yum install &lt;FQPN&gt; # 例如：sudo yum install docker-ce-17.12.0.ce
+</code></pre>
+<p>5、启动并加入开机启动</p>
+<pre><code class="language-shell">$ sudo systemctl start docker
+$ sudo systemctl enable docker
+</code></pre>
+<p>6、验证安装是否成功(有client和service两部分表示docker安装启动都成功了)</p>
+<pre><code class="language-shell">$ docker version
+</code></pre>
+<h2>docker容器网络无法访问</h2>
+<p>docker网络原理：<a href="https://blog.csdn.net/qq_37423198/article/details/78682404">Docker学习笔记(4)——Docker网络配置</a></p>
+<p>采用默认的网桥模式网络。需要修改宿主机配置：
+在/etc/sysctl.conf文件中加入以下两行</p>
+<pre><code class="language-shell">net.ipv6.conf.all.disable_ipv6=1    # 停止ipv6
+net.ipv4.ip_forward=1    # docker网络转发
+</code></pre>
+<p>重启网络： service network restart</p>
+<h2>改变docker的image存放目录</h2>
+<p>steps:
+1. mkdir /data/docker（你想要docker存放image的目录）
+2. systemctl stop docker
+3. vi /usr/lib/systemd/system/docker.service
+4. 添加 -g /data/docker</p>
+<pre><code class="language-shell">[Unit]
+...
+
+[Service]
+...
+ExecStart=/usr/bin/docker daemon -g /data/docker
+...
+[Install]
+...
+</code></pre>
+<ol>
+<li>cp -R /var/lib/docker/* /data/docker/</li>
+<li>systemctl daemon-reload</li>
+<li>systemctl start docker</li>
+</ol>
+<h2>安装oracle-xe镜像</h2>
+<p>参考：<a href="https://blog.csdn.net/xp541130126/article/details/70138904">mac os下使用 Docker安装oracle-xe-11g数据库</a>
+可以在 https://hub.docker.com 搜索自己需要的image。</p>
+<pre><code class="language-shell"># 搜索包括oracle的image， 选择镜像：alexeiled/docker-oracle-xe-11g
+docker search oracle
+
+# 下载镜像
+docker pull alexeiled/docker-oracle-xe-11g
+
+# 启动镜像为一个容器，并命名为oracle
+# docker run -h &quot;oracle&quot; --name &quot;oracle&quot; -d -p 49160:22 -p 49161:1521 -p 49162:8080 alexeiled/docker-oracle-xe-11g
+# 映射端口时，指定了ip，那么宿主机采用ipv4，否则采用ipv6，为了减少麻烦，最好指定ip，ip不要设成127.0.0.1，否则外网无法访问
+docker run -h &quot;oracle_xe_1&quot; --name &quot;oracle_xe_1&quot; -d -p 192.168.31.200:49150:22 -p 192.168.31.200:49151:1521 -p 192.168.31.200:49152:8080 alexeiled/docker-oracle-xe-11g
+</code></pre>
+<p>oracle express版本是免费的开发版，它的主要限制是数据库的大小最大1G，和一些性能的限制。</p>
+<ul>
+<li>
+<p>此镜像的oracle数据库连接信息</p>
+<ul>
+<li>hostname:  宿主机IP</li>
+<li>port: 49161</li>
+<li>sid: xe</li>
+<li>username: system / oracle</li>
+<li>username: sys / oracle</li>
+</ul>
+</li>
+<li>
+<p>ubuntu的帐户： root / admin</p>
+</li>
+<li>进入docker容器</li>
+</ul>
+<pre><code class="language-shell"># docker exec -it &lt;CONTAINER&gt; &lt;COMMAND&gt;
+docker exec -it 0deb75d61474 /bin/bash
+</code></pre>
+<p>参考：<a href="https://www.cnblogs.com/xhyan/p/6593075.html">Docker容器进入的4种方式</a></p>
+<h2>安装oracle企业版镜像</h2>
+<ul>
+<li>wget 下载oracle安装文件
+登录oracle官网，得到下载链接，类似：http://download.oracle.com/otn/linux/oracle11g/R2/linux.x64_11gR2_database_1of2.zip?AuthParam=1528547837_6e9ab74583f4c5b6b8bc7256af0436be
+用下面命令下载即可</li>
+</ul>
+<pre><code class="language-shell">wget --limit-rate=2M &quot;http://download.oracle.com/otn/linux/oracle11g/R2/linux.x64_11gR2_database_1of2.zip?AuthParam=1528547837_6e9ab74583f4c5b6b8bc7256af0436be&quot;
+</code></pre>

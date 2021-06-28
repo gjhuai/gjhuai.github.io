@@ -1,0 +1,60 @@
+<h1>ReadPreference 读偏好</h1>
+<p><strong>MongoDB 有 5 种 ReadPreference 模式：</strong></p>
+<ul>
+<li>primary</li>
+<li>主节点，默认模式，读操作只在主节点，如果主节点不可用，报错或者抛出异常。</li>
+<li>primaryPreferred</li>
+<li>首选主节点，大多情况下读操作在主节点，如果主节点不可用，如故障转移，读操作在从节点。</li>
+<li>secondary</li>
+<li>从节点，读操作只在从节点， 如果从节点不可用，报错或者抛出异常。</li>
+<li>secondaryPreferred</li>
+<li>首选从节点，大多情况下读操作在从节点，特殊情况（如单主节点架构）读操作在主节点。</li>
+<li>nearest</li>
+<li>最邻近节点，读操作在最邻近的成员，可能是主节点或者从节点。</li>
+</ul>
+<h1>MongoDB 应答机制</h1>
+<ul>
+<li>w : 该选项要求确认操作已经传播到指定数量的 mongod 实例或指定标签的 mongod 实例</li>
+<li>w:1(应答式写入)</li>
+<li>w:0(非应答式写入)</li>
+<li>w:&gt;1(用于副本集环境) 写入节点数</li>
+<li>j : 该选项要求确认写操作已经写入 journal 日志之后应答客户端(需要开启 journal 功能)</li>
+<li>wtimeout: 该选项指定一个时间限制,以防止写操作无限制被阻塞导致无法应答给客户端</li>
+</ul>
+<h1>readConcern 原理解析</h1>
+<ul>
+<li>readConcern 决定到某个读取数据时，能读到什么样的数据。</li>
+<li>local 能读取任意数据，这个是默认设置</li>
+<li>majority 只能读取到『成功写入到大多数节点的数据』</li>
+<li>readConcern 的初衷在于解决『脏读』的问题</li>
+</ul>
+<h1>go context 之 WithTimeout 的使用</h1>
+<ul>
+<li>
+<ol>
+<li>context 包的 WithTimeout()函数接受一个 Context 和超时时间作为参数，返回其子 Context 和取消函数 cancel</li>
+</ol>
+</li>
+<li>
+<ol>
+<li>新创建协程中传入子 Context 做参数，且需监控子 Context 的 Done 通道，若收到消息，则退出</li>
+</ol>
+</li>
+<li>
+<ol>
+<li>需要新协程结束时，在外面调用 cancel 函数，即会往子 Context 的 Done 通道发送消息</li>
+</ol>
+</li>
+<li>
+<ol>
+<li>若不调用 cancel 函数，到了原先创建 Context 时的超时时间，它也会自动调用 cancel()函数，即会往子 Context 的 Done 通道发送消息</li>
+</ol>
+</li>
+</ul>
+<h1>Golang 的 Tag 语法</h1>
+<ul>
+<li>通过 Tag 来增强结构体的定义，Tag 会带上一些 meta 信息。</li>
+<li>Tag 在运行时可以通过 reflection 包来读取。</li>
+<li>Tags 可以由键值对来组成，通过空格符来分割键值  ，可以通过反射的 Lookup 或者 Get 来获取键值对的值。</li>
+<li>Tag 最常用的大概就是在 marshaling。</li>
+</ul>

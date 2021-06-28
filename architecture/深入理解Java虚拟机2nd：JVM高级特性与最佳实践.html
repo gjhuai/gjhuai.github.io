@@ -1,0 +1,56 @@
+<h1>第2章 Java内存区域与内存溢出异常</h1>
+<h2>2.2 运行时数据区域</h2>
+<p><img alt="" src="_v_images/2020-04-03-09-49-30.png" /></p>
+<h3>2.2.1 程序计数器（Program Counter Register）</h3>
+<ul>
+<li>较小的内存空间</li>
+<li>字节码的行号指示器</li>
+<li>“线程私有”</li>
+<li>无OutOfMemoryError情况</li>
+</ul>
+<h3>2.2.2  Java虚拟机栈</h3>
+<ul>
+<li>线程私有，生命周期与线程相同</li>
+<li>方法的调用过程对应着一个栈帧（Stack Frame）在虚拟机栈中入栈到出栈的过程</li>
+<li>栈帧存储方法的局部变量表、操作数栈、动态链接、方法出口等信息</li>
+<li>局部变量表存放了编译期可知的各种基木数据类型、对象引用(reference)、returnAddress类型</li>
+<li>局部变量表所需的内存空间在编译期间已经确定</li>
+<li>两种异常状况：<ul>
+<li>如果线程请求的栈深度大于虚拟机所允许的深度，将抛出StackOverflowError异常</li>
+<li>如果虚拟机栈可以动态扩展，如果扩展时无法申请到足够的内存，就会抛出OutOfMemoryError异常</li>
+</ul>
+</li>
+</ul>
+<h3>2.2.3 本地方法栈（Native Method Stack）</h3>
+<ul>
+<li>类似虚拟机栈，为调用Native方法服务</li>
+<li>也会抛出StackOverflowError和OutOfMemoryError异常</li>
+</ul>
+<h3>2.2.4 Java堆（heap）</h3>
+<ul>
+<li>被所有线程共享的一块大内存</li>
+<li>所有的对象实例以及数组都要在堆上分配</li>
+<li>堆是垃圾收集器管理的主要区域</li>
+<li>物理上不连续、逻辑上是连续的即可</li>
+<li>如果在堆中没有内存完成实例分配，并且堆也无法再扩展时，将会她出OutOfMemoryError异常</li>
+</ul>
+<h3>2.2.5 方法区（Method Area, Non-Heap）</h3>
+<ul>
+<li>被所有线程共享</li>
+<li>存储类信息、常量、静态变量、JIT编译后的代码等</li>
+<li>为堆的一个逻辑部分</li>
+<li>可以不实现垃圾收集，这区域的内存回收目标主要是针对常量池的回收和对类型的卸载</li>
+</ul>
+<h3>2.2.6 运行时常量池（Runtime Constant Pool）</h3>
+<ul>
+<li>存放各种字面量和符号引用</li>
+<li>运行期间也可能将新的常量放人池中</li>
+</ul>
+<h3>2.2.7 直接内存</h3>
+<ul>
+<li>不是虚拟机运行时数据区的一部分</li>
+<li>超过物理内存的限制，可导致OutOfMemoryError异常</li>
+<li>NIO的DirectByteBuffer对象直接操作这块内存的引用</li>
+<li>设置-Xmx</li>
+</ul>
+<h2>2.3  HotSpot虚拟机对象探秘</h2>

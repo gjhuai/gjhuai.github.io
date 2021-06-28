@@ -1,0 +1,60 @@
+<p>参考：
+<a href="http://blog.csdn.net/seccloud/article/details/8192707">帮你深入理解OAuth2.0协议</a>
+<a href="http://jinnianshilongnian.iteye.com/blog/2038646">OAuth2集成——《跟我学Shiro》</a></p>
+<h1>一、OAuth基础</h1>
+<h2>介绍</h2>
+<p>目前实现开放授权的方法分为两种：一种是使用OAuth协议[1]；另一种是使用IAM服务[2]。OAuth协议主要适用于针对个人用户对资源的开放授权，比如Google的用户Alice。OAuth的特点是“现场授权”或“在线授权”：客户端主要通过浏览器去访问资源，授权时需要认证Alice的资源所有者身份，并且需要Alice现场审批。OAuth一般在SNS服务中广泛使用，如微博。IAM服务则不同，它的特点是“预先授权”或“离线授权”：客户端主要通过REST API方式去访问资源，资源所有者可以预先知道第三方应用所需要的资源请求，一次授权之后，很少会变更。IAM服务一般在云计算服务中使用，如AWS服务、阿里云计算服务。</p>
+<h2>OAuth角色</h2>
+<ul>
+<li><strong>资源拥有者（resource owner）</strong>：能授权访问受保护资源的一个实体，可以是一个人，那我们称之为最终用户；如新浪微博用户zhangsan；</li>
+<li><strong>资源服务器（resource server）</strong>：存储受保护资源，客户端通过access token请求资源，资源服务器响应受保护资源给客户端；存储着用户zhangsan的微博等信息。</li>
+<li><strong>授权服务器（authorization server）</strong>：成功验证资源拥有者并获取授权之后，授权服务器颁发授权令牌（Access Token）给客户端。</li>
+<li><strong>客户端（client）</strong>：如新浪微博客户端weico、微格等第三方应用，也可以是它自己的官方应用；其本身不存储资源，而是资源拥有者授权通过后，使用它的授权（授权令牌）访问受保护资源，然后客户端把相应的数据展示出来/提交到服务器。“客户端”术语不代表任何特定实现（如应用运行在一台服务器、桌面、手机或其他设备）。</li>
+</ul>
+<h3>OAuth协议流程</h3>
+<p><img alt="" src="_v_images/2019-11-29-17-53-50.png" /></p>
+<ol>
+<li>客户端从资源拥有者那请求授权。授权请求可以直接发给资源拥有者，或间接的通过授权服务器这种中介，后者更可取。</li>
+<li>客户端收到一个授权许可，代表资源服务器提供的授权。</li>
+<li>客户端使用它自己的私有证书及授权许可到授权服务器验证。</li>
+<li>如果验证成功，则下发一个访问令牌。</li>
+<li>客户端使用访问令牌向资源服务器请求受保护资源。</li>
+<li>资源服务器会验证访问令牌的有效性，如果成功则下发受保护资源。</li>
+</ol>
+<h2>授权类型</h2>
+<ul>
+<li>授权码 (Authorization Code Grant)、 -- 最核心、最难理解、也是最广泛使用的一种授权类型</li>
+<li>隐式授权 (Implicit Grant)、</li>
+<li>RO凭证授权 (Resource Owner Password Credentials Grant)、</li>
+<li>Client凭证授权 (Client Credentials Grant)。</li>
+</ul>
+<h1>二、Session Authentication vs Token Authentication</h1>
+<p>参考： <a href="https://security.stackexchange.com/questions/81756/session-authentication-vs-token-authentication">Session Authentication vs Token Authentication</a>
+<a href="http://www.baeldung.com/spring-security-session">Control the Session with Spring Security</a></p>
+<ol>
+<li>In <strong>Session-based Authentication</strong> the Server does all the heavy lifting server-side. Broadly speaking a client authenticates with its credentials and receives a session_id (which can be stored in a cookie) and attaches this to every subsequent outgoing request. So this could be considered a "token" as it is the equivalent of a set of credentials. There is however nothing fancy about this session_id-String. It is just an identifier and the server does everything else. It is stateful. It associates the identifier with a user account (e.g. in memory or in a database). It can restrict or limit this session to certain operations or a certain time period and can invalidate it if there are security concern and more importantly it can do and change all of this on the fly. Furthermore it can log the users every move on the website(s). Possible disadvantages are bad scale-ability (especially over more than one server farm) and extensive memory usage.</li>
+<li>
+<p>In <strong>Token-based Authentication</strong> no session is persisted server-side (stateless). The initial steps are the same. Credentials are exchanged against a token which is then attached to every subsequent request (It can also be stored in a cookie). However for the purpose of decreasing memory usage, easy scale-ability and total flexibility (tokens can be exchanged with another client) a string with all the necessary information is issued (the token) which is checked after each request made by the client to the server. There are a number of ways to use/ create tokens:</p>
+</li>
+<li>
+<p>a) using a hash mechanism e.g. HMAC-SHA1</p>
+<blockquote>
+<p>token = user_id|expiry_date|HMAC(user_id|expiry_date, k)
+--id and expiry_id are sent in plaintext with the resulting hash attached (k is only know to the server)</p>
+</blockquote>
+</li>
+<li>
+<p>b) encrypting the token symmetrically e.g. with AES</p>
+<blockquote>
+<p>token = AES(user_id|expiry_date, x)
+--x represents the en-/decryption key</p>
+</blockquote>
+</li>
+<li>
+<p>c) encrypting it asymmetrically e.g. with RSA</p>
+<blockquote>
+<p>token = RSA(user_id|expiry_date, private key)</p>
+</blockquote>
+</li>
+</ol>
+<p><strong>Productive systems</strong> are usually more complex than those two archetypes. Amazon for example uses both mechanisms on its website. Also hybrids can be used to issue tokens as described in 2 and also associate a user session with it for user tracking or possible revocation and still retain the client flexibility of classic tokens. Also OAuth 2.0 uses short-lived and specific bearer-tokens and longer-lived refresh tokens e.g. to get bearer-tokens.</p>

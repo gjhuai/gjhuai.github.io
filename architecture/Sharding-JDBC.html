@@ -1,0 +1,246 @@
+<p>[TOC]</p>
+<h1>一、什么是Sharding-JDBC</h1>
+<p>Sharding-JDBC定位为轻量级Java框架，在Java的JDBC层提供的额外服务。它使用客户端直连数据库，以jar包形式提供服务，无需额外部署和依赖，可理解为增强版的JDBC驱动，完全兼容JDBC和各种ORM框架。</p>
+<h1>二、Sharding-JDBC能做什么</h1>
+<ul>
+<li>分库 &amp; 分表</li>
+<li>读写分离</li>
+<li>分布式主键</li>
+<li>分布式事务</li>
+</ul>
+<h1>三、适用项目框架</h1>
+<p>Sharding-JDBC适用于：</p>
+<pre><code>- 任何基于Java的ORM框架，如：JPA, Hibernate, Mybatis, Spring JDBC Template或直接使用JDBC。
+- 基于任何第三方的数据库连接池，如：DBCP, C3P0, BoneCP, Druid, HikariCP等。
+- 支持任意实现JDBC规范的数据库，目前支持MySQL，Oracle，SQLServer和PostgreSQL。
+</code></pre>
+<h1>四、Maven依赖</h1>
+<pre><code class="language-XML">&lt;!-- sharding jdbc 开始--&gt;
+&lt;dependency&gt;
+    &lt;groupId&gt;io.shardingsphere&lt;/groupId&gt;
+    &lt;artifactId&gt;sharding-core&lt;/artifactId&gt;
+    &lt;version&gt;${sharding.version}&lt;/version&gt;
+&lt;/dependency&gt;
+&lt;dependency&gt;
+    &lt;groupId&gt;io.shardingsphere&lt;/groupId&gt;
+    &lt;artifactId&gt;sharding-jdbc-spring-namespace&lt;/artifactId&gt;
+    &lt;version&gt;${sharding.version}&lt;/version&gt;
+&lt;/dependency&gt;
+&lt;!-- 如果不配置分布式事务的话配置上边两个就够了 --&gt; 
+&lt;!-- 分布式事务引用依赖--&gt;
+&lt;dependency&gt;
+    &lt;groupId&gt;io.shardingsphere&lt;/groupId&gt;
+    &lt;artifactId&gt;sharding-transaction-2pc-xa&lt;/artifactId&gt;
+    &lt;version&gt;${sharding.version}&lt;/version&gt;
+
+&lt;/dependency&gt;
+&lt;dependency&gt;
+    &lt;groupId&gt;io.shardingsphere&lt;/groupId&gt;
+    &lt;artifactId&gt;sharding-transaction-spring&lt;/artifactId&gt;
+    &lt;version&gt;${sharding.version}&lt;/version&gt;
+&lt;/dependency&gt;
+&lt;!-- sharding jdbc 结束--&gt;
+&lt;!--AspectJ AOP支持 --&gt;
+&lt;dependency&gt;
+    &lt;groupId&gt;org.aspectj&lt;/groupId&gt;
+    &lt;artifactId&gt;aspectjweaver&lt;/artifactId&gt;
+    &lt;version&gt;${aspectjweaver.version}&lt;/version&gt;
+&lt;/dependency&gt;
+</code></pre>
+<h1>五、读写分离</h1>
+<h2>5.1 数据源配置</h2>
+<p>先配置数据源</p>
+<p>也可以配置读写分离</p>
+<p>以下配置是ds0和ds1两个数据库的主和从一共四个数据源。</p>
+<p>parentDs 是数据源公共的配置，抽出去以免写重复代码。</p>
+<pre><code class="language-XML">&lt;!-- ds0的主--&gt;
+&lt;bean id=&quot;ds0_master&quot; class=&quot;com.alibaba.druid.pool.DruidDataSource&quot; destroy-method=&quot;close&quot; parent=&quot;parentDs&quot;&gt; 
+    &lt;property name=&quot;driverClassName&quot; value=&quot;&quot;/&gt;
+    &lt;property name=&quot;url&quot; value=&quot;&quot;/&gt;
+&lt;/bean&gt;
+&lt;!-- ds0的从--&gt;
+&lt;bean id=&quot;ds0_slave&quot; class=&quot;com.alibaba.druid.pool.DruidDataSource&quot; destroy-method=&quot;close&quot; parent=&quot;parentDs&quot;&gt;
+    &lt;property name=&quot;driverClassName&quot; value=&quot;&quot;/&gt;
+    &lt;property name=&quot;url&quot; value=&quot;${sharding.connection.url.0}&quot;/&gt;
+&lt;/bean&gt;
+&lt;!-- ds1的主--&gt;
+&lt;bean id=&quot;ds1_master&quot; class=&quot;com.alibaba.druid.pool.DruidDataSource&quot; destroy-method=&quot;close&quot; parent=&quot;parentDs&quot;&gt;
+    &lt;property name=&quot;driverClassName&quot; value=&quot;&quot;/&gt;
+    &lt;property name=&quot;url&quot; value=&quot;${sharding.connection.url.1}&quot;/&gt;
+&lt;/bean&gt;
+&lt;!-- ds1的从--&gt;
+&lt;bean id=&quot;ds1_slave&quot; class=&quot;com.alibaba.druid.pool.DruidDataSource&quot; destroy-method=&quot;close&quot; parent=&quot;parentDs&quot;&gt;
+    &lt;property name=&quot;driverClassName&quot; value=&quot;&quot;/&gt;
+    &lt;property name=&quot;url&quot; value=&quot;${sharding.connection.url.1}&quot;/&gt;
+&lt;/bean&gt;
+</code></pre>
+<h2>5.2 读写分离配置</h2>
+<p>只配置主从不配置分库分表的情况如下，如果要配置分库分表则不需要下面这个配置。</p>
+<p>master-data-source-name 是主数据源ID</p>
+<p>slave-data-source-names 是从数据源ID</p>
+<pre><code class="language-XML">&lt;master-slave:data-source id=&quot;masterSlaveDataSource&quot; master-data-source-name=&quot;ds0_master, ds1_master&quot; slave-data-source-names=&quot;ds0_slave, ds1_slave &quot; &gt;
+        &lt;master-slave:props&gt;
+                &lt;prop key=&quot;sql.show&quot;&gt;${sql_show}&lt;/prop&gt;
+                &lt;prop key=&quot;executor.size&quot;&gt;10&lt;/prop&gt;
+                &lt;prop key=&quot;foo&quot;&gt;bar&lt;/prop&gt;
+        &lt;/master-slave:props&gt;
+&lt;/master-slave:data-source&gt;
+</code></pre>
+<h2>5.3 读写分离和分库分表一起配置</h2>
+<p>如果读写分离和分库分表一起使用的话把主从路由配置到 shardingdata-source下就可以了。</p>
+<p>sharding:master-slave-rule 的 id 就是配置出来的逻辑的数据源的名称，如果多个从的话还可以通过配置strategy-ref来配置负载均衡。</p>
+<p>master-data-source 配置的是主库数据源ID 。</p>
+<p>slave-data-source 配置的是从库数据源ID，多个以逗号分开。</p>
+<pre><code class="language-XML">&lt;!-- sharding数据源--&gt;
+&lt;sharding:data-source id=&quot;shardingDataSource&quot;&gt;
+    &lt;!-- 读写分离的话要把所有的主从数据源都写在这里--&gt;
+    &lt;sharding:sharding-rule
+            data-source-names=&quot;ds0_master,ds0_slave,ds1_master,ds1_slave &quot;&gt;
+        &lt;!-- 读写分离的路由 一主一从配置 strategy-ref  --&gt;
+        &lt;sharding:master-slave-rules&gt;
+            &lt;sharding:master-slave-rule id=&quot;ds0&quot; master-data-source-name=&quot;ds0_master&quot; slave-data-source-names=&quot;ds0_slave&quot;/&gt;
+            &lt;sharding:master-slave-rule id=&quot;ds1&quot; master-data-source-name=&quot;ds1_master&quot; slave-data-source-names=&quot;ds1_slave&quot;/&gt;
+        &lt;/sharding:master-slave-rules&gt;
+        &lt;!-- 读写分离配置 结束--&gt;
+
+        &lt;sharding:table-rules&gt;
+    &lt;!— 这里是分库分表路由的配置 --&gt;
+        &lt;/sharding:table-rules&gt;
+        &lt;sharding:binding-table-rules&gt;
+    &lt;!—- 绑定表的配置 --&gt; 
+        &lt;/sharding:binding-table-rules&gt;
+ &lt;/sharding:sharding-rule&gt;
+&lt;sharding:props&gt;
+        &lt;!-- 显示SQL --&gt;
+        &lt;prop key=&quot;sql.show&quot;&gt;true&lt;/prop&gt;
+    &lt;/sharding:props&gt;
+&lt;/sharding:data-source&gt;
+</code></pre>
+<h1>六、数据分片</h1>
+<h2>6.1 分片支持</h2>
+<p>Sharding-JDBC提供了5种分片策略。由于分片算法和业务实现紧密相关，因此Sharding-JDBC并未提供内置分片算法，而是通过分片策略将各种场景提炼出来，提供更高层级的抽象，并提供接口让应用开发者自行实现分片算法。</p>
+<ul>
+<li><strong>StandardShardingStrategy</strong></li>
+</ul>
+<p>标准分片策略。提供对SQL语句中的=, IN和BETWEEN AND的分片操作支持。StandardShardingStrategy只支持单分片键，提供PreciseShardingAlgorithm和RangeShardingAlgorithm两个分片算法。PreciseShardingAlgorithm是必选的，用于处理=和IN的分片；RangeShardingAlgorithm是可选的，用于处理BETWEEN AND分片，如果不配置RangeShardingAlgorithm，SQL中的BETWEEN AND将按照全库路由处理。</p>
+<ul>
+<li><strong>ComplexShardingStrategy</strong></li>
+</ul>
+<p>复合分片策略。提供对SQL语句中的=, IN和BETWEEN AND的分片操作支持。ComplexShardingStrategy支持多分片键，由于多分片键之间的关系复杂，因此Sharding-JDBC并未做过多的封装，而是直接将分片键值组合以及分片操作符交于算法接口，完全由应用开发者实现，提供最大的灵活度。</p>
+<ul>
+<li><strong>InlineShardingStrategy</strong></li>
+</ul>
+<p>Inline表达式分片策略。使用Groovy的Inline表达式，提供对SQL语句中的=和IN的分片操作支持。InlineShardingStrategy只支持单分片键，对于简单的分片算法，可以通过简单的配置使用，从而避免繁琐的Java代码开发，如: tuser${user_id % 8} 表示t_user表按照user_id按8取模分成8个表，表名称为t_user_0到t_user_7。</p>
+<ul>
+<li><strong>HintShardingStrategy</strong></li>
+</ul>
+<p>通过Hint而非SQL解析的方式分片的策略。</p>
+<ul>
+<li><strong>NoneShardingStrategy</strong></li>
+</ul>
+<p>不分片的策略。</p>
+<h2>6.2 分片配置</h2>
+<p>标准分片配置</p>
+<pre><code class="language-XML">&lt;!-- 标准分片策略。--&gt;
+&lt;bean id=&quot;demoUserStandardStrategy&quot; class=&quot;shard.strategy.DemoUserStandardStrategy&quot;/&gt;
+&lt;sharding:standard-strategy id=&quot;shardingDemoUserStandardStrategy&quot;
+                            precise-algorithm-ref=&quot;demoUserStandardStrategy&quot; sharding-column=&quot;id&quot;
+                            range-algorithm-ref=&quot;&quot;/&gt;
+</code></pre>
+<p>DemoUserStandardStrategy标准分片要实现 PreciseShardingAlgorithm 接口，doSharding的两个参数一个是所有数据源的cllection.另一个参数是执行SQL时传过来的分片的值。</p>
+<pre><code class="language-JAVA">/**
+ * 根据ID取
+ * 标准分片策略
+ * 用于处理=和IN的分片
+ * @author yulonggao
+ * @date 2019/1/31 14:35
+ */
+@Slf4j
+public class DemoUserStandardStrategy implements PreciseShardingAlgorithm&lt;Long&gt; {
+
+    @Override
+    public String doSharding(Collection&lt;String&gt; collection, PreciseShardingValue&lt;Long&gt; preciseShardingValue) {
+        //这个里边有异常会被处理掉，然后导致拿不到分片。但出异常一般是业务代码写错了。
+        //每条指定分片的操作都会调用此方法，如果是in 条件查询的话每个值会调用一次此方法，如果是批量插入也是每一条都要调用一次进行分片
+        log.info(&quot;DemoUserStandardStrategy_preciseShardingValue={}&quot;, preciseShardingValue);
+        Long suffix = preciseShardingValue.getValue() % 4;
+        log.info(&quot;suffix={}&quot;, suffix);
+        final String targetDb = String.valueOf(Math.abs(suffix.intValue()));
+        String shardingValue = collection.stream().filter(p -&gt; p.endsWith(targetDb)).findFirst().get();
+        log.info(&quot;preciseShardingValue={},shardingValue={}&quot;, preciseShardingValue, shardingValue);
+        return shardingValue;
+    }
+</code></pre>
+<p>强制分片</p>
+<pre><code class="language-xml">&lt;!-- 强制路由分片策略--&gt;
+&lt;bean id=&quot;demoUserHintStrategy&quot; class=&quot;shard.strategy.DemoUserHintStrategy&quot;/&gt;
+
+&lt;!-- 强制路由例子使用--&gt;
+&lt;sharding:hint-strategy id=&quot;shardingDemoUserHintStrategy&quot; algorithm-ref=&quot;demoUserHintStrategy&quot;/&gt;
+</code></pre>
+<p>DemoUserHintStrategy 的Java 如下，强制分片要实现HintShardingAlgorithm接口。</p>
+<pre><code class="language-JAVA">/**
+ * DemoUserHint强制路由分片策略,其实可以共用，只是例子
+ * @author yulonggao
+ * @date 2019/1/31 14:35
+ */
+@Slf4j
+public class DemoUserHintStrategy implements HintShardingAlgorithm {
+
+    @Override
+    public Collection&lt;String&gt; doSharding(Collection&lt;String&gt; availableTargetNames, ShardingValue shardingValue) {
+        //availableTargetNames 这个参数是所有的dataSource的集合，shardingValue是HintManager传过来的分片信息
+        log.info(&quot;DemoUserHintStrategy_availableTargetNames={}&quot;, availableTargetNames);
+        log.info(&quot;DemoUserHintStrategy_shardingValue={}&quot;, shardingValue);
+        ListShardingValue listShardingValue = (ListShardingValue) shardingValue;
+        Collection shardingValueList = listShardingValue.getValues();
+        //因为调用的时候分片是直接传的 DataSource的名称，所以直接返回就可以了，如果传其它值则要加业务逻辑进行分片筛选
+        //返回结果只能是availableTargetNames 里边所包含的
+        return shardingValueList;
+    }
+
+}
+</code></pre>
+<p>生成分部式ID的配置，生成主键的类要实现KeyGenerator接口。</p>
+<pre><code class="language-XML">&lt;!—主键生成 --&gt;
+&lt;bean id=&quot;keyId&quot; class=&quot;shard.key.DefaultKeyGenerator&quot;/&gt;
+</code></pre>
+<p><img alt="Sharding-JDBC配置" src="_v_images/20200604065002540_18818.png" /></p>
+<h1>七、分布式事务</h1>
+<p>把下面这行代码配置在spring里，shardingTransaction.xml 是jar包里边带的。</p>
+<p>文件的源码只有两行配置：</p>
+<pre><code class="language-XML">&lt;bean id=&quot;transactionManager&quot;
+      class=&quot;org.springframework.jdbc.datasource.DataSourceTransactionManager&quot;&gt;
+    &lt;property name=&quot;dataSource&quot; ref=&quot;shardingDataSource&quot;&gt;&lt;/property&gt;
+&lt;/bean&gt;
+&lt;tx:annotation-driven transaction-manager=&quot;transactionManager&quot;/&gt;
+&lt;!-- 事务支持--&gt;
+&lt;import resource=&quot;classpath:META-INF/shardingTransaction.xml&quot;/&gt;
+</code></pre>
+<p>使用注解配置事务要同时使用ShardingTransactionType和Transactional两个注解。</p>
+<pre><code class="language-JAVA">/**
+ * 注意：@ShardingTransactionType需要同Spring的@Transactional配套使用，事务才会生效。
+ * @param param
+ * @return
+ */
+@ShardingTransactionType(TransactionType.XA)
+@Transactional(rollbackFor = Exception.class)
+@Override
+public int addParam(DemoParam param) {
+log.info(&quot;addParam-param={}&quot;, param);
+return demoParamDao.addParam(param);
+}
+</code></pre>
+<h2>7.1 支持程度</h2>
+<p>完全支持非跨库事务，例如：仅分表或分库但是路由的结果在单库中。</p>
+<p>完全支持因逻辑异常导致的跨库事务。例如：同一事务中跨两个库更新，更新完毕后，抛出空指针，则两个库的内容都能回滚。</p>
+<p>支持数据库字段约束造成的回滚。</p>
+<h1>八、其他问题</h1>
+<p>关于order by 排序，如果排序的字段不在查询结果中，生成的SQL也会被带上，但结果不返回给你。
+不支持因网络、硬件异常导致的跨库事务。例如：同一事务中跨两个库更新，更新完毕后、未提交之前，第一个库死机，则只有第二个库数据提交。</p>
+<p><img alt="" src="_v_images/20200604065318535_1841.png" /></p>
+<p>九、参考文档</p>
+<ul>
+<li>https://shardingsphere.apache.org/document/current/cn/manual/sharding-jdbc/usage/sharding/</li>
+<li>https://www.cnblogs.com/yixinjishu/p/10876071.html</li>
+</ul>

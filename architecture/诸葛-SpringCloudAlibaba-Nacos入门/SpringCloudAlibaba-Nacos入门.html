@@ -1,0 +1,113 @@
+<p>[TOC]</p>
+<h1>微服务架构</h1>
+<p>https://github.com/alibaba/spring-cloud-alibaba/blob/master/README-zh.md</p>
+<p><img alt="亿级流量电商网络微服务架构" src="_v_images/20200917161031675_7588.png =1024x" /></p>
+<h1>Nacos注册中心</h1>
+<p><img alt="基于Nginx的负载均衡" src="_v_images/20200917161526033_6220.png" /></p>
+<p>增加减少机器需要频繁修改配置</p>
+<p><img alt="Nacos服务注册中心" src="_v_images/20200917162815662_2365.png" /></p>
+<p>基于Ribbon算法的负载均衡</p>
+<p><img alt="完整的微服务架构" src="_v_images/20200917164823949_25307.png =1200x" /></p>
+<p>Feign：通过动态代理，实现对远程服务的调用。</p>
+<h1>P6 Sentinel 限流熔断降级</h1>
+<p>Sentinel 切入点，从流量控制、熔断降级、系统负载保护等多个维度保护服务的稳定性。</p>
+<h2>Sentinel教程</h2>
+<p><a href="https://github.com/alibaba/Sentinel/wiki/介绍">Sentinel介绍 Quick Start</a></p>
+<p><a href="https://blog.csdn.net/noaman_wgs/article/details/103328793%0Ahttps://blog.csdn.net/noaman_wgs/article/details/103328793">【Sentinel（一）】Sentinel介绍与使用</a>
+<a href="https://www.jianshu.com/p/c47dfd25eeee%0Ahttps://www.jianshu.com/p/c47dfd25eeee">Sentinel 实战-控制台篇</a>
+<a href="https://gitee.com/all_4_you/sentinel-tutorial%0Ahttps://gitee.com/all_4_you/sentinel-tutorial">Sentinel教程</a>
+https://github.com/alibaba/Sentinel/tree/master/sentinel-demo</p>
+<p><img alt="Sentinel主要特性" src="https://img-blog.csdnimg.cn/20191130203727708.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L25vYW1hbl93Z3M=,size_16,color_FFFFFF,t_70 =800x" /></p>
+<h2>Sentinel与Hystrix的区别</h2>
+<p>关于Sentinel与Hystrix的区别见：<a href="https://yq.aliyun.com/articles/633786/">技术选型：Sentinel vs Hystrix</a></p>
+<p>总体来说：</p>
+<p>Hystrix常用的线程池隔离会造成线程上下切换的overhead比较大；Hystrix使用的信号量隔离对某个资源调用的并发数进行控制，效果不错，但是无法对慢调用进行自动降级；Sentinel通过并发线程数的流量控制提供信号量隔离的功能；</p>
+<p>此外，Sentinel支持的熔断降级维度更多，可对多种指标进行流控、熔断，且提供了实时监控和控制面板，功能更为强大。</p>
+<h2>Spring Cloud Alibaba：Sentinel实现熔断与限流</h2>
+<p><a href="https://juejin.im/post/6844903999876022279%0Ahttps://juejin.im/post/6844903999876022279">Spring Cloud Alibaba：Sentinel实现熔断与限流</a></p>
+<h3>与Feign结合使用</h3>
+<ul>
+<li>引入依赖 <code>spring-cloud-starter-alibaba-sentinel</code></li>
+<li>在application.yml中打开Sentinel对Feign的支持： <code>feign.sentinel.enabled: true</code></li>
+<li>在应用启动类上添加@EnableFeignClients启动Feign的功能；</li>
+<li>定义对nacos-user-service服务的调用</li>
+</ul>
+<pre><code class="language-java">@FeignClient(value = &quot;nacos-user-service&quot;,fallback = UserFallbackService.class)
+public interface UserService {
+    @PostMapping(&quot;/user/create&quot;)
+    CommonResult create(@RequestBody User user);
+}
+</code></pre>
+<ul>
+<li>创建UserFallbackService类实现UserService接口，用于处理服务降级逻辑：</li>
+</ul>
+<pre><code class="language-java">@Component
+public class UserFallbackService implements UserService {
+    @Override
+    public CommonResult create(User user) {
+        User defaultUser = new User(-1L, &quot;defaultUser&quot;, &quot;123456&quot;);
+        return new CommonResult&lt;&gt;(defaultUser,&quot;服务降级返回&quot;,200);
+    }
+}
+</code></pre>
+<ul>
+<li>通过Feign调用nacos-user-service服务中的接口：</li>
+</ul>
+<pre><code class="language-java">@RestController
+@RequestMapping(&quot;/user&quot;)
+public class UserFeignController {
+    @Autowired
+    private UserService userService;
+
+    @PostMapping(&quot;/create&quot;)
+    public CommonResult create(@RequestBody User user) {
+        return userService.create(user);
+    }
+</code></pre>
+<ul>
+<li>调用如下接口会发生服务降级，返回服务降级处理信息：http://localhost:8401/user/4</li>
+</ul>
+<pre><code class="language-json">{
+    &quot;data&quot;: {
+        &quot;id&quot;: -1,
+        &quot;username&quot;: &quot;defaultUser&quot;,
+        &quot;password&quot;: &quot;123456&quot;
+    },
+    &quot;message&quot;: &quot;服务降级返回&quot;,
+    &quot;code&quot;: 200
+}
+</code></pre>
+<pre><code class="language-java">@Transactional
+public String createOrder(Long productId，Long userId，Integer stockCount，Integer creditCount) {
+    System.out.println(&quot;创建订单成功&quot;); //T0D0
+    stockService.deductStock(productId，stockCount);
+    creditService.addCredit(userId，creditCount); // DEBUG: 停掉积分系统，不能报错
+    wmsService.delivery(userId，productId);
+    return&quot;success&quot;;
+}
+</code></pre>
+<h1>Seata 分布式事务</h1>
+<p>seata.io/zh-cn/</p>
+<p>@GlobalTransactional</p>
+<h2>Seata AT 模式</h2>
+<p>整体机制：两阶段提交协议的演变：</p>
+<ul>
+<li>一阶段：业务数据和回滚日志记录在同一个本地事务中提交，释放本地锁和连接资源。</li>
+<li>二阶段：<ul>
+<li>提交异步化，非常快速地完成。</li>
+<li>回滚通过一阶段的回滚日志进行反向补偿。</li>
+</ul>
+</li>
+</ul>
+<p>对数据一致性的及时性要求不高的业务场景，尽量不适用分布式事务，因为Seata底层是加锁，降低了系统性能。</p>
+<h1>电商业务中台整体微服务架构</h1>
+<p>https://www.processon.com/view/link/5e69e768e4b07fc7a6841488</p>
+<p><img alt="电商业务中台整体微服务架构" src="_v_images/20200917182324982_14617.png =1200x" /></p>
+<h2>Gateway的作用</h2>
+<p>SpringCloud Gateway ：
+- 路由（服务转发）
+- 限流
+- 安全认证（对请求统一校验权限）</p>
+<p><img alt="Gateway配置" src="_v_images/20200917174512999_3323.png" /></p>
+<h1>分布式调用链路追踪Pinpoint</h1>
+<h1>微服务自动化监控 Prometheus &amp; Grafana</h1>

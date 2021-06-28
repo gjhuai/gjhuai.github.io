@@ -1,0 +1,61 @@
+<h1>YuGongLauncher.java</h1>
+<pre><code class="language-java">
+/**
+1、使用commons-configuration读取properties和xml配置文件。commons-configuration有1.10 和2.x 两个版本。
+2、读取classpath下的文件。YuGongLauncher.class.getClassLoader().getResourceAsStream(conf)
+3、使用ShutdownHook在程序退出时，关闭线程，避免无法关闭JVM。 Runtime.getRuntime().addShutdownHook(new Thread() {
+*/
+public class YuGongLauncher {
+
+    private static final String CLASSPATH_URL_PREFIX = &quot;classpath:&quot;;
+    private static final Logger logger               = LoggerFactory.getLogger(YuGongLauncher.class);
+
+    public static void main(String[] args) throws Throwable {
+        try {
+            String conf = System.getProperty(&quot;yugong.conf&quot;, &quot;classpath:yugong.properties&quot;);
+            PropertiesConfiguration config = new PropertiesConfiguration();
+            if (conf.startsWith(CLASSPATH_URL_PREFIX)) {
+                conf = StringUtils.substringAfter(conf, CLASSPATH_URL_PREFIX);
+                config.load(YuGongLauncher.class.getClassLoader().getResourceAsStream(conf));
+            } else {
+                config.load(new FileInputStream(conf));
+            }
+
+            logger.info(&quot;## start the YuGong.&quot;);
+            final YuGongController controller = new YuGongController(config);
+            controller.start();
+            logger.info(&quot;## the YuGong is running now ......&quot;);
+            logger.info(VersionInfo.getBuildVersion());
+            Runtime.getRuntime().addShutdownHook(new Thread() {
+
+                public void run() {
+                    if (controller.isStart()) {
+                        try {
+                            logger.info(&quot;## stop the YuGong&quot;);
+                            controller.stop();
+                        } catch (Throwable e) {
+                            logger.warn(&quot;## something goes wrong when stopping YuGong:\n{}&quot;,
+                                ExceptionUtils.getFullStackTrace(e));
+                        } finally {
+                            logger.info(&quot;## YuGong is down.&quot;);
+                        }
+                    }
+                }
+
+            });
+
+            controller.waitForDone();// 如果所有都完成，则进行退出
+            Thread.sleep(3 * 1000); // 等待3s，清理上下文
+            logger.info(&quot;## stop the YuGong&quot;);
+            if (controller.isStart()) {
+                controller.stop();
+            }
+            logger.info(&quot;## YuGong is down.&quot;);
+        } catch (Throwable e) {
+            logger.error(&quot;## Something goes wrong when starting up the YuGong:\n{}&quot;,
+                ExceptionUtils.getFullStackTrace(e));
+            System.exit(0);
+        }
+    }
+}
+</code></pre>

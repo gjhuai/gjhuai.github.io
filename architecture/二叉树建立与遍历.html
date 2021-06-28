@@ -1,0 +1,115 @@
+<p>算法原理 ：</p>
+<p>//先定义数据类型
+typedef struct BiTNode{
+  char data;   //data你想用什么类型自己变就行了
+ struct BiTNode <em>lchild,</em>rchild;
+} BiTNode,*BiTree;</p>
+<p>//建树也用递归
+void createTree( char data,BiTree &amp;T)//用引用
+{
+  char c;
+ c = getchar();</p>
+<p>if (c!=NULL){
+    T = (BiTree)malloc(sizeof(BiTNode);
+    T-&gt;data = c;
+    createTree(data,lchild);
+  createTree(data,rchild);
+ } else {
+    T=NULL;
+ }
+}//这是先序建树，中序和后序只是变变顺序</p>
+<p>//遍历，这是后序，也是递归
+void traverse(BiTree T)
+{
+  if (T){
+    traverse(T-&gt;lchild);
+    traverse(T-&gt;rchild);
+    printf(T-&gt;data);
+ }
+}//还是那样，先序和中序变一变这三句的顺序就行。</p>
+<p>下面是c语言的代码：</p>
+<h1>include <stddef.h></h1>
+<h1>include <stdio.h></h1>
+<p>typedef struct tree {
+ struct tree <em>left;
+  int date;
+ struct tree </em>right;
+}
+treenode,*b_tree;</p>
+<p>///////插入节点/////////////////////
+b_tree insert(b_tree root, int node) {
+ b_tree newnode;
+ b_tree currentnode;
+ b_tree parentnode;</p>
+<p>newnode=(b_tree)malloc(sizeof(treenode));
+ newnode-&gt;date=node;
+ newnode-&gt;right=NULL;
+ newnode-&gt;left=NULL;</p>
+<p>if (root==NULL)   return newnode;
+  else {
+   currentnode=root;
+    while (currentnode!=NULL)  {
+     parentnode=currentnode;
+      if (currentnode-&gt;date&gt;node)   currentnode=currentnode-&gt;left;
+      else
+       currentnode=currentnode-&gt;right;
+   }</p>
+<pre><code>if (parentnode-&gt;date&gt;node)  parentnode-&gt;left=newnode;
+else   parentnode-&gt;right=newnode;
+</code></pre>
+<p>}
+  return root;
+}</p>
+<p>//////建立树///////////////////
+b_tree create( int *date, int len) {
+ b_tree root=NULL;
+  int i;
+  for (i=0;i&lt;len;i++)   root=insert(root,date[i]);
+  return root;
+}</p>
+<p>//////中序打印////////////////
+void print1(b_tree root) {
+  if (root!=NULL) {
+   print1(root-&gt;left);
+   printf("%d-&gt;",root-&gt;date);
+   print1(root-&gt;right);
+ }
+}</p>
+<p>//////后序打印////////////////
+void print2(b_tree root) {
+  if (root!=NULL)  {
+   print2(root-&gt;left);
+   print2(root-&gt;right);
+   printf("%d-&gt;",root-&gt;date);
+ }
+}</p>
+<p>//////前序打印////////////////
+void print3(b_tree root) {
+  if (root!=NULL)  {
+   printf("%d-&gt;",root-&gt;date);
+   print3(root-&gt;left);
+   print3(root-&gt;right);
+ }
+}</p>
+<p>//////////在二叉树中查找给定关键字 ////////////
+b_tree lookfor(b_tree root, int e) {
+ b_tree p1,p2;
+  if (root!=NULL)  {
+    if (root-&gt;date==e)   return root;
+    else
+     p1=lookfor(root-&gt;left,e);</p>
+<p>p2=lookfor(root-&gt;right,e);</p>
+<pre><code>if (p1!=NULL)    return p1;
+else   if (p2!=NULL)    return p2;
+else   return NULL;
+</code></pre>
+<p>}
+  else return NULL;
+}</p>
+<p>main (){
+  int arr[] = {1,2,3,4,5,6,7,8};
+ b_tree bt = create(arr,sizeof(arr)/sizeof(arr[0]));
+ print1(bt);printf("\n");
+ print2(bt);printf("\n");
+ print3(bt);printf("\n");
+}</p>

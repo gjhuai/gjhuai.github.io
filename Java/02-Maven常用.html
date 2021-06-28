@@ -1,0 +1,131 @@
+<p>[TOC]</p>
+<h2>向repo发布第三方jar</h2>
+<p>mvn deploy:deploy-file -DgroupId=com.oracle -DartifactId=ojdbc6 -Dversion=11.2.0.4 -Dpackaging=jar -Dfile=ojdbc6 .jar -DrepositoryId=gm-repo -Durl=http://dev.snhb.group:8081/nexus/content/repositories/releases</p>
+<h2>跳过测试</h2>
+<p>-DskipTests，不执行测试用例，但编译测试用例类生成相应的class文件至target/test-classes下。
+-Dmaven.test.skip=true，不执行测试用例，也不编译测试用例类。</p>
+<h2>常用repository仓库</h2>
+<pre><code class="language-xml">&lt;repositories&gt;
+    &lt;repository&gt;
+        &lt;id&gt;aliyun-repo&lt;/id&gt;
+        &lt;name&gt;Aliyun repo&lt;/name&gt;
+        &lt;url&gt;https://maven.aliyun.com/repository/public&lt;/url&gt;
+    &lt;/repository&gt;
+&lt;/repositories&gt;
+&lt;pluginRepositories&gt;
+    &lt;pluginRepository&gt;
+        &lt;id&gt;aliyun-repo&lt;/id&gt;
+        &lt;url&gt;https://maven.aliyun.com/repository/public&lt;/url&gt;
+    &lt;/pluginRepository&gt;
+&lt;/pluginRepositories&gt;
+</code></pre>
+<h2>指定编码</h2>
+<pre><code class="language-xml">&lt;!-- 文件拷贝时的编码 --&gt;  
+&lt;project.build.sourceEncoding&gt;UTF-8&lt;/project.build.sourceEncoding&gt;  
+&lt;project.reporting.outputEncoding&gt;UTF-8&lt;/project.reporting.outputEncoding&gt;  
+&lt;!-- 编译时的编码 --&gt;  
+&lt;maven.compiler.encoding&gt;UTF-8&lt;/maven.compiler.encoding&gt;
+</code></pre>
+<h2>指定编译的JDK版本</h2>
+<p><strong>Setting the -source and -target of the Java Compiler</strong></p>
+<pre><code class="language-xml">  &lt;properties&gt;
+    &lt;maven.compiler.source&gt;1.8&lt;/maven.compiler.source&gt;
+    &lt;maven.compiler.target&gt;1.8&lt;/maven.compiler.target&gt;
+  &lt;/properties&gt;
+</code></pre>
+<h2>使用atom语法</h2>
+<p>mvn io.takari.polyglot:polyglot-translate-plugin:translate -Dinput=pom.xml -Doutput=pom.atom</p>
+<h2>创建web项目</h2>
+<pre><code>mvn archetype:generate -DgroupId={project-packaging}
+    -DartifactId={project-name}
+    -DarchetypeArtifactId=maven-archetype-webapp
+    -DinteractiveMode=false
+或
+mvn archetype:generate -DarchetypeArtifactId=maven-archetype-webapp -DinteractiveMode=false -DgroupId=com.cdjdgm -DartifactId=webshell
+</code></pre>
+<h2>Dependency Scope</h2>
+<ul>
+<li>compile
+默认的scope，表示 dependency 都可以在生命周期中使用。而且，这些dependencies 会传递到依赖的项目中。</li>
+<li>provided
+跟compile相似，但是表明了dependency 由JDK或者容器提供，例如Servlet AP和一些Java EE APIs。这个scope 只能作用在编译和测试时，同时没有传递性。        </li>
+<li>runtime
+表示dependency不作用在编译时，但会作用在运行和测试时</li>
+<li>test
+表示dependency作用在测试时，不作用在运行时。</li>
+<li>system
+跟provided 相似，但是在系统中要以外部JAR包的形式提供，maven不会在repository查找它。 </li>
+</ul>
+<h2>发布部署Nexus</h2>
+<p>pom.xml文件：</p>
+<pre><code class="language-xml">&lt;distributionManagement&gt;
+  &lt;repository&gt;
+    &lt;id&gt;releases&lt;/id&gt;
+    &lt;url&gt;http://dev.snhb.group:8081/nexus/content/repositories/releases/&lt;/url&gt;
+  &lt;/repository&gt;
+  &lt;snapshotRepository&gt;
+    &lt;id&gt;snapshots&lt;/id&gt;
+    &lt;url&gt;http://dev.snhb.group:8081/nexus/content/repositories/snapshots/&lt;/url&gt;
+  &lt;/snapshotRepository&gt;
+&lt;/distributionManagement&gt;
+</code></pre>
+<p>~/.m2/settings.xml:</p>
+<pre><code class="language-xml">&lt;servers&gt;  
+  &lt;server&gt;  
+    &lt;id&gt;releases&lt;/id&gt;  
+    &lt;username&gt;deployment&lt;/username&gt;  
+    &lt;password&gt;your_pwd&lt;/password&gt;  
+  &lt;/server&gt;  
+&lt;/servers&gt;
+</code></pre>
+<h2>向仓库导入jar包</h2>
+<ol>
+<li>
+<p>安装到本地库：
+mvn install:install-file -Dfile=D:\JAR_LIB\pinyin4j-2.5.0.jar -DgroupId=net.sourceforge.pinyin4j -DartifactId=pinyin4j -Dversion=2.5.0 -Dpackaging=jar  -DgeneratePom=true -DcreateChecksum=true</p>
+</li>
+<li>
+<p>安装到私服
+mvn deploy:deploy-file -Dfile=pinyin4j-2.5.0.jar -DgroupId=net.sourceforge.pinyin4j -DartifactId=pinyin4j -Dversion=2.5.0 -Dpackaging=jar -DrepositoryId=et_nexus_repo -Durl=http://10.143.132.66:8081/nexus/content/repositories/thirdparty</p>
+</li>
+</ol>
+<h2>eclipse警告：maven-enforcer-plugin (goal "enforce") is ignored by m2e.</h2>
+<p>警告状况描述： 
+父项目使用插件maven-enforcer-plugin，所有子项目中<parent>标签处均会提示maven-enforcer-plugin (goal "enforce") is ignored by m2e警告信息。 
+警告引发原因： 
+MyEclipse/Eclipse使用的m2e插件，所以会忽略没有与m2e插件关联的maven插件，从而造成警告信息。 
+警告解决方法： 
+为父项目加入lifecycle-mapping插件即可。</p>
+<pre><code class="language-xml">&lt;build&gt;
+ &lt;pluginManagement&gt;
+  &lt;plugins&gt;
+   &lt;!-- This plugin's configuration is used to store Eclipse m2e settings 
+    only. It has no influence on the Maven build itself. --&gt;
+   &lt;plugin&gt;
+    &lt;groupId&gt;org.eclipse.m2e&lt;/groupId&gt;
+    &lt;artifactId&gt;lifecycle-mapping&lt;/artifactId&gt;
+    &lt;version&gt;1.0.0&lt;/version&gt;
+    &lt;configuration&gt;
+     &lt;lifecycleMappingMetadata&gt;
+      &lt;pluginExecutions&gt;
+       &lt;pluginExecution&gt;
+        &lt;pluginExecutionFilter&gt;
+         &lt;groupId&gt;org.apache.maven.plugins&lt;/groupId&gt;
+         &lt;artifactId&gt;maven-enforcer-plugin&lt;/artifactId&gt;
+         &lt;versionRange&gt;[1.0.0,)&lt;/versionRange&gt;
+         &lt;goals&gt;
+          &lt;goal&gt;enforce&lt;/goal&gt;
+         &lt;/goals&gt;
+        &lt;/pluginExecutionFilter&gt;
+        &lt;action&gt;
+         &lt;ignore /&gt;
+        &lt;/action&gt;
+       &lt;/pluginExecution&gt;
+      &lt;/pluginExecutions&gt;
+     &lt;/lifecycleMappingMetadata&gt;
+    &lt;/configuration&gt;
+   &lt;/plugin&gt;
+  &lt;/plugins&gt;
+ &lt;/pluginManagement&gt;
+&lt;/build&gt;
+</code></pre>

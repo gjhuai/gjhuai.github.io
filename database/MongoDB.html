@@ -1,0 +1,124 @@
+<ul>
+<li>官方文档： https://docs.mongodb.com/manual/</li>
+</ul>
+<h1>特性</h1>
+<ul>
+<li>文档数据库，使用 BSON 结构。</li>
+<li>没有 schema 限制，更灵活，存储速度更加快。</li>
+<li>即时查询能力</li>
+<li>保留了关系型数据库即时查询的能力，保留了索引（底层是基于 Btree）的能力。</li>
+<li>易伸缩</li>
+<li>易伸缩是指对数据集进行分片，将存储压力分摊给多台服务器。</li>
+<li>自动故障转移</li>
+<li>自动故障转移是副本集的概念，MongoDB 能检测主节点是否存活，当失活时能自动提升从节点为主节点，达到故障转移。</li>
+<li>速度</li>
+<li>fire and forget 驱动，即通过驱动调用写入时，可以立即得到返回得到成功的结果（即使是报错），这样让写入的速度更加快，当然会有一定的不安全性，完全依赖网络。</li>
+<li>Journaling 日志，持久性：</li>
+<li>像 mysql 的 bin-log 日志，当需要插入的时候会先往日志里面写入记录，再完成实际的数据操作，这样如果出现停电，进程突然中断的情况，可以保障数据不会错误，可以通过修复功能读取 Journaling 日志进行修复。</li>
+</ul>
+<h1>vs Redis</h1>
+<ul>
+<li>Redis 八大数据结构</li>
+<li>string, list, set, hash, zset, geospatial, hyperloglog, bitmaps</li>
+<li>数据淘汰算法</li>
+<li>10w QPS</li>
+<li>无法统计</li>
+<li>Mongo 提供聚合函数</li>
+<li>Mongodb 也可设置数据过期时间</li>
+</ul>
+<h1>用途</h1>
+<ul>
+<li>分布式日志收集</li>
+<li>ELK 复杂，耗内存</li>
+<li>ES 最多支持 32G</li>
+<li>电子产品传感器</li>
+<li>40 亿个</li>
+<li>地理地图</li>
+<li>数据爬虫</li>
+<li>Schema 经常变动</li>
+</ul>
+<h1>大数据 3V</h1>
+<ul>
+<li>海量 Volume</li>
+<li>多样 Variety</li>
+<li>实时 Velocity</li>
+</ul>
+<h1>C/S 服务模型</h1>
+<ul>
+<li>mongod 服务端</li>
+<li>缺少内存配置，由 OS 管理内存</li>
+<li>mongos 路由实现分片功能</li>
+<li>mongo 客户端</li>
+<li>js shell 类似 sql</li>
+</ul>
+<h1>命令行工具</h1>
+<ul>
+<li>mongodump 和 mongorestore，备份和恢复</li>
+<li>mongoexport 和 mongoimport，用来导入导出 JSON、CSV 和 TSV 数据</li>
+<li>mongosniff，网络嗅探工具，用来观察发送到数据库的操作。基本就是把网络上传输的 BSON 转换为易于人们阅读的 shell 语句。</li>
+</ul>
+<h1>操作入门</h1>
+<ul>
+<li>＿id 读作“ Object Id ”，它是由时间 、机器码、进程 pid 和自增计数器构成的，始终递增，但绝不重复。</li>
+</ul>
+<h1>聚合查询</h1>
+<ul>
+<li>聚合功能可以把数据像放入传送带一样，先把原始数据按照一定的规则进行筛选处理，然后通过多个不同的数据处理阶段来处理数据，最终输出 个汇总的结果。</li>
+<li>aggregate</li>
+</ul>
+<h1>优化和安全建议</h1>
+<ul>
+<li>MongoDB 会自动监控 ，如果发现一个游标在 10 分钟内没有进行任何的数据库操作，就会把它关掉。</li>
+</ul>
+<h1>Java 开发</h1>
+<ul>
+<li>官方驱动文档： http://mongodb.github.io/mongo-java-driver/4.2</li>
+<li>Getting Started</li>
+<li>https://www.mongodb.com/blog/post/getting-started-with-mongodb-and-java-part-i</li>
+<li>https://www.mongodb.com/blog/post/getting-started-with-mongodb-and-java-part-ii</li>
+<li>mongo-java-driver</li>
+<li>mongodb-driver-core 是核心库</li>
+<li>mongodb-driver-sync 是非异步的同步版本，包含了一般 MongoCollection 的接口</li>
+<li>mongodb-driver-legacy 兼容旧版本 API</li>
+<li>mongodb-driver = mongodb-driver-sync + mongodb-driver-legacy</li>
+<li>mongo-java-driver = mongodb-driver + mongodb-driver-core + bson</li>
+<li>Morphia</li>
+<li>Morphia is a really lightweight ODM (Object Document Mapper), so it’s similar to ORMs like Hibernate.</li>
+<li>Spring Data MongoDB</li>
+<li>Another frequently used ODM</li>
+<li>MongoJack</li>
+<li>直接将 JSON 映射成 Mongo 对象。不再需要将 JSON 转换成 Java 对象，再转为 Mongo 对象。</li>
+<li>Jongo</li>
+<li>another Jackson-based ODM, but provides an interesting extra in the form of supporting queries the way you’d write them in the shell.</li>
+</ul>
+<h1>Golang 开发</h1>
+<ul>
+<li>Getting Started： https://www.mongodb.com/blog/post/quick-start-golang--mongodb--starting-and-setup</li>
+</ul>
+<h1>MongoDB 集群</h1>
+<ul>
+<li>1、Master-Slaver 是一种主从副本的模式，目前已经不推荐使用。</li>
+<li>一个主节点（Primary）和一个或多个从节点（Secondary）</li>
+<li>可用于备份、故障恢复、读扩展等</li>
+<li>只能有一个主节点，主节点提供所有的增、删、查、改服务，从节点不提供任何服务，但是可以通过设置使从节点提供查询服务。</li>
+<li>每个从节点要知道主节点的地址，主节点记录在其上的所有操作，从节点定期轮询主节点获取这些操作，然后对自己的数据副本执行这些操作，从而保证从节点的数据与主节点一致。</li>
+<li>当主节点出现故障时，只能人工介入，指定新的主节点，从节点不会自动升级为主节点。同时，在这段时间内，该集群架构只能处于只读状态。</li>
+<li>2、Replica Set 模式是一种互为主从的关系。Replica Set 将数据复制多份保存，不同服务器保存同一份数据，在出现故障时自动切换，实现故障转移，在实际生产中非常实用。</li>
+<li>也是一主多从，区别是：当集群中主节点发生故障时，副本集可以自动投票，选举出新的主节点，并引导其余的从节点连接新的主节点。</li>
+<li>自带故障转移功能的主从复制。</li>
+<li>只能有一个主节点。主节点负责数据的写入和更新，并在更新数据的同时，将操作信息写入名为 oplog 的日志文件当中。</li>
+<li>从节点会定时轮询读取 oplog 日志，根据日志内容同步更新自身的数据，保持与主节点一致。</li>
+<li>在副本集中还有一个额外的仲裁节点（不需要使用专用的硬件设备），负责在主节点发生故障时，参与选举新节点作为主节点。</li>
+<li>副本集中的各节点会通过心跳信息来检测各自的健康状况，当主节点出现故障时，并选举其中一个作为新的主节点。为了保证选举票数不同，副本集的节点数保持为奇数。</li>
+<li>3、Sharding 模式适合处理大量数据，它将数据分开存储，不同服务器保存不同的数据，所有服务器数据的总和即为整个数据集。</li>
+<li>分片是指将数据拆分并分散存放在不同机器上的过程。</li>
+<li>MongoDB 支持自动分片，可以使数据库架构对应用程序不可见。</li>
+<li>需要三个重要的组件，分别是分片服务器（Shard Server）、配置服务器（Config Server）和路由服务器（Route Server）。<ul>
+<li>需要三个重要的组件，分别是分片服务器（Shard Server）、配置服务器（Config Server）和路由服务器（Route Server）。</li>
+<li>Shard Server 是一个 mongod 数据库实例，在实际生产中，一个 Shard Server 可由几台机器组成一个副本集来承担，防止因主节点单点故障导致整个系统崩溃。</li>
+<li>Config Server 是独立的一个 mongod 进程，保存集群和分片的元数据。</li>
+<li>Route Server 是独立的一个 mongos 进程，在集群中可作为路由使用，客户端由此接入，让整个集群看起来像是一个单一的数据库，提供客户端应用程序和分片集群之间的接口。它将客户端的请求路由给每个 Shard Server，在各 Shard Server 返回结果后进行聚合并返回客户端。</li>
+</ul>
+</li>
+<li>Sharding 模式追求的是高性能，而且是三种集群中最复杂的。在实际生产环境中，通常将 Replica Set 和 Sharding 两种技术结合使用。</li>
+</ul>

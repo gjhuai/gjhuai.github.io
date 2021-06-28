@@ -1,0 +1,51 @@
+<p>[TOC]</p>
+<h2>Excel转Html</h2>
+<p>https://blog.csdn.net/qq_22206899/article/details/80874635
+首先实现office系列文件在线预览主要查到有如下解决方案:</p>
+<p>1.flash 的flexpaper 将文档转换为swf格式，然后使用flash在网页中浏览 
+2.使用开源的软件openoffice+pdf2htmlEx，利用openoffice的接口先将文档转换为pdf格式，然后在使用pdf2htmlEx将文档转换为html直接在网页中显示， 
+3.利用OpenOffice+JodConverter将word2003转换成html或者pdf文件
+4.自己搭建一个文档预览服务器，基于office web app,也就是微软的office online，开源的内容管理系统KodExplorer就是这么干的。
+5.Java poi将html转化
+6.docx4j
+7.用第三方收费组件：PageOffice
+8.虚拟打印机</p>
+<h2>Excel相关框架</h2>
+<ul>
+<li>
+<p>Aspose.Cells
+官网地址：  https://products.aspose.com/cells  ， 例子： https://github.com/aspose-cells/Aspose.Cells-for-Java
+这是个收费的excel处理库，看过官方文档，功能相当强大，基本可以包括了Excel的常见的功能。如果基于它写一个UI，完全可以替换excel。它还提供了一个gridweb.jar包，可以实现基于web的excel。</p>
+</li>
+<li>
+<p><a href="http://jett.sourceforge.net/index.html">JETT</a></p>
+</li>
+</ul>
+<p>JETT (Java Excel Template Translator) is a Java 5.0 API that allows speedy creation of Excel spreadsheet reports using Excel spreadsheet templates.</p>
+<p>JETT allows the developer to follow the MVC pattern easily. JETT is the Controller, the developer creates the Model, and either the developer or another party controls the Excel spreadsheet template, which acts as the View.</p>
+<p>To summarize JETT, the developer supplies an Excel spreadsheet template, which provides the structure, layout, and styling of the resultant spreadsheet. Then, the developer creates beans that contain the actual data to be populated in the spreadsheet. Finally, the developer uses an ExcelTransformer, the JETT API entry point, to transform the template spreadsheet into the resultant spreadsheet, complete with the desired data, which can then be published.</p>
+<ul>
+<li><a href="https://github.com/jbaliuka/x4j-analytic">x4j-analytic</a></li>
+</ul>
+<p>x4j-analytic is an open source XLSX format template engine API for Java programming language. X4J is used as the embedded library in Java applications to implement full blown reporting solutions.</p>
+<ul>
+<li><a href="http://jxls.sourceforge.net/">JXLS</a></li>
+</ul>
+<p>Jxls is a small Java library to make generation of Excel reports easy. Jxls uses a special markup in Excel templates to define output formatting and data layout.</p>
+<h2>报表应用</h2>
+<p>将报表制作开发成一个独立的应用，用户（程序员）只需填入SQL、调整页面布局即可生成报表。使用简单，零开发成本，缺点是数据源接入受限于配置，与现有程序集成困难；报表布局设置较死板，制作灵活报表困难。适合简单的报表制作。</p>
+<ul>
+<li><a href="https://github.com/xianrendzw/EasyReport">EasyReport</a></li>
+</ul>
+<p>A simple and easy to use Web Report System for java</p>
+<p>EasyReport是一个简单易用的Web报表工具,它的主要功能是把SQL语句查询出的行列结构转换成HTML表格(Table)，并支持表格的跨行(RowSpan)与跨列(ColSpan)。同时它还支持报表Excel导出、图表显示及固定表头与左边列的功能。</p>
+<h1>专业的报表集成开发工具</h1>
+<p>此类工具功能强大，但都需要一定的学习成本。</p>
+<ul>
+<li><a href="http://www.eclipse.org/birt/">BIRT</a></li>
+</ul>
+<p>Business Intelligence and Reporting Tools (BIRT) </p>
+<p>An open source technology platform used to create data visualizations and reports that can be embedded into rich client and web applications.</p>
+<ul>
+<li>帆软报表（收费）</li>
+</ul>

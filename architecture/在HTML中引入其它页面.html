@@ -1,0 +1,60 @@
+<h2>IFrame element</h2>
+<pre><code>&lt;iframe src=&quot;your.html&quot; width=&quot;x&quot; height=&quot;y&quot;&gt;&lt;p&gt;Fallback text&lt;/p&gt;&lt;/iframe&gt;
+</code></pre>
+<h2>Object element</h2>
+<object type="text/html" data="your.html"></object>
+<p><embed type="text/html" src="header.html"></p>
+<h2>Javascript insertion</h2>
+<p>external.js</p>
+<pre><code class="language-js">var element = '&lt;div&gt; &lt;ul&gt;
+                     &lt;li class=&quot;current&quot;&gt;&lt;a href=&quot;.html&quot; &gt;&lt;/a&gt;&lt;/li&gt;
+                     &lt;li&gt;&lt;a href=&quot;.html&quot;&gt;&lt;/a&gt;&lt;/li&gt;
+                   &lt;/ul&gt; &lt;/div&gt;';
+</code></pre>
+<p>container.html</p>
+<pre><code class="language-html">&lt;script type=&quot;text/javascript&quot; src=&quot;external.js&quot;&gt;&lt;/script&gt;
+&lt;script&gt;
+     document.getElementById('#containing-element').innerHTML(element);
+&lt;/script&gt;
+</code></pre>
+<h2>AJAX</h2>
+<pre><code class="language-js">jQuery(document).ready(function ($){
+    $('#containing-element').load('your.html');
+});
+</code></pre>
+<h2>jquery方式1</h2>
+<pre><code class="language-js">$(function(){
+    $(&quot;[data-load]&quot;).each(function(){
+        $(this).load($(this).data(&quot;load&quot;), function(){
+        });
+    });
+})
+------------
+&lt;nav data-load=&quot;sidepanel.html&quot;&gt;&lt;/nav&gt;
+&lt;nav data-load=&quot;footer.html&quot;&gt;&lt;/nav&gt;
+</code></pre>
+<p>创建一个文件header.html之类的</p>
+<pre><code class="language-html">
+&lt;!-- Meta --&gt;
+&lt;meta http-equiv=&quot;Content-Type&quot; content=&quot;text/html; charset=ISO-8859-1&quot;&gt;
+&lt;!-- JS --&gt;
+&lt;script type=&quot;text/javascript&quot; src=&quot;js/lib/jquery-1.11.1.min.js&quot; &gt;&lt;/script&gt;
+&lt;script type=&quot;text/javascript&quot; src=&quot;js/lib/angular.min.js&quot;&gt;&lt;/script&gt;
+&lt;script type=&quot;text/javascript&quot; src=&quot;js/lib/angular-resource.min.js&quot;&gt;&lt;/script&gt;
+&lt;script type=&quot;text/javascript&quot; src=&quot;js/lib/angular-route.min.js&quot;&gt;&lt;/script&gt;
+&lt;link rel=&quot;stylesheet&quot; href=&quot;css/bootstrap.min.css&quot;&gt;
+
+
+&lt;title&gt;Your application&lt;/title&gt;
+</code></pre>
+<p>现在在HTML页面中包含header.html，例如：</p>
+<pre><code class="language-html">&lt;head&gt;
+   &lt;script type=&quot;text/javascript&quot; src=&quot;js/lib/jquery-1.11.1.min.js&quot; &gt;&lt;/script&gt;
+   &lt;script&gt; 
+     $(function(){ $(&quot;head&quot;).load(&quot;header.html&quot;) });
+   &lt;/script&gt;
+&lt;/head&gt;
+</code></pre>
+<h2>HTML5的import</h2>
+<p><link rel="import" href="autoload-template.html">
+在Chrome 61.0，Opera 48.0，Opera Neon 1.0，Android Browser 6.0，Chrome Mobile 61.0和Adblocker Browser 54.0中测试OK，在Safari 10.1，Firefox 56.0，Edge 38.14和IE 11中  测试NG。</p>

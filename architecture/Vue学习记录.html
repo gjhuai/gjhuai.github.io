@@ -1,0 +1,251 @@
+<p>[toc]</p>
+<h1>开发环境</h1>
+<h2>CentOS7 安装 node</h2>
+<p>参考：https://www.jianshu.com/p/d4a78b27fe83</p>
+<ul>
+<li>
+<p>下载
+  <code>wget https://nodejs.org/dist/latest-v13.x/node-v13.14.0-linux-x64.tar.xz</code></p>
+</li>
+<li>
+<p>解压</p>
+</li>
+</ul>
+<pre><code class="language-shell"># xz -d node-v13.14.0-linux-x64.tar.xz
+得到 一个包 node-v13.14.0-linux-x64.tar
+# tar -xvf node-v13.14.0-linux-x64.tar
+得到一个目录 node-v13.14.0-linux-x64
+</code></pre>
+<ul>
+<li>做软链
+  ln -s /opt/devel/node/bin/node /usr/bin/node
+  ln -s /opt/devel/node/bin/npm /usr/bin/npm
+  ln -s /opt/devel/node/bin/npx /usr/bin/npx</li>
+</ul>
+<h2>npm 使用</h2>
+<h3>加速 npm</h3>
+<pre><code class="language-shell">npm config set registry https://registry.npm.taobao.org --global
+npm config set disturl https://npm.taobao.org/dist --global
+</code></pre>
+<ul>
+<li>下载 node v10.23 安装</li>
+<li>升级 npm： <code>npm install npm -g</code></li>
+<li>安装 cnpm：<code>npm install -g cnpm --registry=https://registry.npm.taobao.org</code></li>
+<li>
+<p>安装 VS 编译工具： <code>npm i -g windows-build-tools</code>
+  i 表示 install
+  -g 表示 global 全局</p>
+</li>
+<li>
+<p>安装 node-gyp： <code>npm install -g node-gyp</code>
+  <a href="https://www.cnblogs.com/wangyuxue/p/11218113.html">安装 node-gyp</a></p>
+</li>
+</ul>
+<h2>VSCode 开发环境</h2>
+<h3>集成 Cmder 终端</h3>
+<pre><code>    &quot;terminal.integrated.shell.windows&quot;: &quot;cmd.exe&quot;,
+    &quot;terminal.integrated.shellArgs.windows&quot;: [
+        &quot;/k D:\\Dev\\cmder\\vendor\\init.bat&quot;
+    ]
+</code></pre>
+<p>此模式下不支持 TS 自动编译，不建议使用。</p>
+<h3>TypeScript 安装</h3>
+<ul>
+<li><code>npm install -g typescript</code> 全局安装</li>
+<li><code>tsc -v</code> 查看安装版本</li>
+</ul>
+<h3>TS 自动编译</h3>
+<ul>
+<li><code>tsc --init</code> 生成 <code>tsconfig.json</code> 文件</li>
+<li>修改 <code>tsconfig.json</code> 文件中的<code>outDir</code> 和 <code>rootDir</code></li>
+<li>设置编译监控： 按 <code>Ctrl + Shift + B</code>，选择 <code>tsc watch</code> 是自动监听，下次保存文件就自动编译。<code>tsc build</code> 是编译一次。</li>
+</ul>
+<h2>pm2</h2>
+<p>PM2 是 node 进程管理工具，可以利用它来简化很多 node 应用管理的繁琐任务，如性能监控、自动重启、负载均衡等，而且使用非常简单。</p>
+<p>安装： <code>npm install -g pm2</code>
+express 应用来举例。
+通过<code>npm start</code>启动应用，其实就是调用<code>node ./bin/www</code>
+<code>pm2 start ./bin/www --watch</code> 这里用了--watch 参数，意味着当你的 express 应用代码发生变化时，pm2 会帮你重启服务，多贴心。</p>
+<p><a href="https://www.cnblogs.com/chyingp/p/pm2-documentation.html">PM2 实用入门指南</a></p>
+<h1>Vue 知识</h1>
+<h2>ref、reactive、toRef、toRefs 的区别</h2>
+<ul>
+<li>
+<p>vue3 reactive 函数
+  https://www.jianshu.com/p/ba1169fa2c97</p>
+</li>
+<li>
+<p>reactive 的用法与 ref 的用法相似，也是将数据变成响应式数据，当数据发生变化时 UI 也会自动更新。不同的是 ref 用于基本数据类型，而 reactive 是用于复杂数据类型，比如对象和数组。</p>
+</li>
+<li>
+<p>vue3 toRef 函数和 toRefs 函数
+  https://www.jianshu.com/p/0c6ad50a9055</p>
+</li>
+<li>
+<p>ref 本质是拷贝，修改响应式数据不会影响原始数据；toRef 的本质是引用关系，修改响应式数据会影响原始数据。</p>
+</li>
+<li>ref 数据发生改变，界面会自动更新；toRef 当数据发生改变是，界面不会自动更新。</li>
+<li>toRef 传参与 ref 不同；toRef 接收两个参数，第一个参数是哪个对象，第二个参数是对象的哪个属性。</li>
+<li>toRefs 接收一个对象作为参数，它会遍历对象身上的所有属性，然后挨个调用 toRef 执行。</li>
+</ul>
+<h1>no-bin-links</h1>
+<p>https://cloud.tencent.com/developer/article/1440562
+https://zhuanlan.zhihu.com/p/36223413</p>
+<p><code>npm install --no-bin-links</code></p>
+<pre><code>npm ERR! nospc ENOTSUP: operation not supported on socket, symlink '../acorn/bin/acorn' -&gt; '/home/baoguoxiao/windows/food/node_modules/.bin/acorn'
+npm ERR! nospc This is most likely not a problem with npm itself
+npm ERR! nospc and is related to insufficient space on your system.
+</code></pre>
+<h1>webpack command not found 的解决方法</h1>
+<p><a href="https://blog.csdn.net/qq_38111015/article/details/79013475">webpack command not found 的解决方法</a></p>
+<pre><code class="language-shell">npm install webpack -g
+npm install -D webpack-cli -no-bin-links
+</code></pre>
+<h1>通过 ps、grep 和 kill 批量杀死进程</h1>
+<p><code>ps aux|grep qemu|awk '{print $2}'|xargs kill -9</code></p>
+<h1>npm run dev 错误</h1>
+<pre><code class="language-js">script{
+&quot;dev&quot;: &quot;export NODE_ENV=development; webpack --watch --config webpack.config.js --mode development &amp; ./bin/www&quot;,
+}
+</code></pre>
+<p>要成功运行<code>npm run dev</code>，需要安装 webpack, webpack-cli, node-gyp, node-gyp-build；并链接到/usr/local/bin/目录下。</p>
+<pre><code class="language-shell">npm install -g webpack
+npm install -g webpack-cli
+# 用来编译多语言支持
+npm install -g node-gyp
+npm install -g node-gyp-build
+sudo ln -s /opt/node10/bin/webpack* /usr/local/bin/
+sudo ln -s /opt/node10/bin/node-gyp* /usr/local/bin/
+</code></pre>
+<h1>express</h1>
+<ul>
+<li><code>morgan</code>是 express 默认的日志中间件，也可以脱离 express，作为 node.js 的日志组件单独使用。
+  https://www.cnblogs.com/chyingp/p/node-learning-guide-express-morgan.html</li>
+</ul>
+<pre><code class="language-javascript">//使用app.use(logger('dev'))可以将请求信息打印在控制台
+app.use(logger(&quot;dev&quot;));
+// morgan支持stream配置项，可以通过它来实现将日志落地的效果
+// 日志写入文件
+var accessLogStream = fs.createWriteStream(path.join(__dirname, &quot;access.log&quot;), {
+  flags: &quot;a&quot;,
+});
+app.use(morgan(&quot;short&quot;, { stream: accessLogStream }));
+</code></pre>
+<ul>
+<li><code>body-parser</code>作用是对 post 请求的请求体进行解析。
+  https://www.cnblogs.com/chyingp/p/nodejs-learning-express-body-parser.html</li>
+</ul>
+<pre><code class="language-js">app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
+</code></pre>
+<p><code>body-parser</code> 实现的要点如下： - 处理不同类型的请求体：比如 text、json、urlencoded 等，对应的报文主体的格式  不同。 - 处理不同的编码：比如 utf8、gbk 等。 - 处理不同的压缩类型：比如 gzip、deflare 等。 - 其他边界、异常的处理。</p>
+<ul>
+<li><code>cookie-parser</code>是 Express 的中间件，用来实现 cookie 的解析
+  https://www.cnblogs.com/chyingp/p/express-cookie-parser-deep-in.html</li>
+</ul>
+<pre><code class="language-js">var express = require(&quot;express&quot;);
+var cookieParser = require(&quot;cookie-parser&quot;);
+var app = express();
+
+app.use(cookieParser());
+
+app.use(function (req, res, next) {
+  console.log(req.cookies.nick); // 第二次访问，输出chyingp
+  next();
+});
+
+app.use(function (req, res, next) {
+  res.cookie(&quot;nick&quot;, &quot;chyingp&quot;);
+  res.end(&quot;ok&quot;);
+});
+
+app.listen(3000);
+</code></pre>
+<h1>webpack</h1>
+<p>版本&gt;v4，需要安装<code>webpack-cli</code>。</p>
+<p>一般和自定义的<code>webpack.config.js</code>文件一起使用。例如，将<code>src/index.js</code>及其引用文件打包到<code>dist/bundle.js</code>文件中。</p>
+<pre><code class="language-js">const path = require(&quot;path&quot;);
+
+module.exports = {
+  entry: &quot;./src/index.js&quot;,
+  output: {
+    path: path.resolve(__dirname, &quot;dist&quot;),
+    filename: &quot;bundle.js&quot;,
+  },
+};
+</code></pre>
+<h1>nodemon</h1>
+<p>nodemon 用来监视 node.js 应用程序中的任何更改并自动重启服务,非常适合用在开发环境中。</p>
+<p>nodemon 不需要对代码或开发方式进行任何更改。 nodemon 只是简单的包装你的 node 应用程序，并监控任何已经改变的文件。nodemon 只是 node 的替换包，只是在运行脚本时将其替换命令行上的 node。</p>
+<h1>npm ERR! code ELIFECYCLE</h1>
+<pre><code class="language-js">npm cache clean --force
+delete node_modules folder
+delete package-lock.json file
+npm install
+</code></pre>
+<h1>安装 vue 支持</h1>
+<pre><code class="language-sh">npm install vue-cli -g
+# cross-env 是用来接近linux、windows环境变量设置不一致的问题。
+# cross-env NODE_ENV=production webpack --config webpack.config.js --mode production
+# cross-env NODE_ENV=production 在linux、windows都能认识
+npm install -g cross-env
+
+</code></pre>
+<h1>解决 npm 安装速度慢的方法</h1>
+<pre><code class="language-sh">onfig set registry https://registry.npm.taobao.org
+npm config set sass_binary_site https://npm.taobao.org/mirrors/node-sass
+npm config set phantomjs_cdnurl https://npm.taobao.org/mirrors/phantomjs
+npm config set electron_mirror https://npm.taobao.org/mirrors/electron
+npm config set sqlite3_binary_host_mirror https://npm.taobao.org/mirrors/sqlite3
+npm config set profiler_binary_host_mirror https://npm.taobao.org/mirrors/node-inspector
+npm config set chromedriver_cdnurl https://npm.taobao.org/mirrors/chromedriver
+</code></pre>
+<p>make 提示：g++命令未找到：<code>yum install gcc-c++</code></p>
+<h1>style-loader 与 vue-style-loader 区别</h1>
+<p><code>vue-style-loader</code>跟 <code>style-loader</code> 基本用法跟功能是一样的，都是往 dom 里面插入一个 style 标签去让样式生效的，但是 <code>vue-style-loader</code> 支持 vue 中的 ssr（服务端渲染），所以如果需要支持服务端渲染的 vue 项目，就需要用到 <code>vue-style-loader</code> 了，如果一般的 vue 项目的话，推荐使用 <code>style-loader</code>，毕竟 <code>style-loader</code> 支持的功能还是丰富些，比如可以懒注入、可以指定位置插入标签等等。</p>
+<h1>vue-resource</h1>
+<p>vue-resource 是 Vue.js 的一款插件，它可以通过 XMLHttpRequest 或 JSONP 发起请求并处理响应。也就是说，$.ajax 能做的事情，vue-resource 插件一样也能做到，而且 vue-resource 的 API 更为简洁。另外，vue-resource 还提供了非常有用的 inteceptor 功能，使用 inteceptor 可以在请求前和请求后附加一些行为，比如使用 inteceptor 在 ajax 请求时显示 loading 界面。</p>
+<ul>
+<li>get 请求</li>
+</ul>
+<pre><code class="language-js">var params = { params: { id: id } };
+this.$http.get(url, params).then(
+  function (res) {
+    // 响应成功回调
+    var data = res.body;
+    //数据在res.body里面
+  },
+  function (res) {
+    // 响应错误回调
+  }
+);
+</code></pre>
+<ul>
+<li>post 请求</li>
+</ul>
+<pre><code class="language-js">//启用{emulateJSON : true}选项后，请求会以application/x-www-form-urlencoded作为content-type,像HTML表单一样。
+var params = { params: { id: id } };
+this.$http.post(url, params, { emulateJSON: true }).then(
+  function (res) {
+    // 响应成功回调
+    var data = res.body;
+    //数据在res.body里面
+  },
+  function (res) {
+    // 响应错误回调
+  }
+);
+</code></pre>
+<ul>
+<li>JSONP 请求</li>
+</ul>
+<pre><code class="language-js">var JSONparams ={
+    params: {id: id}
+    jsonp: 'callback' // 设置回调函数的参数的一个名字，默认是话是callback,
+}
+ this.$http.jsonp(url, JSONparams).then( (res) =&gt; {
+    console.log(res);
+}, (err) =&gt; {
+    console.log(err);
+})
+</code></pre>

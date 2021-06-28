@@ -1,0 +1,72 @@
+<pre><code>
+</code></pre>
+<p>[TOC]</p>
+<h2>学习序列</h2>
+<p><a href="https://blog.csdn.net/qq_34021712/column/info/26947">Shiro学习 系列</a>
+springboot整合shiro -shiro介绍(一)
+springboot整合shiro -快速入门(二)
+springboot整合shiro-Whitelabel Error Page解决(三)
+springboot整合shiro-配置记住我(四)
+springboot整合shiro-ehcache缓存(五)
+springboot整合shiro-session管理(六)
+springboot整合shiro-在线人数以及并发登录人数控制(七)
+springboot整合shiro-登录失败次数限制(八)
+springboot整合shiro-实现验证码认证(九)
+springboot使用shiro-整合redis作为缓存(十)
+Shiro使用redis作为缓存(解决shiro频繁访问Redis)(十一)
+解决Shiro频繁访问Redis读取和更新session(十二)
+shiro 整合oauth2.0 服务端 和 客户端实现(入门教程)(十三)
+关于shiro使用密码加密加盐之后序列化失败的问题(十四)
+springboot整合shiro-对密码进行MD5并加盐处理(十五)
+springboot整合shiro-实现自己的登出(十六)
+springboot整合shiro-关于登出时,redis中缓存没有清理干净的问题(十七)
+springboot整合shiro-SimpleAuthenticationInfo 参数该使用username 还是User实体(十八)</p>
+<p><a href="https://www.bbsmax.com/A/kvJ3EXo9dg/">Apache-Shiro+Zookeeper系统集群安全解决方案之缓存管理</a></p>
+<p>（一） shiro入门介绍
+（二） shiro 的INI配置
+（三）shiro身份认证（Shiro Authentication）
+（四）shiro授权（Authentication）--访问控制
+（五）分布式集群系统下的高可用session解决方案
+（六）分布式集群系统下的高可用session解决方案---Session共享
+（七）分布式集群系统下---cache共享
+（八） web集群时session同步的3种方法</p>
+<h2>SessionDAO vs CacheManager</h2>
+<ul>
+<li>SessionDAO、CacheManager 两者的职责不一样。 SessionDAO可以实现有缓存的，也可以实现没有的； 而CacheManager不仅仅用于CachingSessionDAO，还有CachingRealm</li>
+<li>CacheManager 实例会自动地直接传送到SessionDAO（通过EnterpriseCacheSessionDAO 实现CacheManagerAware 接口的性质）。 然后，当SessionManager 要求EnterpriseCacheSessionDAO 去持久化一个Session 时，它使用一个CacheManager去存储Session 数据。</li>
+<li>如果想Session存于Redis中，有两种方式：1、实现Redis的SessionDAO就行；2、实现Redis的CacheManager，而SessionDao使用 EnterpriseCacheSessionDAO，并设置cacheManager。</li>
+</ul>
+<h2>集群</h2>
+<p><a href="https://stormpath.com/blog/hazelcast-support-apache-shiro">Hazelcast Support in Apache Shiro</a></p>
+<p><a href="https://www.bbsmax.com/A/kvJ3EXo9dg/">Apache-Shiro+Zookeeper系统集群安全解决方案之缓存管理</a>
+如今的系统多不是孤军奋战,在多结点会话共享管理方面有着各自的解决办法,比如Session粘连,基于Web容器的各种处理等或者类似本文说的完全接管Web容器的Session管理,只是做法不尽相同. 而本 ...</p>
+<p><a href="https://www.bbsmax.com/A/GBJrlweEd0/">Apache shiro集群实现系列</a>  备用： https://blog.csdn.net/lishehe/article/details/45218251</p>
+<h2>Token、JWT登录</h2>
+<p><a href="https://blog.csdn.net/u011687186/article/details/80702912">Shrio框架Token认证思路</a>
+<a href="https://blog.csdn.net/qq_40194399/article/details/85539158">shiro实现免密登录，解决三方登录问题</a>
+<a href="https://github.com/HowieYuan/Shiro-SpringBoot">shiro 框架的构建以及与 JWT 的整合</a>
+<a href="https://github.com/Smith-Cruise/Spring-Boot-Shiro">Shiro基于SpringBoot +JWT搭建简单的restful服务</a></p>
+<h2>Session问题</h2>
+<p><a href="https://blog.csdn.net/suruiliang/article/details/78824448">shiro的session和servlet的session的区别</a>
+<a href="https://blog.csdn.net/u013628152/article/details/84031784">shiro将ServletHttpSession包装成了ShiroHttpSession</a></p>
+<h2>OAuth2集成</h2>
+<p><a href="https://blog.csdn.net/qq_34021712/article/details/80510774">shiro 整合oauth2.0 服务端 和 客户端实现(入门教程)(十三)</a>
+<a href="https://github.com/zhangtr/teedao">teedao例子代码    </a></p>
+<h2>CAS集成</h2>
+<p><a href="https://www.cnblogs.com/suiyueqiannian/p/9359597.html">spring boot 2.0 集成 shiro 和 pac4j cas单点登录</a></p>
+<h2>20181101</h2>
+<p><a href="https://www.cnblogs.com/vinozly/p/5080692.html">spring mvc下shiro的session,request等问题</a>
+<a href="https://www.cnblogs.com/shenjixiaodao/p/7426594.html">Session(数据)共享的前后端分离Shiro实战</a></p>
+<p>https://www.jianshu.com/p/eab0b28f6fea
+https://blog.csdn.net/achenyuan/article/details/78541529
+https://www.cnblogs.com/vinozly/p/5080692.html
+http://jinnianshilongnian.iteye.com/blog/2025656</p>
+<h2>Old</h2>
+<p><a href="http://www.9iu.org/2013/12/20/springrain5-shiro-httpsession.html">springrain技术详解(5)-shiro的httpSession</a></p>
+<p><a href="http://bbs.landingbj.com/showtopic.jsp?rootid=174571&amp;CPages=1">jsessionid传递方式对session实现机制</a></p>
+<p><a href="http://618119.com/archives/2007/12/19/48.html">解决iframe中jsessionid无法传递导致session丢失的问题</a></p>
+<p><a href="http://www.verydemo.com/demo_c432_i2937.html">实现跨域cookie共享</a></p>
+<p><a href="http://blog.csdn.net/michaelliuyang/article/details/8819852">apache shiro集群实现（一） session共享</a>
+<a href="http://blog.csdn.net/michaelliuyang/article/details/8820390">apache shiro集群实现（二）— cache共享</a></p>
+<p><a href="https://github.com/alexxiyang/shiro-redis">alexxiyang/shiro-redis</a></p>
+<p><a href="http://jetgeng.github.io/blog/html/2014/09/07/redis_shiro.html">使用Redis让Shiro实现集群</a></p>
