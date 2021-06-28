@@ -70,7 +70,8 @@
 			axios.get("https://gjhuai.github.io/md_index.json")
               .then((response) => {
                 this.md_index = response.data;
-                console.log(this.md_index);
+                //console.log(this.md_index);
+                this.articles = this.md_index['lastest'];
               })
               .catch((error) => {
                 console.log(error);
