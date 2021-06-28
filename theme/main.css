@@ -1,10 +1,9 @@
 .grid {
-  margin: 50px;
-  height: 300px;
-  width: 300px;
+  margin-top: 30px;
+  margin-left: -5px;
   display: grid;
-  grid-template-rows: 120px 120px;
-  grid-template-columns: 120px 120px;
+  grid-template-rows: 40px 40px;
+  grid-template-columns: 120px 120px 120px 120px;
   box-sizing: border-box;
 }
 .grid > li {
@@ -12,9 +11,9 @@
   margin-left: -4px;
   box-sizing: border-box;
   list-style: none;
-  line-height: 120px;
+  line-height: 49px;
   text-align: center;
-  border: 4px solid #ccc;
+  border: 3px solid #ccc;
 }
 .grid > li:hover {
   border-color: red;
