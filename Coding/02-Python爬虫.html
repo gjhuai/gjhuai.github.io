@@ -1,4 +1,67 @@
 <p>[TOC]</p>
+<h1>requests库的用法</h1>
+<ol>
+<li>get / post 请求</li>
+</ol>
+<p>参数也是字典，也可以传递json类型的参数：</p>
+<pre><code class="language-python">import requests
+from fake_useragent import UserAgent
+
+headers = {&quot;User-Agent&quot;:UserAgent().random}
+url = &quot;https://www.baidu.cn/index/login/login&quot;
+params = {
+    &quot;user&quot;:&quot;1351351335&quot;,#账号
+    &quot;password&quot;:&quot;123456&quot;#密码
+}
+response = requests.post(url,headers=headers,data=params)
+response.text
+</code></pre>
+<ol>
+<li>IP代理</li>
+</ol>
+<pre><code class="language-python">headers = {&quot;User-Agent&quot;:UserAgent().random}
+
+url = &quot;http://httpbin.org/get&quot;
+proxies = {
+    # http://用户名:密码@IP:端口号
+    &quot;http&quot;:&quot;http://yonghuming:123456@192.168.1.1:8088&quot;
+}
+#设置访问时间
+# requests.get(&quot;http://baidu.com/&quot;,timeout=0.1)
+requests.get(url,headers=headers,proxies=proxies)
+</code></pre>
+<ol>
+<li>session自动保存cookies</li>
+</ol>
+<pre><code class="language-python">headers = {&quot;User-Agent&quot;:UserAgent().chrome}
+login_url = &quot;https://www.baidu.cn/index/login/login&quot;
+
+params = {
+    &quot;user&quot;:&quot;yonghuming&quot;,#用户名
+    &quot;password&quot;:&quot;123456&quot;#密码
+}
+
+session = requests.Session()
+response = session.post(login_url,headers=headers,data=params)
+info_url = &quot;https://www.baidu.cn/index/user.html&quot;
+resp = session.get(info_url,headers=headers)
+resp.text
+</code></pre>
+<ol>
+<li>
+<p>获取响应信息</p>
+</li>
+<li>
+<p><code>resp.json()</code> 获取响应内容 (以json字符串)</p>
+</li>
+<li><code>resp.text</code> 获取相应内容(以字符串)</li>
+<li><code>resp.content</code> 获取响应内容(以字节的方式)</li>
+<li><code>resp.headers</code> 获取响应头内容</li>
+<li><code>resp.url</code> 获取访问地址</li>
+<li><code>resp.encoding</code> 获取网页编码</li>
+<li><code>resp.request.headers</code> 请求头内容</li>
+<li><code>resp.cookie</code> 获取cookie</li>
+</ol>
 <h1>BeautifulSoup</h1>
 <h2>课程内容</h2>
 <ol>

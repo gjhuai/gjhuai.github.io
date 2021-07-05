@@ -1,0 +1,194 @@
+<p>[TOC]</p>
+<p>学习资料：
+<a href="https://www.liaoxuefeng.com/wiki/0014316089557264a6b348958f449949df42a6d3a2e542c000">Python教程</a>
+<a href="http://www.runoob.com/python3/python3-tutorial.html">Python 3 教程</a></p>
+<h1>JSON操作</h1>
+<ul>
+<li>load()：读取json文件</li>
+</ul>
+<pre><code class="language-python"># 读取json文件内容,返回字典格式
+with open('./source_file/info.json','r',encoding='utf8')as fp:
+    json_data = json.load(fp)
+    print('这是文件中的json数据：',json_data)
+    print('这是读取到文件数据的数据类型：', type(json_data))
+</code></pre>
+<ul>
+<li>dump()：写入json文件</li>
+</ul>
+<pre><code class="language-python"># 将字典数据写入到json文件中
+dict1 = {'name': '张三', 'age': 18, 'sex': '男'}
+with open('./source_file/info.json','a',encoding='utf8')as fp:
+    json.dump(dict1,fp,ensure_ascii=False)　　
+ #  如果ensure_ascii ' '为false，则返回值可以包含非ascii值
+</code></pre>
+<ul>
+<li>loads()：将json字符串转换成字典格式</li>
+</ul>
+<pre><code class="language-python"># 将json字符串转换成字典格式
+str1 = '{&quot;name&quot;: &quot;张三&quot;, &quot;age&quot;: 18, &quot;sex&quot;: &quot;男&quot;}'
+print('这是转换后的数据：',json.loads(str1))
+</code></pre>
+<ul>
+<li>dumps()：将字典格式数据转换成json格式;</li>
+</ul>
+<pre><code class="language-python"># 将字典格式数据转换成json格式
+dict1 = {'name': '张三', 'age': 18, 'sex': '男'}
+print('这是将字典转换之后的数据：',json.dumps(dict1,ensure_ascii=False))
+#  如果ensure_ascii ' '为false，则返回值可以包含非ascii值
+</code></pre>
+<h1>日期时间</h1>
+<pre><code class="language-python"># 获取当前时间
+now = datetime.datetime.now()
+# datetime =&gt; string 格式化输出
+now.strftime('%Y-%m-%d %H:%M:%S')
+
+# string =&gt; datetime 字符串转日期
+t_str = '2012-03-05 16:26:23'
+d = datetime.datetime.strptime(t_str, '%Y-%m-%d %H:%M:%S')
+
+#在datetime模块中有timedelta类，这个类的对象用于表示一个时间间隔，比如两个日#期或者时间的差别。
+
+#计算两个日期的间隔
+d1 = datetime.datetime.strptime('2012-03-05 17:41:20', '%Y-%m-%d %H:%M:%S')
+d2 = datetime.datetime.strptime('2012-03-02 17:41:20', '%Y-%m-%d %H:%M:%S')
+delta = d1 - d2
+print delta.days
+
+#今天的n天后的日期。
+now = datetime.datetime.now()
+delta = datetime.timedelta(days=3)
+n_days = now + delta
+</code></pre>
+<h1>自定义排序</h1>
+<pre><code class="language-python">import functools
+def cmp(a,b):
+    if a[1] == b[1]:
+        return 0
+    elif len(a[1])&gt;=len(b[1]) and a[1]&gt;b[1]:
+        return -1
+    else:
+        return 1
+
+emap = {'a':'3', 'b':'2'}
+sortedLinks = sorted(emap.items(), key=functools.cmp_to_key(cmp))
+</code></pre>
+<h1>文件操作</h1>
+<ul>
+<li>读取文件最后一行</li>
+</ul>
+<pre><code class="language-python">def __get_last_line(self, filename):
+    &quot;&quot;&quot;
+    get last line of a file
+    :param filename: file name
+    :return: last line or None for empty file
+    &quot;&quot;&quot;
+    try:
+        filesize = os.path.getsize(filename)
+        if filesize == 0:
+            return None
+        else:
+            with open(filename, 'rb') as fp: # to use seek from end, must use mode 'rb'
+                offset = -8                 # initialize offset
+                # 设置偏移量时注意不要超过文件总的字节数，否则会报OSError
+                while -offset &lt; filesize:   # offset cannot exceed file size
+                    # fp.seek(offset[, where])中where=0,1,2分别表示从文件头，当前指针位置，文件尾偏移，
+                    # 缺省值为0，但是如果要指定where=2，文件打开的方式必须是二进制打开，即使用’rb’模式
+                    fp.seek(offset, 2)      # read # offset chars from eof(represent by number '2')
+                    lines = fp.readlines()  # read from fp to eof
+                    if len(lines) &gt;= 2:     # if contains at least 2 lines
+                        return lines[-1]    # then last line is totally included
+                    else:
+                        offset *= 2         # enlarge offset
+                # 注意边界条件的处理，比如文件只有一行的情况
+                fp.seek(0)
+                lines = fp.readlines()
+                return lines[-1]
+    except FileNotFoundError:
+        print(filename + ' not found!')
+        return None
+</code></pre>
+<h1>语法</h1>
+<hr />
+<h2>三元运算符</h2>
+<p>参考：
+<a href="https://www.cnblogs.com/hhfzj/p/6978092.html">Python之三元运算、集合、函数</a></p>
+<pre><code class="language-python">c= a if a&gt;1 else b #如果a大于1的话，c=a，否则c=b
+ss = [i for i in range(1,11) if i%2==0 ] #循环1-11间的值（不包括11），如果值能被2整除（即取偶数）
+</code></pre>
+<h2>Set</h2>
+<pre><code class="language-python">#a.定义一个列表，通过强制转换来定义集合
+nums = [1,1,2,3,5,6,77,8]
+num_set = set(nums)
+#b.直接定义
+num_set1={1,2,3,3,4}
+#集合不能通过下标来访问元素
+s.remove(333) #删除元素，如果元素不存在就会报错
+s.pop() #删除一个随机的元素，并返回删除的元素
+s.discare(111) #如果删除的元素存在，删除，不存在不做处理
+</code></pre>
+<h2>可变参数</h2>
+<pre><code class="language-python">def post(*args):    #想传多少个参数就传多少个，将传入的参数放到一个元组里
+    print(args)
+
+# 调用
+post('001','denglu',post)  # 输出：('001', 'denglu', &lt;function post at 0x000001EBEF237400&gt;)
+post()
+</code></pre>
+<h2>关键字参数</h2>
+<pre><code class="language-python">def kw(**kwargs):  #参数不固定，个数不限，和其它类型参数混用时，顺序为：必填参数，默认值参数，可变参数和关键字参数。
+    print(kwargs)    # 参数被转化为一个字典
+# 调用
+kw()
+kw(age=18,name='aaa')    # 
+d={'age':18,'name':'aaa'}
+kw(**d)    # 传入字典调用的时，就得写**{'age':18,'name':'aaa'}
+</code></pre>
+<h2>字符串查找定位</h2>
+<pre><code class="language-python">chapters = []
+
+urls = [ch for ch in chapters]
+idx = urls.index(urlPrefix+posMap.get(novel['name']))
+</code></pre>
+<h2>字符串与dict转换</h2>
+<pre><code class="language-python">import json
+json_str= '{&quot;name&quot; : &quot;jay&quot;, &quot;sex&quot; : &quot;male&quot;, &quot;age&quot;: 22}'
+# JSON到字典转化：
+dictinfo = json.loads(json_str)   #输出dict类型
+# 字典到JSON转化：
+jsoninfo = json.dumps( dictinfo   )    #输出str类型
+</code></pre>
+<h1>文件操作</h1>
+<h2>遍历文件</h2>
+<pre><code class="language-python">def walkdir(rootdir):
+    #三个参数：分别返回1.父目录 2.所有文件夹名字（不含路径） 3.所有文件名字
+    for parent,dirnames,filenames in os.walk(rootdir):
+        for dirname in  dirnames:
+            print(&quot;dir path: &quot; + os.path.join(parent, dirname))
+        for filename in filenames:
+            print(&quot;file path:&quot; + os.path.join(parent,filename))
+</code></pre>
+<h2>glob文件查找</h2>
+<p><strong>glob</strong></p>
+<pre><code class="language-python">import glob
+glob.glob('d:\a\*\*.txt')
+glob.glob('./glob_?.png')
+glob.glob('../glob_[0-9].png')
+glob.glob('glob_[0-9].*')
+</code></pre>
+<p><strong>iglob</strong>
+获取一个迭代器(iterator)对象，使用它可以逐个获取匹配的文件路径名。与glob.glob()的区别是：glob.glob()同时获取所有的匹配路径，而glob.iglob()一次只获取一个匹配路径。</p>
+<pre><code class="language-python">import glob
+files = glob.iglob('*.png')
+for png in files:
+    print(png)
+</code></pre>
+<p><strong>多模式匹配来搜索文件</strong></p>
+<pre><code class="language-python">import itertools as it, glob, os
+
+def multiple_file_types(*patterns):
+    return it.chain.from_iterable(glob.glob(pattern) for pattern in patterns)
+
+for filename in multiple_file_types(&quot;*.txt&quot;, &quot;*.py&quot;): # add as many filetype arguements
+    realpath = os.path.realpath(filename)
+    print realpath
+</code></pre>
