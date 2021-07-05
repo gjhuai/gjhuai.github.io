@@ -1,4 +1,5 @@
-<p>本文讲解在Spring中实现类似MyBatis的注解Mapper功能。</p>
+<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no" />
+<link rel="stylesheet" href="../theme/css/my.css" /><p>本文讲解在Spring中实现类似MyBatis的注解Mapper功能。</p>
 <p>以查询为例，定义一个接口，并接口上标注@Dao注解；定义一个查询方法，并在其上标注上@Select注解，填充上命名参数的sql；使用@Param注解在方法参数上标明sql命名参数，所有预定义过程完成。使用spring的@Autowired注入即可调用。</p>
 <h1>主要知识点</h1>
 <ul>

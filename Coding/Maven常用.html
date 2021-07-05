@@ -1,4 +1,5 @@
-<p>[TOC]</p>
+<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no" />
+<link rel="stylesheet" href="../theme/css/my.css" /><p>[TOC]</p>
 <h2>向repo发布第三方jar</h2>
 <p>mvn deploy:deploy-file -DgroupId=com.oracle -DartifactId=ojdbc6 -Dversion=11.2.0.4 -Dpackaging=jar -Dfile=ojdbc6 .jar -DrepositoryId=gm-repo -Durl=http://dev.snhb.group:8081/nexus/content/repositories/releases</p>
 <h2>跳过测试</h2>

@@ -1,4 +1,5 @@
-<p>《大型网站技术架构》读书笔记：</p>
+<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no" />
+<link rel="stylesheet" href="../theme/css/my.css" /><p>《大型网站技术架构》读书笔记：</p>
 <p>当我们架设一个系统的时候通常需要考虑到如何与其他系统交互，所以我们首先需要知道各种系统之间是如何交互的，使用何种技术实现。  </p>
 <h1>1. 不同系统不同语言之间的交互</h1>
 <p>现在我们常见的不同系统不同语言之间的交互使用WebService，Http请求。WebService，即“Web 服务”，简写为 WS。从字面上理解，它其实就是“基于 Web 的服务”。而服务却是双方的，有服务需求方，就有服务提供方。服务提供方对外发布服务，服务需求方调用服务提供方所发布的服务。如果说得再专业一点，WS 其实就是建立在 HTTP 协议上实现异构系统通讯的工具。没错！WS 说白了还是基于 HTTP 协议的，也就是说，数据是通过 HTTP 进行传输的。最早我们是用CXF开发SOAP服务实现WS，后面我们是用REST服务实现WS(这个目前使用比较多，也最我用得最多的这一种)。基于CXF也可以开发REST服务，不过我们一般直接使用springMVC或者其他MVC框架实现REST服务。  </p>

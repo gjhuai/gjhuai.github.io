@@ -1,6 +1,7 @@
-<p>[TOC]</p>
-<h2>常用命令</h2>
-<h3>Linux 统计文件夹下文件个数及目录个数</h3>
+<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no" />
+<link rel="stylesheet" href="../theme/css/my.css" /><p>[TOC]</p>
+<h1>常用命令</h1>
+<h2>Linux 统计文件夹下文件个数及目录个数</h2>
 <ol>
 <li>
 <p>统计文件夹下文件的个数
@@ -25,18 +26,18 @@
 -l 统计行数
 -m 统计字符数，此标志不能与-c标志一起使用
 -w 统计字数。一个字定义为由空白、跳格或换行字符分隔的字符串</p>
-<h3>使用ps/awk杀死进程</h3>
+<h2>使用ps/awk杀死进程</h2>
 <pre><code class="language-shell">#!/bin/bash
 # Grabs and kill a process from the pidlist that has the word myapp
 ​
 pid=`ps aux | grep myapp | awk '{print $2}'`
 kill -9 $pid
 </code></pre>
-<h3>查看程序端口占用情况</h3>
+<h2>查看程序端口占用情况</h2>
 <p>netstat   -anp   |   grep  portno
 即：netstat –apn | grep 8080</p>
 <p>其中最后一栏是 * PID/Program name *</p>
-<h3>查看linux磁盘空间容量</h3>
+<h2>查看linux磁盘空间容量</h2>
 <p>查看磁盘使用情况
 df -lh</p>
 <p>查看目录的磁盘占用情况
@@ -46,7 +47,20 @@ du -sh * | sort -h</p>
 <p>修改rsyslog文件，将/etc/rsyslog.d/50-default.conf 文件中的#cron.*前的#删掉；
 重启rsyslog服务service rsyslog restart；
 重启cron服务service cron restart</p>
-<h3>linux下ssh客户端以及sftp文件传送的一般用法</h3>
+<h2>ssh 证书登录</h2>
+<ol>
+<li>在windows下，创建 <code>~\.ssh</code> 目录；</li>
+<li>在<code>~\.ssh</code>下，执行<code>ssh-keygen -t rsa</code>，生成私钥 <code>id_rsa</code>, 公钥 <code>id_rsa.pub</code>;</li>
+<li>将公钥 <code>id_rsa.pub</code> 拷贝到 linux 的 <code>~/.ssh</code> 目录下，改名为 <code>authorized_keys</code>；</li>
+<li>修改 ssh 配置是否开启证书登录: <code>vi /etc/ssh/sshd_config</code></li>
+</ol>
+<pre><code class="language-shell">RSAAuthentication yes     # 是否允许用户自行使用成对的密钥系统进行登入行为 version 2
+PubkeyAuthentication yes  # 是否允许用户自行使用成对的密钥系统进行登入行为
+AuthorizedKeysFile        # 公钥数据路径 用户目录下  .ssh/authorized_keys
+</code></pre>
+<p>修改完成后， <code>sudo systemctl restart sshd</code> 重启ssh服务；
+5. 登录服务器: <code>ssh -i ~\.ssh\id_rsa gjh@10.19.12.12</code></p>
+<h2>linux下ssh客户端以及sftp文件传送的一般用法</h2>
 <p>linux下ssh客户端以及sftp文件传送的一般用法</p>
 <p>以前在windows上，我要用ssh连接服务器，我一般都用putty。
     这段时间一直在linux上工作，由于linux上一般都自带ssh客户端，也就是ssh命令了，此外还有一个命令sftp，用来安全的传送文件，今天为了管理linux服务器，用到了linux下的这两个命令行工具，现就其最常用的用法描述如下：
@@ -60,7 +74,7 @@ du -sh * | sort -h</p>
 
 至于这两个命令行的其他用法，可参看其联机手册...
 </code></pre>
-<h3>修改home下的中文目录为英文目录</h3>
+<h2>修改home下的中文目录为英文目录</h2>
 <p>在终端下输入命令：
      export LANG=en_US
      xdg-user-dirs-gtk-update
@@ -69,19 +83,19 @@ du -sh * | sort -h</p>
      export LANG=zh_CN.UTF-8
 以显示中文。</p>
 <p>OK，行了，三个命令就行。可就为一次改变要记三个命令，也麻烦。能不能不记啦。当然可以，那您注销，然后在登录界面选择语言种类为“English(united states)”，进入系统后你就发现整个系统都变成English了，同时还会弹出一个对话框提示是否切换用户目录，选择“Update names”，确认并再注销，在登录界面选择“汉语”，进入系统后事个系统又变成了Chinese了，同样会弹出同一个对话框，选择"Keep old names"。OK，大功告成，一个命令都不需要记，就可完成您想要的结果。</p>
-<h3>分区方案</h3>
+<h2>分区方案</h2>
 <p>/boot    200M    Linux的内核及引导系统程序所需要的文件，比如 vmlinuz initrd.img文件都位于这个目录中。在一般情况下，GRUB或LILO系统引导管理器也位于这个目录；启动撞在文件存放位置，如kernels，initrd，grub。</p>
 <p>/              100G    用于存储系统文件
 /home    200G    用户工作目录；个人配置文件，如个人环境变量等；所有账号分配一个工作目录。
 swap是内存的两倍</p>
-<h3>find</h3>
+<h2>find</h2>
 <pre><code class="language-shell">
 find . -name .gradle -exec rm -rf {} \;
 
 find . -type f -exec ls -l {} \;
 
 </code></pre>
-<h3>linux解压缩命令</h3>
+<h2>linux解压缩命令</h2>
 <p>tar</p>
 <p>-c: 建立压缩档案
 -x：解压
@@ -113,19 +127,19 @@ find . -type f -exec ls -l {} \;
 7、</em>.tar.Z 用tar –xZf 解压
 8、<em>.rar 用 unrar e解压
 9、</em>.zip 用 unzip 解压</p>
-<h3>nohup命令</h3>
+<h2>nohup命令</h2>
 <p>该命令的一般形式为：<code>nohup command &amp;</code></p>
 <p>如果使用nohup命令提交作业，那么在缺省情况下该作业的所有输出都被重定向到一个名为 nohup.out的文件中，除非另外指定了输出文件：
   <code>nohup command &gt; myout.file 2&gt;&amp;1 &amp;</code>
   在上面的例子中，输出被重定向到myout.file文件中。
   使用 jobs 查看任务。
   使用 fg %n 关闭。</p>
-<h3>添加sudoer</h3>
+<h2>添加sudoer</h2>
 <p>1）进入超级用户模式。也就是输入"su -",系统会让你输入超级用户密码，输入密码后就进入了超级用户模式。（当然，你也可以直接用root用）
 2）添加文件的写权限。也就是输入命令"chmod u+w /etc/sudoers"。
 3）编辑/etc/sudoers文件。也就是输入命令"vim /etc/sudoers",输入"i"进入编辑模式，找到这一 行："root ALL=(ALL) ALL"在起下面添加"xxx ALL=(ALL) ALL"(这里的xxx是你的用户名)，然后保存（就是先按一 下Esc键，然后输入":wq"）退出。
 4）撤销文件的写权限。也就是输入命令"chmod u-w /etc/sudoers"。 </p>
-<h2>Linux的文件权限与目录配置</h2>
+<h1>Linux的文件权限与目录配置</h1>
 <ul>
 <li><strong>使用者与群组</strong></li>
 </ul>

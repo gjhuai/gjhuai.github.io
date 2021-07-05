@@ -1,4 +1,5 @@
-<p><a href="http://blog.csdn.net/luoweifu/article/details/46595285">编程思想之多线程与多进程(1)——以操作系统的角度述说线程与进程</a>
+<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no" />
+<link rel="stylesheet" href="../theme/css/my.css" /><p><a href="http://blog.csdn.net/luoweifu/article/details/46595285">编程思想之多线程与多进程(1)——以操作系统的角度述说线程与进程</a>
 关键词：多核、多线程、超线程技术、内核线程、用户线程</p>
 <hr />
 <p>多核(心)处理器是指在一个处理器上集成多个<strong>运算核心</strong>从而提高计算能力，也就是有多个真正并行计算的处理核心，每一个处理核心对应一个内核线程。<strong>内核线程</strong>（Kernel Thread， KLT）<em>就是直接由操作系统内核支持的线程，这种线程由内核来完成线程切换，内核通过操作调度器对线程进行调度，并负责将线程的任务映射到各个处理器上。一般一个处理核心对应一个内核线程，比如单核处理器对应一个内核线程，双核处理器对应两个内核线程，四核处理器对应四个内核线程。</em></p>

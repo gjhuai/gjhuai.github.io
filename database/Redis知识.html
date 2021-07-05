@@ -1,4 +1,5 @@
-<h2>Redis作为缓存</h2>
+<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no" />
+<link rel="stylesheet" href="../theme/css/my.css" /><h2>Redis作为缓存</h2>
 <p>当用jdk默认的序列化方案时，对类的版本要求严格一直，否则抛出ClassNotFoundException。比如：
 - 几个共用redis缓存的应用，它们共用的jar包版本有差异（serialNo），就会导致整个系统失败。 https://github.com/alexxiyang/shiro-redis/issues/78
 - class一旦上线，就不能改变包名或位置，否则无法序列号。 https://www.cnblogs.com/technologykai/p/10097167.html</p>
