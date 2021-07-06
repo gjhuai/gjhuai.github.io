@@ -10,12 +10,17 @@
   </head>
 
   <body>
+
     <div id="container" class="container">
       <div class="row">
-        <header class="col-md-2">
+        <header class="col-md-3">
           <div class="logo">
             <span class="visiable-xs">MyNotes</span>
           </div>
+			<div class="search-input">
+			    <input type="text" id="searchText" v-model="searchText" @keyup.enter="search" placeholder="请输入搜索内容" />
+			    <input type="button" id="search" @click="search" value="搜 索" />
+			</div>
           <div class="header-nav">
             <ul class="clearfix">
               <li><a id="lastest" href="#" class="glyphicon glyphicon-camera" @click="changeCate">最近</a></li>
@@ -47,15 +52,18 @@
     <!--<script src="https://unpkg.com/vue@3.1.2/dist/vue.global.prod.js"></script>-->
     <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14"></script>
     <script src="theme/js/axios.min.js"></script>
+    <script src="theme/js/gbk.min.js"></script>
 
     <script type="text/javascript">
       const Markdown = {
 	    el: "#container",
         data() {
           return {
+            md_cache: {},
             md_index: {},
             category: "",
-            articles: []
+            articles: [],
+            searchText: ""
           };
         },
         methods: {
@@ -68,9 +76,22 @@
 	          this.articles = this.md_index[event.target.id];
 	          //console.log(this.articles)
           },
+          search(event) {
+	          if (!this.searchText){
+		          return;
+	          }
+	          
+		      this.category = "";
+		      this.articles = [];
+		      for (var key in this.md_cache) {
+			      if (this.md_cache[key].includes(this.searchText.toLowerCase())){
+				      this.articles.push(key);
+			      }
+		      }
+          }
         },
         mounted() {
-			axios.get("https://gjhuai.github.io/md_index.json")
+			axios.get("md_index.json")
               .then((response) => {
                 this.md_index = response.data;
                 //console.log(this.md_index);
@@ -79,7 +100,24 @@
               .catch((error) => {
                 console.log(error);
               });
-	        },
+			axios.get("md_cache.json", { responseType: 'blob'})
+              .then((response) => {
+				var reader = new FileReader();
+				reader.that = this;
+				reader.onload = function(e) {
+				 	var md_json = JSON.parse(reader.result);
+				 	for (var key in md_json) {
+					 	md_json[key] = md_json[key].toLowerCase()
+				 	}
+				 	this.that.md_cache = md_json;
+				 	return md_json;
+				};
+				reader.readAsText(response.data, "GBK");
+              })
+              .catch((error) => {
+                console.log(error);
+              });
+	    },
       };
 
     // Vue.createApp(Markdown).mount("#container");
