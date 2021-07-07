@@ -1,13 +1,13 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no" />
 <link rel="stylesheet" href="../theme/css/my.css" /><p>[toc]</p>
-<h1>ORM 缓存</h1>
-<h2>基本理念</h2>
+<h1>1. ORM 缓存</h1>
+<h2>1.1. 基本理念</h2>
 <ul>
 <li>减少 DB 磁盘 IO</li>
 <li>尽量设计细颗粒度的表</li>
 <li>尽量避免多表关联查询</li>
 </ul>
-<h2>技巧</h2>
+<h2>1.2. 技巧</h2>
 <ul>
 <li>利用表关联实现透明的对象缓存</li>
 <li>按照 column 拆表实现细粒度对象缓存</li>
@@ -15,14 +15,14 @@
 <li>片段缓存和过期处理</li>
 <li>对象写入缓存</li>
 </ul>
-<h2>其他缓存技巧</h2>
+<h2>1.3. 其他缓存技巧</h2>
 <ul>
 <li>用数据库来实现的缓存</li>
 <li>HTTP 客户端缓存</li>
 <li>用缓存实现计数器功能</li>
 </ul>
-<h1>缓存架构分类</h1>
-<h2>单机缓存</h2>
+<h1>2. 缓存架构分类</h1>
+<h2>2.1. 单机缓存</h2>
 <ul>
 <li>OSCache</li>
 <li>可缓存任何对象</li>
@@ -36,13 +36,13 @@
 <li>无法扩展、缓存的数据量受限</li>
 <li>集群环境无法共享</li>
 </ul>
-<h2>简单分布式缓存</h2>
+<h2>2.2. 简单分布式缓存</h2>
 <ul>
 <li>单实例的 memcached</li>
 <li>OSCache 和 Enhence 的分布式缓存</li>
 <li>用 JGroups 广播，同步缓存数据</li>
 </ul>
-<h2>使用复制方式的缓存集群</h2>
+<h2>2.3. 使用复制方式的缓存集群</h2>
 <ul>
 <li>必要条件</li>
 <li>缓存的数据量不大，没有超过单机的限制</li>
@@ -51,23 +51,23 @@
 <li>方式</li>
 <li>使用虚拟 IP 的方式将多个缓存实例作为一个集群</li>
 </ul>
-<h2>使用散列方式的缓存集群</h2>
+<h2>2.4. 使用散列方式的缓存集群</h2>
 <ul>
 <li>必要条件</li>
 <li>需要缓存的数据量特别巨大</li>
 <li>需要极高的读取缓存的性能</li>
 <li>允许单点故障</li>
 </ul>
-<h2>高性能高、可靠的缓存集群</h2>
-<h1>REST 缓存</h1>
-<h2>实现方式</h2>
+<h2>2.5. 高性能高、可靠的缓存集群</h2>
+<h1>3. REST 缓存</h1>
+<h2>3.1. 实现方式</h2>
 <ul>
 <li>通用缓存：Memcache，Redis</li>
 <li>反向代理</li>
 <li>非常适合作为 URL 的缓存服务器</li>
 <li>Varnish / Squid</li>
 </ul>
-<h2>HTTP 请求缓存方式</h2>
+<h2>3.2. HTTP 请求缓存方式</h2>
 <ul>
 <li>缓存控制</li>
 <li>HTTP 头中“Cache-control”字段来控制</li>
@@ -77,30 +77,30 @@
 <li>ETag</li>
 <li>If-Modified-Since/If-None-Match</li>
 </ul>
-<h1>Redis/NoSQL 缓存</h1>
-<h2>内存模式</h2>
+<h1>4. Redis/NoSQL 缓存</h1>
+<h2>4.1. 内存模式</h2>
 <ul>
 <li>Memcached 缓存的总数据大小受限于内存的大小</li>
 <li>Redis 强大的内存存储功能</li>
 <li>Redis 功能、性能超越 Memcached</li>
 <li>Tokyo Tyrant</li>
 </ul>
-<h2>持久化模式</h2>
+<h2>4.2. 持久化模式</h2>
 <ul>
 <li>热点数据存入内存，非热点数据存储到磁盘</li>
 <li>NoSQL 缓存的过期策略最好不使用时间过期，而是数据是否被更新过</li>
 </ul>
-<h1>其他</h1>
-<h2>分类</h2>
+<h1>5. 其他</h1>
+<h2>5.1. 分类</h2>
 <ul>
 <li>一级缓存</li>
 <li>单独的服务器，多机共享</li>
 <li>二级缓存</li>
 <li>对单 WebServer 进行数据共享</li>
 </ul>
-<h2>MyBatis 缓存</h2>
+<h2>5.2. MyBatis 缓存</h2>
 <ul>
 <li>一级缓存（local cache），即本地缓存，作用域默认为 session</li>
 <li>二级缓存（second level cache），作用域默认为 Mapper(Namespace)</li>
 </ul>
-<h2>缓存侵入性</h2>
+<h2>5.3. 缓存侵入性</h2>
