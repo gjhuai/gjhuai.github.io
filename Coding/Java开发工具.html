@@ -1,0 +1,39 @@
+<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no" />
+<link rel="stylesheet" href="../theme/css/my.css" /><p>[TOC]</p>
+<h1>Intellij IDEA</h1>
+<h2>快捷键</h2>
+<ul>
+<li><a href="http://blog.csdn.net/dc_726/article/details/42784275">十大Intellij IDEA快捷键</a></li>
+<li><a href="https://blog.csdn.net/zyjustin9/article/details/84694543">Intellij IDEA的快捷键、常用技巧和相关设置</a> </li>
+</ul>
+<h1>eclipse</h1>
+<h2>快捷键</h2>
+<ul>
+<li><a href="https://blog.csdn.net/weixin_30572613/article/details/95037110">Eclipse 常用快捷键及使用技巧</a></li>
+</ul>
+<h2>eclipse 必备插件</h2>
+<ul>
+<li>eExplorer <code>http://culmat.github.io/eExplorer/updatesite/</code></li>
+<li>Quick Bookmarks plugin 和 Grep Console  <code>http://eclipse.schedenig.name</code></li>
+<li>Eclipse Web Development Tools</li>
+<li>Enhanced Class Decompiler</li>
+<li>JRebel</li>
+<li>HTML Editor</li>
+<li>UML Plugin:<ul>
+<li><strong>ObjectAid UML</strong> ： 类图很好，时序图要收费。http://www.objectaid.com/update/current</li>
+<li><strong>AmaterasUML</strong> ：图不能隐藏Attributes 和 Operations，时序图不能从代码反向生成，完全需要手动完成。我们真的需要完全从代码生成的Sequence Diagram吗？手动也不错，能按照编码者的意愿画图。 https://github.com/takezoe/amateras-modeler</li>
+</ul>
+</li>
+</ul>
+<h1>Gradle介绍</h1>
+<pre><code class="language-groovy">repositories {
+    //mavenLocal()
+    maven { url &quot;https://maven.aliyun.com/repository/public&quot; }
+    //maven { url &quot;http://192.168.31.200:8081/nexus/content/groups/public/&quot; }
+}
+
+configurations {
+    compile.exclude module: 'commons'
+    all*.exclude group: 'org.gradle.test.excludes', module: 'reports'
+}
+</code></pre>
