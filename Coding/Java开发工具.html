@@ -37,3 +37,85 @@ configurations {
     all*.exclude group: 'org.gradle.test.excludes', module: 'reports'
 }
 </code></pre>
+<h1>Maven</h1>
+<h2>常用命令</h2>
+<pre><code class="language-shell"># 安装jar到本地库：
+mvn install:install-file -Dfile=D:\pinyin4j-2.5.0.jar -DgroupId=net.pinyin4j -DartifactId=pinyin4j -Dversion=2.5.0 -Dpackaging=jar  -DgeneratePom=true -DcreateChecksum=true
+
+# 安装jar到私服
+mvn deploy:deploy-file -Dfile=D:\pinyin4j-2.5.0.jar -DgroupId=net.pinyin4j -DartifactId=pinyin4j -Dversion=2.5.0 -Dpackaging=jar -DrepositoryId=et_nexus_repo -Durl=http://10.143.132.66:8081/nexus/content/repositories/thirdparty
+
+# 创建web项目
+mvn archetype:generate -DarchetypeArtifactId=maven-archetype-webapp -DinteractiveMode=false -DgroupId=com.cdjdgm -DartifactId=webshell
+
+# 跳过测试
+-DskipTests    # 不执行测试用例，但编译测试用例类生成相应的class文件至target/test-classes下。
+-Dmaven.test.skip=true    # 不执行测试用例，也不编译测试用例类。
+</code></pre>
+<h2>常用项</h2>
+<pre><code class="language-xml">&lt;properties&gt;
+    &lt;!-- Setting the -source and -target of the Java Compiler --&gt;
+    &lt;maven.compiler.source&gt;1.8&lt;/maven.compiler.source&gt;
+    &lt;maven.compiler.target&gt;1.8&lt;/maven.compiler.target&gt;
+    &lt;!-- 文件拷贝时的编码 --&gt;  
+    &lt;project.build.sourceEncoding&gt;UTF-8&lt;/project.build.sourceEncoding&gt;  
+    &lt;project.reporting.outputEncoding&gt;UTF-8&lt;/project.reporting.outputEncoding&gt;  
+    &lt;!-- 编译时的编码 --&gt;  
+    &lt;maven.compiler.encoding&gt;UTF-8&lt;/maven.compiler.encoding&gt;
+&lt;/properties&gt;
+
+&lt;!-- 常用repository仓库 --&gt;
+&lt;repositories&gt;
+    &lt;repository&gt;
+        &lt;id&gt;aliyun-repo&lt;/id&gt;
+        &lt;name&gt;Aliyun repo&lt;/name&gt;
+        &lt;url&gt;https://maven.aliyun.com/repository/public&lt;/url&gt;
+    &lt;/repository&gt;
+&lt;/repositories&gt;
+&lt;!-- 发布部署到私服Nexus --&gt;
+&lt;pluginRepositories&gt;
+    &lt;pluginRepository&gt;
+        &lt;id&gt;aliyun-repo&lt;/id&gt;
+        &lt;url&gt;https://maven.aliyun.com/repository/public&lt;/url&gt;
+    &lt;/pluginRepository&gt;
+&lt;/pluginRepositories&gt;
+&lt;distributionManagement&gt;
+  &lt;repository&gt;
+    &lt;id&gt;releases&lt;/id&gt;
+    &lt;url&gt;http://cddyys.ddns.net:8081/nexus/content/repositories/releases/&lt;/url&gt;
+  &lt;/repository&gt;
+  &lt;snapshotRepository&gt;
+    &lt;id&gt;snapshots&lt;/id&gt;
+    &lt;url&gt;http://cddyys.ddns.net:8081/nexus/content/repositories/snapshots/&lt;/url&gt;
+  &lt;/snapshotRepository&gt;
+&lt;/distributionManagement&gt;
+
+&lt;!-- 修改 ~/.m2/settings.xml --&gt;
+&lt;servers&gt;
+  &lt;server&gt;
+    &lt;id&gt;releases&lt;/id&gt; &lt;!-- 和 pom.xml 的 distributionManagement 中保持一致 --&gt;
+    &lt;username&gt;deployment&lt;/username&gt;
+    &lt;password&gt;your_pwd&lt;/password&gt;
+  &lt;/server&gt;
+&lt;/servers&gt;
+</code></pre>
+<h1>Git常用</h1>
+<h2>记住密码</h2>
+<p>git和tortoiseGit都不能记住用户名密码了。修复方法如下：</p>
+<pre><code class="language-shell">git config credential.helper store
+git config --unset credential.helper
+git config --global credential.helper store
+</code></pre>
+<h2>checkout 子目录</h2>
+<p>以https://github.com/geekhac/to...子目录为例：</p>
+<pre><code class="language-shell">git init todomvc &amp;&amp; cd todomvc
+# 设置允许克隆子目录
+git config core.sparsecheckout true
+# 设置要克隆的仓库的子目录路径
+echo '/examples/react/*' &gt;&gt; .git/info/sparse-checkout
+git remote add origin https://github.com/geekhac/to...
+git pull origin master
+</code></pre>
+<h2>强制更新</h2>
+<p><code>git fetch --all</code>
+<code>git reset --hard origin/master</code></p>

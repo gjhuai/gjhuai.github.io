@@ -1,0 +1,359 @@
+<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no" />
+<link rel="stylesheet" href="../theme/css/my.css" /><p>[TOC]</p>
+<h1>CentOS7 安装</h1>
+<ul>
+<li>
+<p><a href="https://blog.csdn.net/weixin_43451430/article/details/115553108">Centos7 安装 Mysql5.7 最全教程</a></p>
+</li>
+<li>
+<p><a href="https://juejin.cn/post/6844903828811153421">Linux Centos 7 安装 MongoDB（简单！详细！）</a></p>
+</li>
+<li>
+<p><a href="https://blog.csdn.net/oschina_41140683/article/details/81510709">CentOS7 安装 Oracle11g—静默安装</a></p>
+</li>
+<li>
+<p><a href="https://www.cnblogs.com/lwf-blog/p/8182975.html">CentOS7 升级 Python2.x 到 3.x</a></p>
+</li>
+<li>
+<p><a href="https://blog.csdn.net/xaccpJ2EE/article/details/117769259">Centos7 上安装 docker</a></p>
+</li>
+</ul>
+<h1>Linux 的文件权限与目录配置</h1>
+<ul>
+<li><strong>使用者与群组</strong></li>
+</ul>
+<p><img alt="" src="_v_images/2019-11-18-21-04-32.png" /></p>
+<p>帐号 --&gt; /etc/passwd
+密码 --&gt; /etc/shadow
+group --&gt; /etc/group</p>
+<ul>
+<li><strong>文件属性</strong></li>
+</ul>
+<p><img alt="" src="_v_images/2019-11-18-21-04-54.png" /></p>
+<p>系统默认语系 --&gt; /etc/sysconfig/i18n</p>
+<p><code>改变文件属怅不权限</code></p>
+<ul>
+<li>chgrp ：改变所属群组 --&gt; chgrp groupname filename</li>
+<li>chown ：改变拥有者 --&gt; chown [-R] 账号名称 filename/dir; chown [-R] 账号名称:组名 filename/dir</li>
+<li>chmod ：改变权限, SUID, SGID, SBIT 等</li>
+</ul>
+<p>r:4
+w:2
+x:1</p>
+<pre><code class="language-shell">chmod 777 .bashrc
+chmod  u/g/o/a  +/-/=  rwx   filename/dir
+chmod  u=rwx,go=rx  .bashrc
+</code></pre>
+<p>将权限去掉而保留已存在的权限？如：要拿掉全部人的可执行权限
+<code>chmod a-x .bashrc</code></p>
+<p><img alt="" src="_v_images/2019-11-18-21-06-39.png" /></p>
+<ul>
+<li><strong>Linux 更改文件拥有者|chown 命令用法</strong></li>
+</ul>
+<p>http://www.isstudy.com/linux/4123.html</p>
+<p>chown [-R] 账户名称：用户组名称、文件或目录</p>
+<p>参数：
+-R ：进行递归的持续更改，即将同子目录下的所有文件、目录都更新问这个用户组。通常用在更改某一目录的情况。
+范例：</p>
+<pre><code class="language-shell"> [root@linux ~]#chown bin install.log
+[root@linux ~]#ls –l
+-rw-r--r--  1  bin  users  24343 Jun 23 08:33  install.log
+[root@linux ~]#chown  root:root  install.log
+[root@linux ~]#ls  -l
+
+-rw-r--r--  1  root  root  24343 Jun 23 08:33  install.log
+</code></pre>
+<h1>CentOS 常用命令</h1>
+<h2>Linux 统计文件夹下文件个数及目录个数</h2>
+<ol>
+<li>
+<p>统计文件夹下文件的个数
+   <code>ls -l | grep "^-" | wc -l</code></p>
+</li>
+<li>
+<p>统计文件夹下目录的个数
+   <code>ls -l | grep "^d" | wc -l</code></p>
+</li>
+<li>
+<p>统计文件夹下文件个数，包括子文件
+   <code>ls -lR | grep "^-" | wc -l</code></p>
+</li>
+<li>
+<p>统计文件夹下目录个数，包括子目录
+   <code>ls -lR | grep "^d" | wc -l</code></p>
+</li>
+</ol>
+<p>wc 命令： (Word Count)功能为统计指定文件中的字节数、字数、行数，并将统计结果显示输出。</p>
+<p>wc [-lcw]</p>
+<p>-c 统计字节数
+-l 统计行数
+-m 统计字符数，此标志不能与-c 标志一起使用
+-w 统计字数。一个字定义为由空白、跳格或换行字符分隔的字符串</p>
+<h2>使用 ps/awk 杀死进程</h2>
+<pre><code class="language-shell">#!/bin/bash
+# Grabs and kill a process from the pidlist that has the word myapp
+​
+pid=`ps aux | grep myapp | awk '{print $2}'`
+kill -9 $pid
+</code></pre>
+<h2>查看程序端口占用情况</h2>
+<p>netstat -anp | grep portno
+即：netstat –apn | grep 8080</p>
+<p>其中最后一栏是 _ PID/Program name _</p>
+<h2>查看 linux 磁盘空间容量</h2>
+<p>查看磁盘使用情况
+df -lh</p>
+<p>查看目录的磁盘占用情况
+du -sh * | sort -h</p>
+<p>crontab</p>
+<p>Ubuntu 查看 crontab 运行日志</p>
+<p>修改 rsyslog 文件，将/etc/rsyslog.d/50-default.conf 文件中的#cron.*前的#删掉；
+重启 rsyslog 服务 service rsyslog restart；
+重启 cron 服务 service cron restart</p>
+<h2>ssh 证书登录</h2>
+<ol>
+<li>在 windows 下，创建 <code>~\.ssh</code> 目录；</li>
+<li>在<code>~\.ssh</code>下，执行<code>ssh-keygen -t rsa</code>，生成私钥 <code>id_rsa</code>, 公钥 <code>id_rsa.pub</code>;</li>
+<li>将公钥 <code>id_rsa.pub</code> 拷贝到 linux 的 <code>~/.ssh</code> 目录下，改名为 <code>authorized_keys</code>；</li>
+<li>修改 ssh 配置是否开启证书登录: <code>vi /etc/ssh/sshd_config</code></li>
+</ol>
+<pre><code class="language-shell">RSAAuthentication yes     # 是否允许用户自行使用成对的密钥系统进行登入行为 version 2
+PubkeyAuthentication yes  # 是否允许用户自行使用成对的密钥系统进行登入行为
+AuthorizedKeysFile        # 公钥数据路径 用户目录下  .ssh/authorized_keys
+</code></pre>
+<p>修改完成后， <code>sudo systemctl restart sshd</code> 重启 ssh 服务； 5. 登录服务器: <code>ssh -i ~\.ssh\id_rsa gjh@10.19.12.12</code></p>
+<h2>linux 下 ssh 客户端以及 sftp 文件传送的一般用法</h2>
+<p>linux 下 ssh 客户端以及 sftp 文件传送的一般用法</p>
+<p>以前在 windows 上，我要用 ssh 连接服务器，我一般都用 putty。
+这段时间一直在 linux 上工作，由于 linux 上一般都自带 ssh 客户端，也就是 ssh 命令了，此外还有一个命令 sftp，用来安全的传送文件，今天为了管理 linux 服务器，用到了 linux 下的这两个命令行工具，现就其最常用的用法描述如下：
+假定服务器 ip 为 61.145.34.33，ssh 服务的端口号为 9186，服务器上有个用户为 sshuser；
+用 ssh 登录服务器的命令为： &gt;ssh -l sshuser 61.145.34.33 -p 9186
+回车后，如果是第一次登录，会提示你一条认证信息，你键入 yes 即可，接着输入服务器 sshuser 的密码登录即可；</p>
+<pre><code>用sftp登录服务器的命令为：
+&gt;sftp -oPort=9186 sshuser@61.145.34.33
+回车后，输入服务器sshuser的密码登录，然后会显示一个sftp&gt;的环境，这个时候，键入help你会看到所有命令的帮助，跟ftp命令行工具非常类似，比如get,put等等。
+
+至于这两个命令行的其他用法，可参看其联机手册...
+</code></pre>
+<h2>修改 home 下的中文目录为英文目录</h2>
+<p>在终端下输入命令：
+export LANG=en_US
+xdg-user-dirs-gtk-update
+这个时候会弹出一个配置界面，提示是否将中文目录切换为英文目录。选中不再提示，确定。系统会删除没有内容的中文目录，而有内容的目录会保持。并创建 8 个相应的英文目录如下：“Desktop”、“Download”、“Templates”、“Public”、“Documents”、“Music”、“Pictures”、“Videos”。此时，您在“位置”里看到的常用中文目录已经变成英文目录。只需要将原中文目录的内容拷贝到相应英文目录，并删除中文目录即可。
+接下来再执行
+export LANG=zh_CN.UTF-8
+以显示中文。</p>
+<p>OK，行了，三个命令就行。可就为一次改变要记三个命令，也麻烦。能不能不记啦。当然可以，那您注销，然后在登录界面选择语言种类为“English(united states)”，进入系统后你就发现整个系统都变成 English 了，同时还会弹出一个对话框提示是否切换用户目录，选择“Update names”，确认并再注销，在登录界面选择“汉语”，进入系统后事个系统又变成了 Chinese 了，同样会弹出同一个对话框，选择"Keep old names"。OK，大功告成，一个命令都不需要记，就可完成您想要的结果。</p>
+<h2>分区方案</h2>
+<p>/boot 200M Linux 的内核及引导系统程序所需要的文件，比如 vmlinuz initrd.img 文件都位于这个目录中。在一般情况下，GRUB 或 LILO 系统引导管理器也位于这个目录；启动撞在文件存放位置，如 kernels，initrd，grub。</p>
+<p>/ 100G 用于存储系统文件
+/home 200G 用户工作目录；个人配置文件，如个人环境变量等；所有账号分配一个工作目录。
+swap 是内存的两倍</p>
+<h2>find</h2>
+<pre><code class="language-shell">find . -name .gradle -exec rm -rf {} \;
+find . -type f -exec ls -l {} \;
+</code></pre>
+<h2>linux 解压缩命令</h2>
+<ul>
+<li>
+<p>tar
+    -c: 建立压缩档案
+    -x：解压
+    -t：查看内容
+    -r：向压缩归档文件末尾追加文件
+    -u：更新原压缩包中的文件</p>
+</li>
+<li>
+<p>可选参数：
+    -z：有 gzip 属性的
+    -j：有 bz2 属性的
+    -Z：有 compress 属性的
+    -v：显示所有过程
+    -O：将文件解开到标准输出</p>
+</li>
+</ul>
+<p>-f: 必须的参数，放在最后，后面接文件名。</p>
+<ul>
+<li>
+<p>压缩</p>
+<ul>
+<li>tar –czf jpg.tar.gz *.jpg //将目录里所有 jpg 文件打包成 jpg.tar 后，并且将其用 gzip 压缩，生成一个 gzip 压缩过的包，命名为 jpg.tar.gz</li>
+<li>zip jpg.zip *.jpg //zip 格式的压缩，需要先下载 zip for linux</li>
+</ul>
+</li>
+<li>
+<p>解压</p>
+<ul>
+<li>1、*.tar 用 tar –xvf 解压</li>
+<li>2、*.gz 用 gzip -d 或者 gunzip 解压</li>
+<li>3、<em>.tar.gz 和</em>.tgz 用 tar –xzf 解压</li>
+<li>4、*.bz2 用 bzip2 -d 或者用 bunzip2 解压</li>
+<li>5、*.tar.bz2 用 tar –xjf 解压</li>
+<li>6、*.Z 用 uncompress 解压</li>
+<li>7、*.tar.Z 用 tar –xZf 解压</li>
+<li>8、*.rar 用 unrar e 解压</li>
+<li>9、*.zip 用 unzip 解压</li>
+</ul>
+</li>
+</ul>
+<h2>nohup 命令</h2>
+<p>该命令的一般形式为：<code>nohup command &amp;</code></p>
+<p>如果使用 nohup 命令提交作业，那么在缺省情况下该作业的所有输出都被重定向到一个名为 nohup.out 的文件中，除非另外指定了输出文件：
+<code>nohup command &gt; myout.file 2&gt;&amp;1 &amp;</code>
+在上面的例子中，输出被重定向到 myout.file 文件中。
+使用 jobs 查看任务。
+使用 fg %n 关闭。</p>
+<h2>添加 sudoer</h2>
+<p>1）进入超级用户模式。也就是输入"su -",系统会让你输入超级用户密码，输入密码后就进入了超级用户模式。（当然，你也可以直接用 root 用）
+2）添加文件的写权限。也就是输入命令"chmod u+w /etc/sudoers"。
+3）编辑/etc/sudoers 文件。也就是输入命令"vim /etc/sudoers",输入"i"进入编辑模式，找到这一 行："root ALL=(ALL) ALL"在起下面添加"xxx ALL=(ALL) ALL"(这里的 xxx 是你的用户名)，然后保存（就是先按一 下 Esc 键，然后输入":wq"）退出。
+4）撤销文件的写权限。也就是输入命令"chmod u-w /etc/sudoers"。</p>
+<h2>CentOS7 查看硬盘情况</h2>
+<p>lsblk 查看分区和磁盘
+df -h 查看空间使用情况
+fdisk -l 分区工具查看分区信息
+cfdisk /dev/sda 查看分区
+blkid 查看硬盘 label（别名）</p>
+<hr />
+<h2>CentOS7 自启动设置</h2>
+<p>参考：<a href="http://blog.csdn.net/looksun/article/details/50668492">CentOS 7.x 设置自定义开机启动,添加自定义系统服务</a></p>
+<p>CentOS7 自启服务分为两种：系统（system）和用户（user），目录分别为：/usr/lib/systemd/system 和 /usr/lib/systemd/user 。服务文件以.service 结尾，常用命令如下：</p>
+<pre><code class="language-shell"># 启动nginx服务
+systemctl start nginx.service
+# 设置开机自启动（service文件在/etc/systemd/system/下创建，enbale后，在/etc/systemd/system/建立链接文件）
+systemctl enable nginx.service
+
+# [root@zhifei]~# systemctl enable jira
+# Created symlink from /etc/systemd/system/multi-user.target.wants/jira.service to /etc/systemd/system/jira.service.
+
+# 停止开机自启动
+systemctl disable nginx.service
+# 查看服务当前状态
+systemctl status nginx.service
+# 重新启动服务
+systemctl restart nginx.service
+# 查看所有已启动的服务
+systemctl list-units --type=service
+</code></pre>
+<hr />
+<h2>CentOS7 防火墙及端口设置</h2>
+<p>防火墙服务默认使用的是 firewalld ，而不是 iptables 。启动/停止 iptables 或 firewalld 使用：
+systemctl enable/start/stop iptables/firewalld
+参考：<a href="http://blog.csdn.net/qq_34409701/article/details/52777197">禁用 firewalld&amp;开启 iptables&amp;systemctl 使用简介</a>
+<a href="http://www.cnblogs.com/moxiaoan/p/5683743.html">CentOS7 使用 firewalld 打开关闭防火墙与端口</a></p>
+<p>使用 firewalld 时，开放端口设置如下：</p>
+<pre><code class="language-shell"># 启动：
+systemctl start firewalld
+# 查看状态：
+systemctl status firewalld
+# 停止：
+systemctl stop firewalld
+# 禁用：
+systemctl disable firewalld
+
+firewall-cmd --zone=public --permanent --add-port=80/tcp
+# 命令含义：
+#    --zone #作用域
+#    --permanent #永久生效，没有此参数重启后失效
+#    --add-port=80/tcp  #添加端口，格式为：端口/通讯协议
+
+# 查看所有打开的端口：
+firewall-cmd --zone=public --list-ports
+# 查看
+firewall-cmd --zone= public --query-port=80/tcp
+# 删除
+firewall-cmd --zone=public --remove-port=80/tcp --permanent
+
+# 重启防火墙
+firewall-cmd --reload
+</code></pre>
+<hr />
+<h2>Centos7 网络配置</h2>
+<p>centos7 取消了 ifconfig 命令，使用 ip addr 命令查看 IP 地址</p>
+<p>修改文件： /etc/sysconfig/network-scripts/ifcfg-enp2s0</p>
+<pre><code class="language-shell">TYPE=&quot;Ethernet&quot;
+BOOTPROTO=&quot;static&quot;
+DEFROUTE=&quot;yes&quot;
+IPV4_FAILURE_FATAL=&quot;no&quot;
+IPV6INIT=&quot;yes&quot;
+IPV6_AUTOCONF=&quot;yes&quot;
+IPV6_DEFROUTE=&quot;yes&quot;
+IPV6_FAILURE_FATAL=&quot;no&quot;
+IPV6_ADDR_GEN_MODE=&quot;stable-privacy&quot;
+NAME=&quot;enp2s0&quot;
+UUID=&quot;1b2b9785-959a-4c35-a2a8-04ab32ef2855&quot;
+DEVICE=&quot;enp2s0&quot;
+ONBOOT=&quot;yes&quot;
+PEERDNS=&quot;yes&quot;
+PEERROUTES=&quot;yes&quot;
+IPV6_PEERDNS=&quot;yes&quot;
+IPV6_PEERROUTES=&quot;yes&quot;
+IPV6_PRIVACY=&quot;no&quot;
+IPADDR=192.168.31.200
+GATEWAY=192.168.31.1
+NETMASK=255.255.255.0
+NM_CONTROLLED=no
+DNS1=192.168.31.1
+ZONE=public
+</code></pre>
+<hr />
+<h2>CentOS 的 SSH 安装</h2>
+<p>https://www.cnblogs.com/kaid/p/7985568.html</p>
+<ol>
+<li>检查是否安装 SSH 服务端软件包：
+   rpm -qa|grep openssh
+   若显示结果中包括 openssh-server-*. 则已安装，直接启动</li>
+<li>安装缺失的软件
+   sudo yum install openssh*</li>
+<li>注册、启动 sshd 服务
+   systemctl enable sshd<br />
+    systemctl start sshd 或者
+   service sshd start</li>
+<li>开启防火墙的 22 端口：
+   具体防火墙使用可以参见：http://www.cnblogs.com/moxiaoan/p/5683743.html
+   firewall-cmd --zone=public --add-port=22/tcp --permanent<br />
+    service firewalld restart</li>
+<li>测试：
+   本机测试： ssh username@localhost 测试，（但必须要先安装 linux 的 ssh 客户端软件包）</li>
+</ol>
+<hr />
+<h2>CentOS 修改系统环境变量</h2>
+<ul>
+<li><code>/etc/profile</code> 文件，对所有用户生效；</li>
+<li><code>~/.bash_profile</code> 文件，对单一用户生效；</li>
+</ul>
+<pre><code class="language-shell">PATH=/usr/local/webserver/php/bin:$PATH
+export PATH
+</code></pre>
+<p>使生效：<code>source /etc/profile</code></p>
+<h2>yum &amp; rpm</h2>
+<ul>
+<li><a href="https://blog.csdn.net/yqj234/article/details/82990271">yum 的详细使用方法</a></li>
+<li><a href="https://www.cnblogs.com/harrymore/p/8665154.html">RPM 简介与基本使用</a></li>
+</ul>
+<p><a href="https://www.linuxidc.com/Linux/2018-01/150211.htm">CentOS 6 &amp; 7 忘记 root 密码的修改方法</a></p>
+<hr />
+<h2>升级内核</h2>
+<ul>
+<li>查看内核版本</li>
+</ul>
+<p>uname -r</p>
+<ul>
+<li>通过 yum 升级内核</li>
+</ul>
+<p>yum install -y kernel</p>
+<ul>
+<li>删除多余的 kernel</li>
+</ul>
+<pre><code class="language-shell"># 查看系统中全部的内核RPM包:
+rpm -qa | grep kernel
+erlang-kernel-18.3.3-1.el7.x86_64
+kernel-devel-3.10.0-123.el7.x86_64
+abrt-addon-kerneloops-2.1.11-36.el7.centos.x86_64
+kernel-3.10.0-327.28.3.el7.x86_64
+kernel-3.10.0-123.el7.x86_64
+# 删除旧内核的RPM包
+yum remove xxxx
+# 重启系统，一定不要忘记，否则不生效。
+reboot
+</code></pre>
