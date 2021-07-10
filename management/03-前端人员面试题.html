@@ -1,0 +1,215 @@
+<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no" />
+<link rel="stylesheet" href="../theme/css/my.css" /><h1>前言</h1>
+<p><a href="https://markyun.github.io/2015/Front-end-Developer-Questions/" title="Questions">只看问题点这里 </a>
+<a href="https://github.com/markyun/My-blog/tree/master/Front-end-Developer-Questions/Questions-and-Answers" title="Questions-and-Answers">看全部问题和答案点这里</a></p>
+<p><strong>前端开发所需掌握知识点概要：</strong></p>
+<pre><code>HTML&amp;CSS：
+    对Web标准的理解（结构、表现、行为）、浏览器内核、渲染原理、依赖管理、兼容性、CSS语法、层次关系，常用属性、布局、选择器、权重、盒模型、
+    Hack、CSS预处理器、CSS3、Flexbox、CSS Modules、Document flow、BFC、HTML5（离线 &amp; 存储、Histoy,多媒体、WebGL\SVG\Canvas）；
+JavaScript：
+    数据类型、运算、对象、Function、继承、闭包、作用域、事件、Prototype、RegExp、JSON、Ajax、DOM、BOM、
+    内存泄漏、跨域、异步请求、模板引擎、模块化、Flux、同构、算法、ECMAScript6、Nodejs、HTTP、
+
+其他：
+    主流MVVM框架(React\Vue\Angular)、Hybrid App\React Native\Weex、TypeScript、RESTFul、WEB安全、前端工程化、依赖管理、性能优化、
+    重构、团队协作、可维护、易用性、SEO、UED、前端技术选型、快速学习能力等；
+</code></pre>
+<h1>HTML</h1>
+<h2>HTML 行内元素有哪些？块级元素有哪些？ 空(void)元素有那些？</h2>
+<pre><code>首先：CSS 规范规定，每个元素都有 display 属性，确定该元素的类型，每个元素都有默认的 display 值，如 div 的 display 默认值为“block”，则为“块级”元素；span 默认 display 属性值为“inline”，是“行内”元素。
+
+（1）行内元素有：a b span img input select strong（强调的语气）
+（2）块级元素有：div ul ol li dl dt dd h1 h2 h3 h4…p
+（3）常见的空元素：&lt;br&gt; &lt;hr&gt; &lt;img&gt; &lt;input&gt; &lt;link&gt; &lt;meta&gt;
+    鲜为人知的是：&lt;area&gt; &lt;base&gt; &lt;col&gt; &lt;command&gt; &lt;embed&gt; &lt;keygen&gt; &lt;param&gt; &lt;source&gt; &lt;track&gt; &lt;wbr&gt;
+</code></pre>
+<h2>html5 有哪些新特性、移除了那些元素？如何处理 HTML5 新标签的浏览器兼容问题？如何区分 HTML 和 HTML5？</h2>
+<pre><code>(1) HTML5 现在已经不是 SGML 的子集，主要是关于图像，位置，存储，多任务等功能的增加。
+        绘画 canvas;
+        用于媒介回放的 video 和 audio 元素;
+        本地离线存储 localStorage 长期存储数据，浏览器关闭后数据不丢失;
+        sessionStorage 的数据在浏览器关闭后自动删除;
+        语意化更好的内容元素，比如 article、footer、header、nav、section;
+        表单控件，calendar、date、time、email、url、search;
+        新的技术webworker, websocket, Geolocation;
+
+    移除的元素：
+        纯表现的元素：basefont，big，center，font, s，strike，tt，u;
+        对可用性产生负面影响的元素：frame，frameset，noframes；
+
+(2) 支持HTML5新标签：
+        IE8/IE7/IE6支持通过document.createElement方法产生的标签，
+        可以利用这一特性让这些浏览器支持HTML5新标签，
+        浏览器支持新标签后，还需要添加标签默认的样式。
+
+        当然也可以直接使用成熟的框架、比如html5shim;
+        &lt;!--[if lt IE 9]&gt;
+        &lt;script&gt; src=&quot;http://html5shim.googlecode.com/svn/trunk/html5.js&quot;&lt;/script&gt;
+        &lt;![endif]--&gt;
+
+(3) 如何区分HTML5： DOCTYPE声明\新增的结构元素\功能元素
+</code></pre>
+<h2>HTML5 的离线储存工作原理？</h2>
+<pre><code>在用户没有与因特网连接时，可以正常访问站点或应用，在用户与因特网连接时，更新用户机器上的缓存文件。
+原理：HTML5的离线存储是基于一个新建的.appcache文件的缓存机制(不是存储技术)，通过这个文件上的解析清单离线存储资源，这些资源就会像cookie一样被存储了下来。之后当网络在处于离线状态下时，浏览器会通过被离线存储的数据进行页面展示。
+
+在线的情况下，浏览器发现html头部有manifest属性，它会请求manifest文件，如果是第一次访问app，那么浏览器就会根据manifest文件的内容下载相应的资源并且进行离线存储。如果已经访问过app并且资源已经离线存储了，那么浏览器就会使用离线的资源加载页面，然后浏览器会对比新的manifest文件与旧的manifest文件，如果文件没有发生改变，就不做任何操作，如果文件改变了，那么就会重新下载文件中的资源并进行离线存储。
+离线的情况下，浏览器就直接使用离线存储的资源。
+</code></pre>
+<p>详细的使用请参考：</p>
+<p><a href="http://yanhaijing.com/html/2014/12/28/html5-manifest/">HTML5 离线缓存-manifest 简介</a>
+<a href="http://segmentfault.com/a/1190000000732617">有趣的 HTML5：离线存储</a></p>
+<h2>请描述一下 cookies，sessionStorage 和 localStorage 的区别？</h2>
+<pre><code>cookie是网站为了标示用户身份而储存在用户本地终端（Client Side）上的数据（通常经过加密）。
+cookie数据始终在同源的http请求中携带（即使不需要），记会在浏览器和服务器间来回传递。
+sessionStorage和localStorage不会自动把数据发给服务器，仅在本地保存。
+
+存储大小：
+    cookie数据大小不能超过4k。
+    sessionStorage和localStorage 虽然也有存储大小的限制，但比cookie大得多，可以达到5M或更大。
+
+有期时间：
+    localStorage    存储持久数据，浏览器关闭后数据不丢失除非主动删除数据；
+    sessionStorage  数据在当前浏览器窗口关闭后自动删除。
+    cookie          设置的cookie过期时间之前一直有效，即使窗口或浏览器关闭
+</code></pre>
+<h2>如何在页面上实现一个圆形的可点击区域？</h2>
+<pre><code>1、map+area或者svg
+2、border-radius
+3、纯js实现 需要求一个点在不在圆上简单算法、获取鼠标坐标等等
+</code></pre>
+<h1>CSS</h1>
+<h2>CSS 选择符有哪些？哪些属性可以继承？</h2>
+<pre><code>1.id选择器（ # myid）
+2.类选择器（.myclassname）
+3.标签选择器（div, h1, p）
+4.相邻选择器（h1 + p）
+5.子选择器（ul &gt; li）
+6.后代选择器（li a）
+7.通配符选择器（ * ）
+8.属性选择器（a[rel = &quot;external&quot;]）
+9.伪类选择器（a:hover, li:nth-child）
+
+*   可继承的样式： font-size font-family color, UL LI DL DD DT;
+*   不可继承的样式：border padding margin width height ;
+</code></pre>
+<h2>margin 和 padding 有什么区别，分别适合什么场景使用？</h2>
+<pre><code>margin是用来隔开元素与元素的间距；padding是用来隔开元素与内容的间隔。
+margin用于布局分开元素使元素与元素互不相干；
+padding用于元素与内容之间的间隔，让内容（文字）与（包裹）元素之间有一段
+</code></pre>
+<h2>CSS 优先级算法如何计算？</h2>
+<pre><code>*   优先级就近原则，同权重情况下样式定义最近者为准;
+*   载入样式以最后载入的定位为准;
+
+优先级为:
+    同权重: 内联样式表（标签内部）&gt; 嵌入样式表（当前文件中）&gt; 外部样式表（外部文件中）。
+    !important &gt;  id &gt; class &gt; tag
+    important 比 内联优先级高
+</code></pre>
+<h2>如何居中 div？分别写出水平居中、让绝对定位的 div 居中、水平垂直居中。</h2>
+<pre><code class="language-css"># 水平居中 div {
+    width: 200px;
+    margin: 0 auto;
+}
+
+# 让绝对定位的div居中 div {
+    position: absolute;
+    width: 300px;
+    height: 300px;
+    margin: auto;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background-color: pink; /* 方便看效果 */
+}
+
+# 水平垂直居中 div {
+    position: relative; /* 相对定位或绝对定位均可 */
+    width: 500px;
+    height: 300px;
+    top: 50%;
+    left: 50%;
+    margin: -150px 0 0 -250px; /* 外边距为自身宽高的一半 */
+    background-color: pink; /* 方便看效果 */
+}
+</code></pre>
+<h1>JavaScript</h1>
+<ul>
+<li>JavaScript 有几种类型？请画出它们的堆栈图，并说明堆和栈的区别。</li>
+</ul>
+<pre><code>栈：原始数据类型（Undefined，Null，Boolean，Number、String）
+堆：引用数据类型（对象、数组和函数）
+
+两种类型的区别是：存储位置不同；
+原始数据类型直接存储在栈(stack)中的简单数据段，占据空间小、大小固定，属于被频繁使用数据，所以放入栈中存储；
+引用数据类型存储在堆(heap)中的对象,占据空间大、大小不固定。如果存储在栈中，将会影响程序运行的性能；引用数据类型在栈中存储了指针，该指针指向堆中该实体的起始地址。当解释器寻找引用值时，会首先检索其在栈中的地址，取得地址后从堆中获得实体
+</code></pre>
+<ul>
+<li>如何解决跨域问题?请尽可能多列出解决方案。</li>
+</ul>
+<pre><code>jsonp、 iframe、window.name、window.postMessage、服务器上设置代理页面
+</code></pre>
+<ul>
+<li>请编写两个 jQuery 的扩展将数组转化为 json 字符串，然后再转化回来？</li>
+</ul>
+<pre><code class="language-js">    $.fn.stringifyArray = function(array) {
+        return JSON.stringify(array)
+    }
+
+    $.fn.parseArray = function(array) {
+        return JSON.parse(array)
+    }
+
+    然后调用：
+    $(&quot;&quot;).stringifyArray(array)
+</code></pre>
+<ul>
+<li>介绍一下你对浏览器内核的理解？</li>
+</ul>
+<pre><code>    主要分成两部分：渲染引擎(layout engineer或Rendering Engine)和JS引擎。
+    渲染引擎：负责取得网页的内容（HTML、XML、图像等等）、整理讯息（例如加入CSS等），以及计算网页的显示方式，然后会输出至显示器或打印机。浏览器的内核的不同对于网页的语法解释会有不同，所以渲染的效果也不相同。所有网页浏览器、电子邮件客户端以及其它需要编辑、显示网络内容的应用程序都需要内核。
+
+    JS引擎则：解析和执行javascript来实现网页的动态效果。
+
+    最开始渲染引擎和JS引擎并没有区分的很明确，后来JS引擎越来越独立，内核就倾向于只指渲染引擎。
+</code></pre>
+<h1>VUE</h1>
+<ul>
+<li>v-if 和 v-show 有什么区别？</li>
+</ul>
+<pre><code>v-show 仅仅控制元素的显示方式，将 display 属性在 block 和 none 来回切换；而v-if会控制这个 DOM 节点的存在与否。当我们需要经常切换某个元素的显示/隐藏时，使用v-show会更加节省性能上的开销；当只需要一次显示或隐藏时，使用v-if更加合理。
+</code></pre>
+<ul>
+<li>Vue 中如何监控某个属性值的变化？比如监控 data 中，obj.a 的变化。</li>
+</ul>
+<pre><code class="language-js">watch: {
+      obj: {
+      handler (newValue, oldValue) {
+        console.log('obj changed')
+      },
+      deep: true
+    }
+  }
+// deep属性表示深层遍历，但是这么写会监控obj的所有属性变化，并不是我们想要的效果，所以做点修改：
+
+watch: {
+   'obj.a': {
+      handler (newName, oldName) {
+        console.log('obj.a changed')
+      }
+   }
+  }
+
+// 还有一种方法，可以通过computed 来实现，只需要：
+
+computed: {
+    a1 () {
+      return this.obj.a
+    }
+}
+</code></pre>
+<ul>
+<li>请列出一些你经常访问的学习网站</li>
+</ul>
