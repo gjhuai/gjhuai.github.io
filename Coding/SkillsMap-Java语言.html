@@ -2,16 +2,7 @@
 <link rel="stylesheet" href="../theme/css/my.css" /><p>[TOC]</p>
 <h1>Java 语言</h1>
 <ul>
-<li>【入门】<a href="https://blog.csdn.net/wenqiangluyao/article/details/100161769">int 与 byte、byte[]相互转换</a></li>
-<li>【入门】<a href="https://blog.csdn.net/changhuzichangchang/article/details/106332199">JAVA：byte 和 int 类型的转换-原码反码补码</a></li>
-<li>【详解】<a href="https://www.cnblogs.com/9dragon/p/10901448.html">java 序列化，看这篇就够了</a></li>
-<li>【详解】<a href="https://www.cnblogs.com/ysocean/p/8482979.html">Java 的深拷贝和浅拷贝</a></li>
-<li>
-<p>【详解】<a href="https://blog.csdn.net/Andya_net/article/details/105382344">Java—Map 集合详解（HashMap/Hashtable/LinkedHashMap/Properties/TreeMap/WeakHashMap/IdentityHashMap/EnumMap）</a></p>
-</li>
-<li>
-<p>Java 新功能：https://github.com/gjhuai/java8-tutorial</p>
-</li>
+<li>Java 新功能：https://github.com/gjhuai/java8-tutorial</li>
 <li>Java 设计模式：https://github.com/gjhuai/java-design-patterns</li>
 <li>
 <p>【练习】<a href="https://github.com/iluwatar/java-design-patterns">70k 星 iluwatar / java-design-patterns</a></p>
@@ -23,7 +14,13 @@
 <p>https://github.com/eugenp/tutorials.git</p>
 </li>
 <li>
-<p>阅读《深入理解 Java 虚拟机<em>JVM 高级特性与最佳实践</em>第 3 版》</p>
+<p>【入门】<a href="https://blog.csdn.net/wenqiangluyao/article/details/100161769">int 与 byte、byte[]相互转换</a></p>
+</li>
+<li>【入门】<a href="https://blog.csdn.net/changhuzichangchang/article/details/106332199">JAVA：byte 和 int 类型的转换-原码反码补码</a></li>
+<li>【详解】<a href="https://www.cnblogs.com/9dragon/p/10901448.html">java 序列化，看这篇就够了</a></li>
+<li>【详解】<a href="https://www.cnblogs.com/ysocean/p/8482979.html">Java 的深拷贝和浅拷贝</a></li>
+<li>
+<p>【详解】<a href="https://blog.csdn.net/Andya_net/article/details/105382344">Java—Map 集合详解（HashMap/Hashtable/LinkedHashMap/Properties/TreeMap/WeakHashMap/IdentityHashMap/EnumMap）</a></p>
 </li>
 <li>
 <p><a href="https://github.com/virtualdogbert/Groovy_Links">Groovy_Links</a></p>
@@ -65,19 +62,58 @@
 <p>以《分布式 JAVA 应用基础与实践》的目录为纲，查阅《深入理解 Java 虚拟机》的细节， 高并发查阅 《 JAVA 并发编程实战 》。
 简称《分 J》、《深 J》、《并 J》</p>
 <ul>
-<li>【入门】<a href="https://mp.weixin.qq.com/s/t7G1tSrNJ603nIpgzMY2uw">这几款 JVM 故障诊断处理工具 你还不会</a></li>
-<li>【详解】<a href="https://blog.csdn.net/flysqrlboy/article/details/79314521">快速定位生产故障问题-JVM 进程 CPU 占用率高于 100</a></li>
-<li>【原理】<a href="https://blog.csdn.net/gjhuai/article/details/118565990">Java 垃圾回收（思维导图）</a></li>
-<li>【原理】<a href="https://cloud.tencent.com/developer/article/1069187">深入理解 JVM 垃圾收集机制(JDK1.8)</a></li>
-<li>【原理】<a href="https://blog.csdn.net/CrankZ/article/details/86009279">Java——七种垃圾收集器+JDK11 最新 ZGC</a></li>
-<li>【原理】<a href="https://blog.csdn.net/javachengzi/article/details/115303495">打工人，从 JMM 透析 volatile 与 synchronized 原理</a></li>
+<li>阅读《深入理解 Java 虚拟机_JVM 高级特性与最佳实践_第 3 版》</li>
+</ul>
+<h2>（一）自动内存管理</h2>
+<h3>Java内存区域与内存溢出异常</h3>
+<ul>
 <li>【原理】<a href="https://zhuanlan.zhihu.com/p/44296601">JVM 之内存模型</a></li>
+<li>
+<p>【详解】<a href="https://www.jianshu.com/p/0d1c003d2ff5">浅谈Java String.intern()</a></p>
+</li>
+<li>
+<p>【练习】<a href="https://github.com/rangareddy/ranga-java-oom">8种典型Java OutOfMemory Example</a></p>
+</li>
+<li>
+<p>【专栏】<a href="https://blog.csdn.net/renfufei/category_9268307.html">GC性能优化</a></p>
+<ul>
+<li>中英文对照版：https://github.com/cncounter/outofmemoryerror</li>
+<li>英文原版：https://plumbr.io/outofmemoryerror</li>
+</ul>
+</li>
+<li>
+<p>当一个 Java 程序响应很慢时如何查找问题</p>
+</li>
+<li>当一个 Java 程序频繁 FullGC 时如何解决问题，如何查看垃圾回收日志</li>
+<li>当一个 Java 应用发生 OutOfMemory 时该如何解决，年轻代、年老代、永久代解决办法不同，导致原因也不同</li>
+<li>编程验证 软引用 ，弱引用， 虚引用</li>
+</ul>
+<h3>垃圾收集器与内存分配策略</h3>
+<ul>
 <li>【原理】<a href="https://zhuanlan.zhihu.com/p/44340596">JVM 之类加载机制</a></li>
 <li>【原理】<a href="https://zhuanlan.zhihu.com/p/44432381">JVM 之代码优化</a></li>
 <li>【原理】<a href="https://zhuanlan.zhihu.com/p/44517264">JVM 之线程并发</a></li>
-<li>【原理】<a href="https://zhuanlan.zhihu.com/p/44401058">JVM 与操作系统</a></li>
-<li>【原理】<a href="https://blog.csdn.net/wsh596823919/article/details/82698357">volatile 非线程安全解析</a></li>
-<li>【原理】<a href="https://mp.weixin.qq.com/s/GCJ5vUsnUSb5VTBoz0zSFw">骚操作：不重启 JVM，如何替换掉已经加载的类？</a></li>
+<li>
+<p>【原理】<a href="https://zhuanlan.zhihu.com/p/44401058">JVM 与操作系统</a></p>
+</li>
+<li>
+<p>【原理】<a href="https://blog.csdn.net/wsh596823919/article/details/82698357">volatile 非线程安全解析</a></p>
+</li>
+<li>
+<p>【原理】<a href="https://mp.weixin.qq.com/s/GCJ5vUsnUSb5VTBoz0zSFw">骚操作：不重启 JVM，如何替换掉已经加载的类？</a></p>
+</li>
+<li>
+<p>【入门】<a href="https://mp.weixin.qq.com/s/t7G1tSrNJ603nIpgzMY2uw">这几款 JVM 故障诊断处理工具 你还不会</a></p>
+</li>
+<li>
+<p>【详解】<a href="https://blog.csdn.net/flysqrlboy/article/details/79314521">快速定位生产故障问题-JVM 进程 CPU 占用率高于 100</a></p>
+</li>
+<li>
+<p>【原理】<a href="https://blog.csdn.net/gjhuai/article/details/118565990">Java 垃圾回收（思维导图）</a></p>
+</li>
+<li>【原理】<a href="https://cloud.tencent.com/developer/article/1069187">深入理解 JVM 垃圾收集机制(JDK1.8)</a></li>
+<li>【原理】<a href="https://blog.csdn.net/CrankZ/article/details/86009279">Java——七种垃圾收集器+JDK11 最新 ZGC</a></li>
+<li>【原理】<a href="https://blog.csdn.net/javachengzi/article/details/115303495">打工人，从 JMM 透析 volatile 与 synchronized 原理</a></li>
 </ul>
 <h2>Java 执行机制</h2>
 <p>主要阅读 《分 J》3.1 节、《深 J》的第三部分</p>
@@ -97,43 +133,6 @@
 <p>FAQ</p>
 <ul>
 <li>写一个程序要求实现 javap 的功能（手工完成，不借助 ASM 等工具）</li>
-</ul>
-</li>
-</ul>
-<h2>JVM 内存管理</h2>
-<p>主要阅读 《分 J》3.2 节、《深 J》的第二部分</p>
-<ul>
-<li>
-<p>Java 内存模型</p>
-<ul>
-<li><a href="https://www.infoq.cn/article/java_memory_model">深入理解 Java 内存模型(书)</a></li>
-<li><a href="https://www.infoq.cn/article/java-memory-model-1">深入理解 Java 内存模型（一）——基础</a></li>
-<li><a href="https://www.infoq.cn/article/java-memory-model-2">深入理解 Java 内存模型（二）——重排序</a></li>
-<li><a href="https://www.infoq.cn/article/java-memory-model-3">深入理解 Java 内存模型（三）——顺序一致性</a></li>
-<li><a href="https://www.infoq.cn/article/java-memory-model-4">深入理解 Java 内存模型（四）——volatile</a></li>
-<li><a href="https://www.infoq.cn/article/java-memory-model-5">深入理解 Java 内存模型（五）——锁</a></li>
-<li><a href="https://www.infoq.cn/article/java-memory-model-6">深入理解 Java 内存模型（六）——final</a></li>
-<li><a href="https://www.infoq.cn/article/java-memory-model-7">深入理解 Java 内存模型（七）——总结</a></li>
-</ul>
-</li>
-<li>
-<p>FAQ</p>
-<ul>
-<li><a href="http://ifeve.com/jmm-faq/">Java 内存模型 FAQ</a></li>
-<li>自己编写各种 outofmemory，stackoverflow 程序<ul>
-<li>HeapOutOfMemory</li>
-<li>Young OutOfMemory</li>
-<li>MethodArea OutOfMemory</li>
-<li>ConstantPool OutOfMemory</li>
-<li>DirectMemory OutOfMemory</li>
-<li>Stack OutOfMemory</li>
-<li>Stack OverFlow</li>
-</ul>
-</li>
-<li>当一个 Java 程序响应很慢时如何查找问题</li>
-<li>当一个 Java 程序频繁 FullGC 时如何解决问题，如何查看垃圾回收日志</li>
-<li>当一个 Java 应用发生 OutOfMemory 时该如何解决，年轻代、年老代、永久代解决办法不同，导致原因也不同</li>
-<li>编程验证 软引用 ，弱引用， 虚引用</li>
 </ul>
 </li>
 </ul>
