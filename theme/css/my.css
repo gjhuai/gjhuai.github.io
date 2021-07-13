@@ -69,15 +69,17 @@ h2 {
 ul li {
   list-style: none !important;
   margin-bottom: 20;
-  border-bottom: 1px solid #666;
+  
 }
 a:hover {
   text-decoration: none;
   color: rgb(199, 69, 69);
+  border-bottom: 1px solid #666;
 }
 a {
   text-decoration: none;
-  color: #666;
+  color: #990066;
+  font-weight: 600
 }
 
 /* .container的最大宽度为1280px */
