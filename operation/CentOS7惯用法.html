@@ -1,22 +1,17 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no" />
 <link rel="stylesheet" href="../theme/css/my.css" /><p>[TOC]</p>
+<h1>概述</h1>
+<ul>
+<li>【教程】<a href="http://cn.linux.vbird.org/linux_basic/linux_basic.php">鸟哥的 Linux 私房菜</a></li>
+<li><a href="https://www.cnblogs.com/crazylqy/category/1008178.html">Linux鸟哥（精选）</a></li>
+</ul>
 <h1>CentOS7 安装</h1>
 <ul>
-<li>
-<p><a href="https://blog.csdn.net/weixin_43451430/article/details/115553108">Centos7 安装 Mysql5.7 最全教程</a></p>
-</li>
-<li>
-<p><a href="https://juejin.cn/post/6844903828811153421">Linux Centos 7 安装 MongoDB（简单！详细！）</a></p>
-</li>
-<li>
-<p><a href="https://blog.csdn.net/oschina_41140683/article/details/81510709">CentOS7 安装 Oracle11g—静默安装</a></p>
-</li>
-<li>
-<p><a href="https://www.cnblogs.com/lwf-blog/p/8182975.html">CentOS7 升级 Python2.x 到 3.x</a></p>
-</li>
-<li>
-<p><a href="https://blog.csdn.net/xaccpJ2EE/article/details/117769259">Centos7 上安装 docker</a></p>
-</li>
+<li><a href="https://blog.csdn.net/weixin_43451430/article/details/115553108">Centos7 安装 Mysql5.7 最全教程</a></li>
+<li><a href="https://juejin.cn/post/6844903828811153421">Linux Centos 7 安装 MongoDB（简单！详细！）</a></li>
+<li><a href="https://blog.csdn.net/oschina_41140683/article/details/81510709">CentOS7 安装 Oracle11g—静默安装</a></li>
+<li><a href="https://www.cnblogs.com/lwf-blog/p/8182975.html">CentOS7 升级 Python2.x 到 3.x</a></li>
+<li><a href="https://blog.csdn.net/xaccpJ2EE/article/details/117769259">Centos7 上安装 docker</a></li>
 </ul>
 <h1>Linux 的文件权限与目录配置</h1>
 <ul>
@@ -63,7 +58,25 @@ chmod  u=rwx,go=rx  .bashrc
 
 -rw-r--r--  1  root  root  24343 Jun 23 08:33  install.log
 </code></pre>
-<h1>CentOS 常用命令</h1>
+<h1>文件与目录管理</h1>
+<ul>
+<li><a href="https://www.cnblogs.com/bluestorm/p/10283869.html">Linux文件查找</a></li>
+<li><a href="https://www.cnblogs.com/crazylqy/p/6901362.html">鸟哥私房菜 - 第七章、Linux 文件与目录管理</a></li>
+</ul>
+<h2>find</h2>
+<pre><code class="language-shell">find . -name .gradle -exec rm -rf {} \;
+find . -type f -exec ls -l {} \;
+</code></pre>
+<h2>linux 解压缩命令</h2>
+<ul>
+<li><a href="https://www.cnblogs.com/yejianfei/p/3351626.html">Linux操作系统中，<em>.zip、</em>.tar、<em>.tar.gz、</em>.tar.bz2、<em>.tar.xz、</em>.jar、*.7z等格式的压缩与解压</a></li>
+<li><a href="https://www.cnblogs.com/xiaochina/p/5801959.html" title="TAR命令详解">LINUX 常用的压缩与解压缩命令</a></li>
+</ul>
+<p>|     扩展名      | 解压命令 |
+| --------------- | -------- |
+| <em>.tar, </em>.tar.xz | tar –xvf |
+| <em>.tar.gz, </em>.tgz | tar –xzf |
+| *.tar.bz2       | tar –xjf |</p>
 <h2>Linux 统计文件夹下文件个数及目录个数</h2>
 <ol>
 <li>
@@ -89,6 +102,7 @@ chmod  u=rwx,go=rx  .bashrc
 -l 统计行数
 -m 统计字符数，此标志不能与-c 标志一起使用
 -w 统计字数。一个字定义为由空白、跳格或换行字符分隔的字符串</p>
+<h1>CentOS 常用命令</h1>
 <h2>使用 ps/awk 杀死进程</h2>
 <pre><code class="language-shell">#!/bin/bash
 # Grabs and kill a process from the pidlist that has the word myapp
@@ -100,16 +114,13 @@ kill -9 $pid
 <p>netstat -anp | grep portno
 即：netstat –apn | grep 8080</p>
 <p>其中最后一栏是 _ PID/Program name _</p>
-<h2>查看 linux 磁盘空间容量</h2>
-<p>查看磁盘使用情况
-df -lh</p>
-<p>查看目录的磁盘占用情况
-du -sh * | sort -h</p>
-<p>crontab</p>
-<p>Ubuntu 查看 crontab 运行日志</p>
-<p>修改 rsyslog 文件，将/etc/rsyslog.d/50-default.conf 文件中的#cron.*前的#删掉；
-重启 rsyslog 服务 service rsyslog restart；
-重启 cron 服务 service cron restart</p>
+<h2>CentOS7 查看硬盘情况</h2>
+<p><code>lsblk</code> 查看分区和磁盘
+<code>df -h</code> 查看分区使用情况
+<code>fdisk -l</code> 分区工具查看分区信息
+<code>cfdisk /dev/sda</code> 查看分区
+<code>blkid</code> 查看硬盘 label（别名）
+<code>du -sh * | sort -h</code> 查看目录的磁盘占用情况</p>
 <h2>ssh 证书登录</h2>
 <ol>
 <li>在 windows 下，创建 <code>~\.ssh</code> 目录；</li>
@@ -149,53 +160,6 @@ export LANG=zh_CN.UTF-8
 <p>/ 100G 用于存储系统文件
 /home 200G 用户工作目录；个人配置文件，如个人环境变量等；所有账号分配一个工作目录。
 swap 是内存的两倍</p>
-<h2>find</h2>
-<pre><code class="language-shell">find . -name .gradle -exec rm -rf {} \;
-find . -type f -exec ls -l {} \;
-</code></pre>
-<h2>linux 解压缩命令</h2>
-<ul>
-<li>
-<p>tar
-    -c: 建立压缩档案
-    -x：解压
-    -t：查看内容
-    -r：向压缩归档文件末尾追加文件
-    -u：更新原压缩包中的文件</p>
-</li>
-<li>
-<p>可选参数：
-    -z：有 gzip 属性的
-    -j：有 bz2 属性的
-    -Z：有 compress 属性的
-    -v：显示所有过程
-    -O：将文件解开到标准输出</p>
-</li>
-</ul>
-<p>-f: 必须的参数，放在最后，后面接文件名。</p>
-<ul>
-<li>
-<p>压缩</p>
-<ul>
-<li>tar –czf jpg.tar.gz *.jpg //将目录里所有 jpg 文件打包成 jpg.tar 后，并且将其用 gzip 压缩，生成一个 gzip 压缩过的包，命名为 jpg.tar.gz</li>
-<li>zip jpg.zip *.jpg //zip 格式的压缩，需要先下载 zip for linux</li>
-</ul>
-</li>
-<li>
-<p>解压</p>
-<ul>
-<li>1、*.tar 用 tar –xvf 解压</li>
-<li>2、*.gz 用 gzip -d 或者 gunzip 解压</li>
-<li>3、<em>.tar.gz 和</em>.tgz 用 tar –xzf 解压</li>
-<li>4、*.bz2 用 bzip2 -d 或者用 bunzip2 解压</li>
-<li>5、*.tar.bz2 用 tar –xjf 解压</li>
-<li>6、*.Z 用 uncompress 解压</li>
-<li>7、*.tar.Z 用 tar –xZf 解压</li>
-<li>8、*.rar 用 unrar e 解压</li>
-<li>9、*.zip 用 unzip 解压</li>
-</ul>
-</li>
-</ul>
 <h2>nohup 命令</h2>
 <p>该命令的一般形式为：<code>nohup command &amp;</code></p>
 <p>如果使用 nohup 命令提交作业，那么在缺省情况下该作业的所有输出都被重定向到一个名为 nohup.out 的文件中，除非另外指定了输出文件：
@@ -208,12 +172,6 @@ find . -type f -exec ls -l {} \;
 2）添加文件的写权限。也就是输入命令"chmod u+w /etc/sudoers"。
 3）编辑/etc/sudoers 文件。也就是输入命令"vim /etc/sudoers",输入"i"进入编辑模式，找到这一 行："root ALL=(ALL) ALL"在起下面添加"xxx ALL=(ALL) ALL"(这里的 xxx 是你的用户名)，然后保存（就是先按一 下 Esc 键，然后输入":wq"）退出。
 4）撤销文件的写权限。也就是输入命令"chmod u-w /etc/sudoers"。</p>
-<h2>CentOS7 查看硬盘情况</h2>
-<p>lsblk 查看分区和磁盘
-df -h 查看空间使用情况
-fdisk -l 分区工具查看分区信息
-cfdisk /dev/sda 查看分区
-blkid 查看硬盘 label（别名）</p>
 <hr />
 <h2>CentOS7 自启动设置</h2>
 <p>参考：<a href="http://blog.csdn.net/looksun/article/details/50668492">CentOS 7.x 设置自定义开机启动,添加自定义系统服务</a></p>
@@ -317,15 +275,6 @@ ZONE=public
    本机测试： ssh username@localhost 测试，（但必须要先安装 linux 的 ssh 客户端软件包）</li>
 </ol>
 <hr />
-<h2>CentOS 修改系统环境变量</h2>
-<ul>
-<li><code>/etc/profile</code> 文件，对所有用户生效；</li>
-<li><code>~/.bash_profile</code> 文件，对单一用户生效；</li>
-</ul>
-<pre><code class="language-shell">PATH=/usr/local/webserver/php/bin:$PATH
-export PATH
-</code></pre>
-<p>使生效：<code>source /etc/profile</code></p>
 <h2>yum &amp; rpm</h2>
 <ul>
 <li><a href="https://blog.csdn.net/yqj234/article/details/82990271">yum 的详细使用方法</a></li>
