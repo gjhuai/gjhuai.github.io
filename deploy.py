@@ -3,6 +3,8 @@ import os, pysftp
 LOCAL_PATH = os.getcwd()
 REMOTE_PATH = "/home/gjh/mynotes"
 
+excludes = ['.git', 'deletable', '.vscode', '.gradle']
+
 sftp = pysftp.Connection(host="192.168.31.200", username="gjh", private_key="~\\.ssh\\id_rsa_200_gjh")
 if not sftp.exists(REMOTE_PATH):
     sftp.mkdir(REMOTE_PATH)
@@ -10,7 +12,13 @@ sftp.chdir(REMOTE_PATH)
 
 
 for parent,dirs,files in os.walk(LOCAL_PATH):
-    if parent.startswith(os.path.join(LOCAL_PATH, '.git')):
+    skip = False
+    for ex in excludes:
+        if parent.startswith(os.path.join(LOCAL_PATH, ex)):
+            skip = True
+            break
+
+    if skip:
         continue
     
     relative_path = parent.replace(LOCAL_PATH, "").replace('\\', '/')
