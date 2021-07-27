@@ -1,0 +1,121 @@
+<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no" />
+<link rel="stylesheet" href="../theme/css/my.css" /><h1>1. 八大数据类型</h1>
+<ul>
+<li>【入门】<a href="https://blog.csdn.net/xiewenfeng520/article/details/104063062">redis 八种基本数据类型及其应用</a></li>
+</ul>
+<h1>2. Redis 应用案例</h1>
+<p>Redis 比较适合的一些应用场景：</p>
+<h2>2.1. 取最新 N 个数据的操作</h2>
+<p>比如典型的取你网站的最新文章，通过下面方式，我们可以将最新的 5000 条评论的 ID 放在 Redis 的 List 集合中，并将超出集合部分从数据库获取</p>
+<ul>
+<li>使用 LPUSH latest.comments<ID>命令，向 list 集合中插入数据</li>
+<li>插入完成后再用 LTRIM latest.comments 0 5000 命令使其永远只保存最近 5000 个 ID</li>
+<li>然后我们在客户端获取某一页评论时可以用下面的逻辑（伪代码）</li>
+</ul>
+<pre><code class="language-javascript">FUNCTION get_latest_comments(start,num_items):
+     id_list = redis.lrange(&quot;latest.comments&quot;,start,start+num_items-1)
+     IF id_list.length &lt; num_items
+          id_list = SQL_DB(&quot;SELECT ... ORDER BY time LIMIT ...&quot;)
+     END
+     RETURN id_list
+END
+</code></pre>
+<p>如果你还有不同的筛选维度，比如某个分类的最新 N 条，那么你可以再建一个按此分类的 List，只存 ID 的话，Redis 是非常高效的。</p>
+<h2>2.2. 排行榜应用，取 TOP N 操作</h2>
+<p>这个需求与上面需求的不同之处在于，前面操作以时间为权重，这个是以某个条件为权重，比如按顶的次数排序，这时候就需要我们的 sorted set 出马了，将你要排序的值设置成 sortedset 的 score，将具体的数据设置成相应的 value，每次只需要执行一条 ZADD 命令即可。</p>
+<h2>2.3. 需要精准设定过期时间的应用</h2>
+<p>比如你可以把上面说到的 sorted set 的 score 值设置成过期时间的时间戳，那么就可以简单地通过过期时间排序，定时清除过期数据了，不仅是清除 Redis 中的过期数据，你完全可以把 Redis 里这个过期时间当成是对数据库中数据的索引，用 Redis 来找出哪些数据需要过期删除，然后再精准地从数据库中删除相应的记录。</p>
+<h2>2.4. 计数器应用</h2>
+<p>Redis 的命令都是原子性的，你可以轻松地利用 INCR，DECR 命令来构建计数器系统。</p>
+<h2>2.5. Uniq 操作，获取某段时间所有数据排重值</h2>
+<p>这个使用 Redis 的 set 数据结构最合适了，只需要不断地将数据往 set 中扔就行了，set 意为集合，所以会自动排重。</p>
+<h2>2.6. 实时系统，反垃圾系统</h2>
+<p>通过上面说到的 set 功能，你可以知道一个终端用户是否进行了某个操作，可以找到其操作的集合并进行分析统计对比等。没有做不到，只有想不到。</p>
+<h2>2.7. Pub/Sub 构建实时消息系统</h2>
+<p>Redis 的 Pub/Sub 系统可以构建实时的消息系统，比如很多用 Pub/Sub 构建的实时聊天系统的例子。</p>
+<h2>2.8. 构建队列系统</h2>
+<p>使用 list 可以构建队列系统，使用 sorted set 甚至可以构建有优先级的队列系统。</p>
+<h2>2.9. 缓存</h2>
+<p>这个不必说了，性能优于 Memcached，数据结构更多样化。</p>
+<p>转自: http://blog.nosqlfan.com/html/2235.html?ref=rediszt</p>
+<h2>2.10. 缓存</h2>
+<ul>
+<li>Redis 字符串、哈希表两种数据结构适合用来储存大量的键值对信息</li>
+</ul>
+<p>当用 jdk 默认的序列化方案时，对类的版本要求严格一直，否则抛出 ClassNotFoundException。比如：</p>
+<ul>
+<li>几个共用 redis 缓存的应用，它们共用的 jar 包版本有差异（serialNo），就会导致整个系统失败。 https://github.com/alexxiyang/shiro-redis/issues/78</li>
+<li>class 一旦上线，就不能改变包名或位置，否则无法序列号。 https://www.cnblogs.com/technologykai/p/10097167.html</li>
+</ul>
+<h2>2.11. 队列</h2>
+<ul>
+<li>使用“列表”数据结构，可以实现普通级和优先级队列的功能。</li>
+<li>使用 有序集合”数据结构，可以实现优先级队列：</li>
+<li>使用“哈希表”数据结构，可以实现延时队列。</li>
+</ul>
+<h2>2.12. 去重</h2>
+<ul>
+<li>利用“集合”数据结构，可以实现小批量数据的去重</li>
+<li>利用“字符串数据结构的位操作，可以实现布隆过滤器，从而实现超大规模的数据去重</li>
+<li>利用 Redis 自带的 HyperLogLog 数据结构，可以实现超大规模数据的去重和计数。</li>
+</ul>
+<h2>2.13. 积分板</h2>
+<ul>
+<li>Redis 的“有序集合”功能可实现积分板功能，还 实现自动排序、排名功能。</li>
+</ul>
+<h2>2.14. “发布／订阅”</h2>
+<ul>
+<li>Redis 带的 “发布／ 订阅”模式可以实现多对多的 发布／订阅”功能</li>
+</ul>
+<h1>其他问题</h1>
+<h2>缓存雪崩</h2>
+<ul>
+<li>
+<p>1、什么是缓存雪崩？你有什么解决方案来防止缓存雪崩？</p>
+<p>大量缓存集中在一段时间内失效，所有的查询都落在数据库上，造成了对数据库 CPU 和内存造成巨大压力，严重的会造成数据库宕机。</p>
+</li>
+<li>
+<p>2、你有什么解决方案来防止缓存雪崩？</p>
+<ul>
+<li>
+<p>1、加锁排队 key： whiltList value：1000w 个 uid 指定 setNx whiltList value nullValue
+    mutex 互斥锁解决，Redis 的 SETNX 去 set 一个 mutex key， 当操作返回成功时，再进行 load db 的操作并回设缓存；否则，就重试整个 get 缓存的方法</p>
+</li>
+<li>
+<p>2、数据预热
+    缓存预热就是系统上线后，将相关的缓存数据直接加载到缓存系统。</p>
+</li>
+<li>
+<p>3、双层缓存策略
+    C1 为原始缓存，C2 为拷贝缓存，C1 失效时，可以访问 C2，C1 缓存失效时间设置为短期，C2 设置为长期。</p>
+</li>
+<li>
+<p>4、定时更新缓存策略
+    失效性要求不高的缓存，容器启动初始化加载，采用定时任务更新或移除缓存</p>
+</li>
+<li>
+<p>5、设置不同的过期时间，让缓存失效的时间点尽量均匀</p>
+</li>
+</ul>
+</li>
+</ul>
+<h2>缓存穿透</h2>
+<ul>
+<li>
+<p>1、什么是缓存穿透？</p>
+<p>缓存穿透是指用户查询数据，在缓存中没有，在数据库也没有，却持续不停发起查询的请求。</p>
+</li>
+<li>
+<p>2、你有什么解决方案来防止缓存穿透？</p>
+<ul>
+<li>
+<p>1、缓存空值
+    如果一个查询返回的数据为空(不管是数据不存在，还是系统故障)我们仍然把这个空结果进行缓存，但它的过期时间会很短，最长不超过五分钟。 通过这个直接设置的默认值存放到缓存，这样第二次到缓冲中获取就有值了，而不会继续访问数据库</p>
+</li>
+<li>
+<p>2、采用布隆过滤器 BloomFilter 优势占用内存空间很小，bit 存储。性能特别高。<br />
+     将所有可能存在的数据哈希到一个足够大的 bitmap 中，一个一定不存在的数据会被这个 bitmap 拦截掉，从而避免了对底层存储系统的查询压力</p>
+</li>
+</ul>
+</li>
+</ul>
