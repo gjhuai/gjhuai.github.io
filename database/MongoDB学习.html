@@ -1,27 +1,46 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no" />
-<link rel="stylesheet" href="../theme/css/my.css" /><ul>
-<li>官方文档： https://docs.mongodb.com/manual/</li>
+<link rel="stylesheet" href="../theme/css/my.css" /><h1>MongoDB 学习纲要</h1>
+<ul>
+<li>【书籍】阅读《Mongodb 权威指南（中文第二版）》</li>
+<li>
+<p>【教程】<a href="https://www.pdai.tech/md/db/nosql-mongo/mongo.html">MongoDB 教程 - Mongo 知识体系详解</a></p>
+</li>
+<li>
+<p>官方文档： https://docs.mongodb.com/manual/</p>
+</li>
 </ul>
 <h1>Java 开发</h1>
 <ul>
 <li>官方驱动文档： http://mongodb.github.io/mongo-java-driver/4.2</li>
-<li>Getting Started</li>
+<li>Getting Started<ul>
 <li>https://www.mongodb.com/blog/post/getting-started-with-mongodb-and-java-part-i</li>
 <li>https://www.mongodb.com/blog/post/getting-started-with-mongodb-and-java-part-ii</li>
-<li>mongo-java-driver</li>
+</ul>
+</li>
+<li>mongo-java-driver<ul>
 <li>mongodb-driver-core 是核心库</li>
 <li>mongodb-driver-sync 是非异步的同步版本，包含了一般 MongoCollection 的接口</li>
 <li>mongodb-driver-legacy 兼容旧版本 API</li>
 <li>mongodb-driver = mongodb-driver-sync + mongodb-driver-legacy</li>
 <li>mongo-java-driver = mongodb-driver + mongodb-driver-core + bson</li>
-<li>Morphia</li>
+</ul>
+</li>
+<li>Morphia<ul>
 <li>Morphia is a really lightweight ODM (Object Document Mapper), so it’s similar to ORMs like Hibernate.</li>
-<li>Spring Data MongoDB</li>
+</ul>
+</li>
+<li>Spring Data MongoDB<ul>
 <li>Another frequently used ODM</li>
-<li>MongoJack</li>
+</ul>
+</li>
+<li>MongoJack<ul>
 <li>直接将 JSON 映射成 Mongo 对象。不再需要将 JSON 转换成 Java 对象，再转为 Mongo 对象。</li>
-<li>Jongo</li>
+</ul>
+</li>
+<li>Jongo<ul>
 <li>another Jackson-based ODM, but provides an interesting extra in the form of supporting queries the way you’d write them in the shell.</li>
+</ul>
+</li>
 </ul>
 <h1>Golang 开发</h1>
 <ul>
@@ -29,20 +48,24 @@
 </ul>
 <h1>MongoDB 集群</h1>
 <ul>
-<li>1、Master-Slaver 是一种主从副本的模式，目前已经不推荐使用。</li>
+<li>1、Master-Slaver 是一种主从副本的模式，目前已经不推荐使用。<ul>
 <li>一个主节点（Primary）和一个或多个从节点（Secondary）</li>
 <li>可用于备份、故障恢复、读扩展等</li>
 <li>只能有一个主节点，主节点提供所有的增、删、查、改服务，从节点不提供任何服务，但是可以通过设置使从节点提供查询服务。</li>
 <li>每个从节点要知道主节点的地址，主节点记录在其上的所有操作，从节点定期轮询主节点获取这些操作，然后对自己的数据副本执行这些操作，从而保证从节点的数据与主节点一致。</li>
 <li>当主节点出现故障时，只能人工介入，指定新的主节点，从节点不会自动升级为主节点。同时，在这段时间内，该集群架构只能处于只读状态。</li>
-<li>2、Replica Set 模式是一种互为主从的关系。Replica Set 将数据复制多份保存，不同服务器保存同一份数据，在出现故障时自动切换，实现故障转移，在实际生产中非常实用。</li>
+</ul>
+</li>
+<li>2、Replica Set 模式是一种互为主从的关系。Replica Set 将数据复制多份保存，不同服务器保存同一份数据，在出现故障时自动切换，实现故障转移，在实际生产中非常实用。<ul>
 <li>也是一主多从，区别是：当集群中主节点发生故障时，副本集可以自动投票，选举出新的主节点，并引导其余的从节点连接新的主节点。</li>
 <li>自带故障转移功能的主从复制。</li>
 <li>只能有一个主节点。主节点负责数据的写入和更新，并在更新数据的同时，将操作信息写入名为 oplog 的日志文件当中。</li>
 <li>从节点会定时轮询读取 oplog 日志，根据日志内容同步更新自身的数据，保持与主节点一致。</li>
 <li>在副本集中还有一个额外的仲裁节点（不需要使用专用的硬件设备），负责在主节点发生故障时，参与选举新节点作为主节点。</li>
 <li>副本集中的各节点会通过心跳信息来检测各自的健康状况，当主节点出现故障时，并选举其中一个作为新的主节点。为了保证选举票数不同，副本集的节点数保持为奇数。</li>
-<li>3、Sharding 模式适合处理大量数据，它将数据分开存储，不同服务器保存不同的数据，所有服务器数据的总和即为整个数据集。</li>
+</ul>
+</li>
+<li>3、Sharding 模式适合处理大量数据，它将数据分开存储，不同服务器保存不同的数据，所有服务器数据的总和即为整个数据集。<ul>
 <li>分片是指将数据拆分并分散存放在不同机器上的过程。</li>
 <li>MongoDB 支持自动分片，可以使数据库架构对应用程序不可见。</li>
 <li>需要三个重要的组件，分别是分片服务器（Shard Server）、配置服务器（Config Server）和路由服务器（Route Server）。<ul>
@@ -50,6 +73,8 @@
 <li>Shard Server 是一个 mongod 数据库实例，在实际生产中，一个 Shard Server 可由几台机器组成一个副本集来承担，防止因主节点单点故障导致整个系统崩溃。</li>
 <li>Config Server 是独立的一个 mongod 进程，保存集群和分片的元数据。</li>
 <li>Route Server 是独立的一个 mongos 进程，在集群中可作为路由使用，客户端由此接入，让整个集群看起来像是一个单一的数据库，提供客户端应用程序和分片集群之间的接口。它将客户端的请求路由给每个 Shard Server，在各 Shard Server 返回结果后进行聚合并返回客户端。</li>
+</ul>
+</li>
 </ul>
 </li>
 <li>Sharding 模式追求的是高性能，而且是三种集群中最复杂的。在实际生产环境中，通常将 Replica Set 和 Sharding 两种技术结合使用。</li>

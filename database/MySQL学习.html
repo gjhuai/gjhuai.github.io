@@ -1,0 +1,295 @@
+<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no" />
+<link rel="stylesheet" href="../theme/css/my.css" /><p>[TOC]</p>
+<h1>MySQL 学习纲要</h1>
+<ul>
+<li>阅读《高性能 MySQL(第 3 版)》</li>
+<li>
+<p>【练习】<a href="https://github.com/bladeXue/sql50">经典的 SQL 练习题</a></p>
+</li>
+<li>
+<p>【官方】<a href="https://github.com/MyCATApache/Mycat-Server/wiki">MyCat 官方文档</a></p>
+</li>
+<li>
+<p>【官方】<a href="https://www.yuque.com/books/share/6606b3b6-3365-4187-94c4-e51116894695">Mycat2 权威指南</a></p>
+</li>
+<li>
+<p>【项目】<a href="https://github.com/alibaba/canal">阿里巴巴 MySQL binlog 增量订阅&amp;消费组件 Canal</a></p>
+</li>
+<li>
+<p>【详解】<a href="https://www.cnblogs.com/fkaka/p/14620957.html">懵了！女朋友突然问我 MVCC 实现原理</a></p>
+</li>
+</ul>
+<h1>索引</h1>
+<ul>
+<li>【详解】<a href="https://my.oschina.net/u/4407645/blog/3469303">常见索引介绍</a></li>
+<li>【详解】<a href="https://www.cnblogs.com/yunnick/p/11165838.html">常见索引介绍</a></li>
+</ul>
+<h2>位图索引（BitMap）</h2>
+<ul>
+<li>适用于值可枚举的字段</li>
+</ul>
+<h2>哈希索引</h2>
+<ul>
+<li>适用于等值检索，通过一次哈希计算即可定位数据的位置。</li>
+<li>与 JAVA 中 HashMap 的实现类似，是用冲突表的方式解决哈希冲突的。</li>
+</ul>
+<h1>B-TREE 索引</h1>
+<ul>
+<li>BTREE 索引是 RDBMS 最常用的索引</li>
+<li>BTREE: 有序平衡 N 叉树, 每个节点有 N 个键值和 N+1 个指针, 指向 N+1 个子节点</li>
+</ul>
+<h2>倒排索引</h2>
+<ul>
+<li>正向索引：给定文档标识，可以获取当前文档的（关键词、词频以及该词在文档中出现的位置信息）</li>
+<li>反向索引：给定了关键词标识，可以获取关键词（所在的所有文档列表，同时包含词频、位置等信息）</li>
+</ul>
+<h1>集群</h1>
+<ul>
+<li>
+<p>【入门】<a href="https://mp.weixin.qq.com/s/JPgROEQIQRuRNwAT_19cVA">必须了解的 MySQL 三大日志：binlog、redo log 和 undo log</a>
+    日志是 mysql 数据库的重要组成部分，记录着数据库运行期间各种状态信息。mysql 日志主要包括错误日志、查询日志、慢查询日志、事务日志、二进制日志几大类。作为开发，我们重点需要关注的是二进制日志 (binlog) 和事务日志(包括 redo log 和 undo log)，本文接下来会详细介绍这三种日志。</p>
+</li>
+<li>
+<p>【教程】<a href="https://www.yuque.com/zerodai/yqzdgs/mnkzn3">MySQL 数据库集群方案汇总</a></p>
+<ul>
+<li>包括后端各种技术：数据库中间件，MySQL，Oracle，MongoDB，Redis，SQL Server，RabbitMQ，</li>
+</ul>
+</li>
+<li>
+<p>【入门】<a href="https://www.cnblogs.com/lgx211/p/12456859.html">多图文，详细介绍 mysql 各个集群方案</a></p>
+<p>介绍优劣：
+一，mysql 原厂出品（1，MySQL Replication、2，MySQL Fabirc、3，MySQL Cluster）；
+二，mysql 第三方优化（4，MMM、5，MHA、6，Galera Cluster）
+三，依托硬件配合（7，heartbeat+SAN、8，heartbeat+DRDB）
+四，其它（9，Zookeeper + proxy、10，Paxos）</p>
+</li>
+<li>
+<p><a href="https://www.zhihu.com/question/21307639">高性能、高可用、可扩展的 MySQL 集群如何组建？</a>
+    组建 MySQL 集群的几种方案
+    LVS+Keepalived+MySQL（有脑裂问题？但似乎很多人推荐这个）
+    DRBD+Heartbeat+MySQL（有一台机器空余？Heartbeat 切换时间较长？有脑裂问题？）
+    MySQL Proxy（不够成熟与稳定？使用了 Lua？是不是用了他做分表则可以不用更改客户端逻辑？）
+    MySQL Cluster （社区版不支持 INNODB 引擎？商用案例不足？）
+    MySQL + MHA （如果配上异步复制，似乎是不错的选择，又和问题？）
+    MySQL + MMM （似乎反映有很多问题，未实践过，谁能给个说法）</p>
+</li>
+<li>
+<p>【详解】<a href="https://blog.csdn.net/William0318/article/details/106855431">MySQL 高可用架构对比，MMM 与 MHA 以及 MGR</a></p>
+</li>
+<li>【详解】<a href="https://www.cnblogs.com/kevingrace/p/10470226.html">MySQL+MGR 单主模式和多主模式的集群环境 - 部署手册 (Centos7.5)</a></li>
+<li>【详解】<a href="https://blog.csdn.net/weixin_27146053/article/details/113592833">悄悄告诉你 MySQL MGR 到底牛在哪?</a></li>
+<li>【详解】<a href="https://www.cnblogs.com/kevingrace/p/10260685.html">MySQL 5.7 基于组复制(MySQL Group Replication) - 运维小结</a></li>
+<li>
+<p>【详解】<a href="https://www.cnblogs.com/clsn/p/8150036.html">MySQL Replication 主从复制全方位解决方案</a></p>
+</li>
+<li>
+<p><a href="https://tech.meituan.com/2017/06/29/database-availability-architecture.html">美团数据库高可用架构的演进与设想</a>
+    MMM、MHA、MHA+Zebra 架构等</p>
+</li>
+</ul>
+<hr />
+<p>回答：
+不管哪种方案都是有其场景限制 或说 规模限制，以及优缺点的。</p>
+<ol>
+<li>首先反对大家做读写分离，关于这方面的原因解释太多次数（增加技术复杂度、可能导致读到落后的数据等），只说一点：99.8%的业务场景没有必要做读写分离，只要做好数据库设计优化 和配置合适正确的主机即可。
+   2.Keepalived+MySQL --确实有脑裂的问题，还无法做到准确判断 mysqld 是否 HANG 的情况；
+   3.DRBD+Heartbeat+MySQL --同样有脑裂的问题，还无法做到准确判断 mysqld 是否 HANG 的情况，且 DRDB 是不需要的，增加反而会出问题；
+   3.MySQL Proxy -- 不错的项目，可惜官方半途夭折了，不建议用，无法高可用，是一个写分离；
+   4.MySQL Cluster -- 社区版本不支持 NDB 是错误的言论，商用案例确实不多，主要是跟其业务场景要求有关系、这几年发展有点乱不过现在已经上正规了、对网络要求高；
+   5.MySQL + MHA -- 可以解决脑裂的问题，需要的 IP 多，小集群是可以的，但是管理大的就麻烦，其次 MySQL + MMM 的话且坑很多，有 MHA 就没必要采用 MMM</li>
+</ol>
+<p>建议： 1.若是双主复制的模式，不用做数据拆分，那么就可以选择 MHA 或 Keepalive 或 heartbeat 2.若是双主复制，还做了数据的拆分，则可以考虑采用 Cobar； 3.若是双主复制+Slave，还做了数据的拆分，需要读写分类，可以考虑 Amoeba；</p>
+<ul>
+<li><a href="https://www.yuque.com/zerodai/yqzdgs/mnkzn3">MySQL 数据库集群方案汇总</a></li>
+<li><a href="https://database.51cto.com/art/202004/615706.htm">悄悄告诉你 MySQL MGR 到底牛在哪</a></li>
+<li>
+<p><a href="https://www.cnblogs.com/kevingrace/p/10470226.html">MySQL+MGR 单主模式和多主模式的集群环境 - 部署手册 (Centos7.5) </a></p>
+</li>
+<li>
+<p><a href="https://blog.csdn.net/William0318/article/details/106855431">MySQL 高可用架构对比，MMM 与 MHA 以及 MGR</a></p>
+</li>
+</ul>
+<h1>Sharding+Proxy</h1>
+<ul>
+<li>【项目】<a href="https://github.com/apache/shardingsphere">Distributed Database Ecosphere</a></li>
+<li>【入门】<a href="https://www.cnblogs.com/yixinjishu/p/10876071.html">Sharding-JDBC 使用入门和基本配置</a></li>
+<li>【例子】<a href="https://github.com/yinjihuan/sharding-jdbc">sharding-jdbc 分库分表示例</a></li>
+<li>【详解】<a href="https://dbaplus.cn/news-11-1854-1.html">方案虽好，成本先行：数据库 Sharding+Proxy 实践解析</a></li>
+</ul>
+<h2>MyCat</h2>
+<p>mycat 的三大功能：分表、读写分离、主从切换</p>
+<ul>
+<li>
+<p>分表
+    mycat 分表的实现：首先在 mycat 的 scheme.xml 中配置逻辑表，并且在配置中说明此表在哪几个物理库上。此逻辑表的名字与真实数据库中的名字一致！然后需要配置分片规则，即按照什么逻辑分库！</p>
+</li>
+<li>
+<p>读写分离</p>
+</li>
+<li>
+<p>MyCat 基本元素</p>
+<ol>
+<li><code>逻辑库</code>：对后端多个物理数据库的映射，逻辑库中不保存数据。</li>
+<li><code>逻辑表</code>：逻辑库中的表，映射后端多个物理数据库中的表，也不保存数据</li>
+</ol>
+</li>
+<li>
+<p>逻辑表分类</p>
+<ol>
+<li><code>分片表</code>：进行了水平切分的表，表结构相同，可存储在不同库中，所有分片表的集合才是一张完整的表。</li>
+<li><code>非分片表</code>：垂直切分的表，一个数据库中就保存了一张完整的表</li>
+<li><code>全局表</code>：所有分片数据库中都存在的表</li>
+<li><code>ER关系表</code>：mycat 独有，子表依赖父表，保证在同一个数据库中</li>
+</ol>
+</li>
+<li>
+<p>配置文件</p>
+<ol>
+<li><code>/usr/local/mycat/conf/server.xml</code>
+    定义用户以及系统相关变量，如端口等。其中用户信息是前端应用程序连接 mycat 的用户信息。</li>
+<li><code>/usr/local/mycat/conf/schema.xml</code>
+    定义逻辑库，表、分片节点等内容。</li>
+<li><code>/usr/local/mycat/conf/rule.xml</code>
+    中定义分片规则。</li>
+</ol>
+</li>
+</ul>
+<h1>惯用法</h1>
+<h2>常用操作</h2>
+<h3>用户管理</h3>
+<ul>
+<li>
+<p>创建用户</p>
+<blockquote>
+<p><code>CREATE USER 'username'@'host' IDENTIFIED BY 'password';</code>
+host：指定该用户在哪个主机上可以登陆，如果是本地用户可用 localhost，如果想让该用户可以从任意远程主机登陆，可以使用通配符%
+<code>CREATE USER 'pig'@'%' IDENTIFIED BY '123456';</code></p>
+</blockquote>
+</li>
+<li>
+<p>更改用户密码</p>
+</li>
+</ul>
+<pre><code class="language-sql"># 改密码
+SET PASSWORD FOR 'username'@'host' = PASSWORD('newpassword');
+# 如果是当前登陆用户用:
+SET PASSWORD = PASSWORD(&quot;newpassword&quot;);
+# 例子:
+SET PASSWORD FOR 'pig'@'%' = PASSWORD(&quot;123456&quot;);
+</code></pre>
+<ul>
+<li>授权</li>
+</ul>
+<pre><code class="language-sql">GRANT SELECT, INSERT ON test.user TO 'pig'@'%';
+GRANT ALL ON *.* TO 'pig'@'%';
+# 用以上命令授权的用户不能给其它用户授权，如果想让该用户可以授权，用以下命令:
+GRANT privileges ON databasename.tablename TO 'username'@'host' WITH GRANT OPTION;
+</code></pre>
+<ul>
+<li>撤销用户权限</li>
+</ul>
+<pre><code class="language-sql"># 说明:privilege, databasename, tablename：同授权部分,不能超越。
+REVOKE privilege ON databasename.tablename FROM 'username'@'host';
+# 例子:
+REVOKE SELECT ON *.* FROM 'pig'@'%';
+</code></pre>
+<ul>
+<li>删除用户
+    <code>DROP USER 'username'@'host';</code></li>
+</ul>
+<h4>用户授权</h4>
+<p>命令格式：</p>
+<blockquote>
+<p><code>mysql&gt; grant 权限1,权限2,…权限n on 数据库名称.表名称 to 用户名@用户地址 identified by '连接口令';</code></p>
+<ul>
+<li>权限 1,权限 2,…权限 n 代表 <code>select,insert,update,delete,create,drop,index,alter,grant,references,reload,shutdown,process,file</code> 等 14 个权限。</li>
+<li>当权限 1,权限 2,…权限 n 被 <code>all privileges</code> 或者 <code>all</code> 代替，表示赋予用户全部权限。</li>
+<li>当 <code>数据库名称.表名</code> 称被 <code>*.*</code> 代替，表示赋予用户操作服务器上所有数据库所有表的权限。</li>
+<li>用户地址可以是 <code>localhost</code> ，也可以是 ip 地址、机器名字、域名。也可以用 <code>'%'</code> 表示从任何地址连接。</li>
+<li><code>'连接口令'</code> 不能为空，否则创建失败。</li>
+</ul>
+</blockquote>
+<pre><code class="language-shell"># 给来自10.163.225.87的用户joe分配可对数据库vtdc的employee表进行select,insert,update,delete,create,drop等操作的权限，并设定口令为123。
+mysql&gt;grant select,insert,update,delete,create,drop on vtdc.employee to joe@10.163.225.87 identified by '123';
+
+# 给来自10.163.225.87的用户joe分配可对数据库vtdc所有表进行所有操作的权限，并设定口令为123。
+mysql&gt;grant all privileges on vtdc.* to joe@10.163.225.87 identified by '123';
+
+# 给来自10.163.225.87的用户joe分配可对所有数据库的所有表进行所有操作的权限，并设定口令为123。
+mysql&gt;grant all privileges on *.* to joe@10.163.225.87 identified by '123';
+
+# 给本机用户joe分配可对所有数据库的所有表进行所有操作的权限，并设定口令为123。
+mysql&gt;grant all privileges on *.* to joe@localhost identified by '123';
+</code></pre>
+<h3>Database/Table 操作</h3>
+<ul>
+<li>创建数据库</li>
+</ul>
+<pre><code class="language-mysql">CREATE DATABASE `mydb` CHARACTER SET utf8 COLLATE utf8_general_ci;
+show databases;
+use wifidb
+</code></pre>
+<ul>
+<li>
+<p>MySQL 在 Linux 下的表名如何不区分大小写</p>
+<blockquote>
+<p>在 CentOS7 下，在 <code>/etc/my.cnf</code> 文件中 <code>[mysqld]</code> 的后面加 <code>lower_case_table_names=1</code>。 0,区分大小写; 1,不区分。
+然后重启 mysql： <code>systemctl reload mysqld</code></p>
+</blockquote>
+</li>
+<li>
+<p>执行 sql 文件：</p>
+</li>
+</ul>
+<pre><code class="language-shell">mysql -uuser -p  # 输入密码
+use testdb
+source /home/gjh/t.sql
+</code></pre>
+<ul>
+<li>查看 mysql 版本的四种方法</li>
+</ul>
+<pre><code class="language-shell">[shengting@login ~]$ `mysql -V`
+mysql&gt; status;
+mysql&gt; `select version();`
+</code></pre>
+<ul>
+<li>查看表字段：</li>
+</ul>
+<pre><code class="language-sql">desc tableName;
+show fields from tableName;
+show columns from tableName;
+</code></pre>
+<h2>运维</h2>
+<h3>导入导出</h3>
+<ul>
+<li>导出</li>
+</ul>
+<p>导出数据库：<code>mysqldump -u 用户名 -p 数据库名 &gt; 导出的文件名</code>，如我输入的命令行:
+<code>mysqldump -u root -p news &gt; news.sql</code> (输入后会让你输入进入 MySQL 的密码)
+（如果导出单张表的话在数据库名后面输入表名即可）</p>
+<ul>
+<li>导入</li>
+</ul>
+<p>1、进入 MySQL：<code>mysql -u 用户名 -p</code> ，如我输入的命令行: <code>mysql -u root -p</code> (输入同样后会让你输入 MySQL 的密码)
+2、新建你要建的数据库，这时是空数据库，如新建一个名为 news 的目标数据库 ： <code>CREATE DATABASE IF NOT EXISTS yourdbname DEFAULT CHARSET utf8 COLLATE utf8_general_ci;</code>
+3、输入：<code>mysql&gt;use 目标数据库名</code>，如我输入的命令行: <code>mysql&gt;use news;</code>
+4、导入文件：<code>mysql&gt;source 导入的文件名;</code> 如我输入的命令行：<code>mysql&gt;source news.sql;</code></p>
+<h2>性能优化</h2>
+<h3>36 个字节 UUID 字符串做主键的性能问题</h3>
+<p>可以使用 binary(16) not null 来存储 uuid(中间的-删除哈)
+<code>unhex(replace('a3eea910-5cab-11df-bbb5-000c29e30cf0','-','');</code>
+检索出来的时候用 hex()</p>
+<p>这样主键只有原来的一半,效率要高些</p>
+<p>MySQL inserting UUID to a binary(16) field
+It is advantageous to store a UUID (acc to RFC 4122) in a binary(16) field in the database.
+It is not hard to create such a table and to insert data into it.</p>
+<pre><code class="language-sql">CREATE TABLE IF NOT EXISTS test_table (
+    id BINARY(16) NOT NULL,
+    name varchar(128) NOT NULL,
+    PRIMARY KEY (id));
+INSERT INTO test_table (id, name) VALUES
+    (UNHEX(REPLACE(UUID(),'-','')), 'test1'),
+    (UNHEX(REPLACE(UUID(),'-','')), 'test2'),
+    (UNHEX(REPLACE(UUID(),'-','')), 'test3')
+  );
+</code></pre>

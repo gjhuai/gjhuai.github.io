@@ -1,0 +1,112 @@
+<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no" />
+<link rel="stylesheet" href="../theme/css/my.css" /><h1>Oracle 学习纲要</h1>
+<ul>
+<li>【入门】<a href="https://www.cnblogs.com/marveler/p/5793833.html">PL_SQL 教程</a></li>
+<li><a href="http://blog.csdn.net/haiross/article/details/25777335">Oracle 用户，权限，角色以及登录管理【不错小结】 - haiross 的专栏</a></li>
+<li><a href="http://blog.csdn.net/starnight_cbj/article/details/6792364">Oracle 建立表空间和用户 - 冷雨夜的专栏</a></li>
+<li><a href="http://blog.csdn.net/u013938484/article/details/51175501">Centos6/7 下静默安装 oracle10g - 一路追寻的博客</a></li>
+<li><a href="http://www.cnblogs.com/xmaomao/p/3273102.html">Oracle 起步---创建临时表空间/表空间/创建用户/授权</a></li>
+<li><a href="http://blog.csdn.net/johnnycode/article/details/40655857">Centos 7 学习之添加用户 - 王吉军-全栈工程师</a></li>
+<li><a href="http://blog.csdn.net/zqixiao_09/article/details/51417432">Linux 下挂载新硬盘方法 - 知秋一叶</a></li>
+<li><a href="http://www.cnblogs.com/zhangXingSheng/p/6580718.html">centos7 配置静态 ip - 薛定谔的猫！ - 博客园</a></li>
+<li><a href="http://soulful.blog.51cto.com/468033/378995">Oracle 11g 删除 - 生命不止，战斗不息！ - 51CTO 技术博客</a></li>
+<li><a href="https://blog.csdn.net/zaneabc/article/details/51924309">监视 oracle 执行的 SQL 语句</a></li>
+<li><a href="http://yunlongzheng.blog.51cto.com/788996/768269">Linux 下完全删除 Oracle - 麦地坞 - 51CTO 技术博客</a></li>
+<li><a href="https://blog.csdn.net/fffygapl/article/details/7718266">Oracle 占用 cpu 过高的处理办法 - Fengg--Focus Oracle</a></li>
+<li><a href="https://www.cnblogs.com/Ronger/archive/2012/03/28/2420962.html">Oracle 之物化视图 - Ronger - 博客园</a></li>
+<li><a href="http://www.bijishequ.com/detail/291324?p=55">Oracle 10g for linux X86 的 SILENT 安装--oracle,data,root,enterprice64,HOME</a></li>
+<li><a href="http://ju.outofmemory.cn/entry/251840">oracle 10g 在 linux 上的静默安装 - 为程序员服务</a></li>
+<li><a href="https://bbs.csdn.net/topics/392312617">Oracle 怎么获取某个表变化的数据-CSDN 论坛</a></li>
+<li><a href="https://czmmiao.iteye.com/blog/1327665">Oracle 表变化趋势追踪记录(原创)</a></li>
+<li><a href="https://github.com/zhoubihui/redo_log_calculate_analysis">zhoubihui/redo_log_calculate_analysis: oracle_redo_calculate_analysis, Oracle 数据库复制</a></li>
+</ul>
+<h2>instantclient 连接 PL/SQL Develop</h2>
+<ul>
+<li>
+<p>win8
+    可以使用 instantclient_10_2， instantclient_11_2 没有试过。</p>
+</li>
+<li>
+<p>win10
+    只能使用 instantclient_11_2，且需要安装 <a href="https://www.microsoft.com/en-us/download/details.aspx?id=18471">Microsoft Visual Studio 2005 Redistributable</a></p>
+</li>
+</ul>
+<p>-步骤 - TNS_ADMIN=D:\dev\instantclient_11_2</p>
+<pre><code>- 加  D:\dev\instantclient_11_2 到  Path中
+
+- 配置 NLS_LANG=SIMPLIFIED CHINESE_CHINA.ZHS16GBK
+
+- 编写tnsnames.ora
+</code></pre>
+<pre><code>ORCL =
+
+  (DESCRIPTION =
+
+    (ADDRESS_LIST =
+
+      (ADDRESS = (PROTOCOL = TCP)(HOST = 192.168.1.106)(PORT = 1521))
+
+    )
+
+    (CONNECT_DATA =
+
+      (SERVICE_NAME = orcl)
+
+    )
+
+  )
+
+</code></pre>
+<pre><code>- 在PLSQL Developer中设置Oracle_Home和OCI Library：
+</code></pre>
+<p>Tools -&gt; Preferences -&gt; Oracle -&gt; Connection：</p>
+<p>Oracle_Home： D:\dev\instantclient_11_2</p>
+<p>OCI Library： D:\dev\instantclient_11_2\oci.dll</p>
+<h2>创建表空间和用户</h2>
+<p>create temporary tablespace ts_snhb_tmp<br />
+tempfile '/opt/oracle/oradata/oracle10g/snhb_tmp.dbf'
+size 50m<br />
+autoextend on<br />
+next 50m maxsize 20480m<br />
+extent management local;</p>
+<p>create tablespace ts_snhb<br />
+logging<br />
+datafile '/opt/oracle/oradata/oracle10g/snhb.dbf'
+size 50m<br />
+autoextend on<br />
+next 50m maxsize 20480m<br />
+extent management local;</p>
+<p>create user snhb identified by snhb<br />
+default tablespace ts_snhb<br />
+temporary tablespace ts_snhb_tmp;</p>
+<p>grant connect,resource,dba to snhb;
+grant all privileges to snhb;</p>
+<p>-- resource is a role in oracle, which gives you the right to create objects (tables, procedures, some more but no views!). ALL PRIVILEGES grants a lot more of system privileges.</p>
+<h2>查看 oracle 数据库(database)的版本命令</h2>
+<p>在 sqlplus 下输入以下任意一个语句</p>
+<pre><code>SQL&gt; select * from v$version;
+
+SQL&gt; select version from v$instance;
+
+SQL&gt; Select version FROM Product_component_version   Where SUBSTR(PRODUCT,1,6)='Oracle';
+
+</code></pre>
+<h2>Oracle 锁表</h2>
+<pre><code class="language-sql">select s.SID,
+       s.serial#,
+       s.USERNAME,
+       s.machine,
+       s.OSUSER,
+       s.PROGRAM,
+       l.locked_mode,
+       o.OBJECT_NAME,
+       a.sql_text
+from v$session s, v$locked_object l, v$sqlarea a, dba_objects o
+where l.session_id = s.sid
+   and s.prev_sql_addr = a.address
+   and o.object_id = l.object_id
+order by sid, s.serial#;
+</code></pre>
+<p>https://www.cnblogs.com/shenckicc/p/5458574.html
+https://www.cnblogs.com/dgq-blog/p/9243196.html
+https://www.cnblogs.com/su1643/p/6598571.html</p>
