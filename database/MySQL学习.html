@@ -33,7 +33,7 @@
 <li>适用于等值检索，通过一次哈希计算即可定位数据的位置。</li>
 <li>与 JAVA 中 HashMap 的实现类似，是用冲突表的方式解决哈希冲突的。</li>
 </ul>
-<h1>B-TREE 索引</h1>
+<h2>B-TREE 索引</h2>
 <ul>
 <li>BTREE 索引是 RDBMS 最常用的索引</li>
 <li>BTREE: 有序平衡 N 叉树, 每个节点有 N 个键值和 N+1 个指针, 指向 N+1 个子节点</li>
@@ -64,16 +64,6 @@
 四，其它（9，Zookeeper + proxy、10，Paxos）</p>
 </li>
 <li>
-<p><a href="https://www.zhihu.com/question/21307639">高性能、高可用、可扩展的 MySQL 集群如何组建？</a>
-    组建 MySQL 集群的几种方案
-    LVS+Keepalived+MySQL（有脑裂问题？但似乎很多人推荐这个）
-    DRBD+Heartbeat+MySQL（有一台机器空余？Heartbeat 切换时间较长？有脑裂问题？）
-    MySQL Proxy（不够成熟与稳定？使用了 Lua？是不是用了他做分表则可以不用更改客户端逻辑？）
-    MySQL Cluster （社区版不支持 INNODB 引擎？商用案例不足？）
-    MySQL + MHA （如果配上异步复制，似乎是不错的选择，又和问题？）
-    MySQL + MMM （似乎反映有很多问题，未实践过，谁能给个说法）</p>
-</li>
-<li>
 <p>【详解】<a href="https://blog.csdn.net/William0318/article/details/106855431">MySQL 高可用架构对比，MMM 与 MHA 以及 MGR</a></p>
 </li>
 <li>【详解】<a href="https://www.cnblogs.com/kevingrace/p/10470226.html">MySQL+MGR 单主模式和多主模式的集群环境 - 部署手册 (Centos7.5)</a></li>
@@ -99,16 +89,6 @@
    5.MySQL + MHA -- 可以解决脑裂的问题，需要的 IP 多，小集群是可以的，但是管理大的就麻烦，其次 MySQL + MMM 的话且坑很多，有 MHA 就没必要采用 MMM</li>
 </ol>
 <p>建议： 1.若是双主复制的模式，不用做数据拆分，那么就可以选择 MHA 或 Keepalive 或 heartbeat 2.若是双主复制，还做了数据的拆分，则可以考虑采用 Cobar； 3.若是双主复制+Slave，还做了数据的拆分，需要读写分类，可以考虑 Amoeba；</p>
-<ul>
-<li><a href="https://www.yuque.com/zerodai/yqzdgs/mnkzn3">MySQL 数据库集群方案汇总</a></li>
-<li><a href="https://database.51cto.com/art/202004/615706.htm">悄悄告诉你 MySQL MGR 到底牛在哪</a></li>
-<li>
-<p><a href="https://www.cnblogs.com/kevingrace/p/10470226.html">MySQL+MGR 单主模式和多主模式的集群环境 - 部署手册 (Centos7.5) </a></p>
-</li>
-<li>
-<p><a href="https://blog.csdn.net/William0318/article/details/106855431">MySQL 高可用架构对比，MMM 与 MHA 以及 MGR</a></p>
-</li>
-</ul>
 <h1>Sharding+Proxy</h1>
 <ul>
 <li>【项目】<a href="https://github.com/apache/shardingsphere">Distributed Database Ecosphere</a></li>

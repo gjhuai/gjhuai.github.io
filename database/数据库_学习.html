@@ -1,10 +1,17 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no" />
 <link rel="stylesheet" href="../theme/css/my.css" /><p>[TOC]</p>
-<h1>学习纲要</h1>
+<h1>分库分表</h1>
+<ul>
+<li><a href="https://github.com/doocs/advanced-java/blob/main/docs/high-concurrency/database-shard.md">为什么要分库分表（设计高并发系统的时候，数据库层面该如何设计）？用过哪些分库分表中间件？不同的分库分表中间件都有什么优点和缺点？你们具体是如何对数据库如何进行垂直拆分或水平拆分的？</a></li>
+<li><a href="https://github.com/doocs/advanced-java/blob/main/docs/high-concurrency/database-shard-method.md">现在有一个未分库分表的系统，未来要分库分表，如何设计才可以让系统从未分库分表动态切换到分库分表上？</a></li>
+<li><a href="https://github.com/doocs/advanced-java/blob/main/docs/high-concurrency/database-shard-dynamic-expand.md">如何设计可以动态扩容缩容的分库分表方案？</a></li>
+<li><a href="https://github.com/doocs/advanced-java/blob/main/docs/high-concurrency/database-shard-global-id-generate.md">分库分表之后，id 主键如何处理？</a></li>
+</ul>
+<h1>数据交换</h1>
 <ul>
 <li><a href="https://github.com/fork-archive-hub/hdata">stuxuhai/HData: 一个支持多数据源的 ETL 数据导入/导出工具</a></li>
 </ul>
-<h3>Kettle</h3>
+<h2>Kettle</h2>
 <p><a href="https://github.com/pentaho/pentaho-kettle">Kettle Github</a>
 <a href="http://www.niubua.com/?tag=etl&amp;paged=2"> 数据对接—kettle 使用 </a></p>
 <p>Kettle 中有两种脚本文件，transformation 和 job，transformation 完成针对数据的基础转换，job 则完成整个工作流的控制。</p>
@@ -13,13 +20,13 @@
 <strong>PAN</strong> 允许你批量运行由 Spoon 设计的 ETL 转换 (例如使用一个时间调度器)。Pan 是一个后台执行的程序，没有图形界面。
 <strong>CHEF</strong> 允许你创建任务（Job）。 任务通过允许每个转换，任务，脚本等等，更有利于自动化更新数据仓库的复杂工作。任务通过允许每个转换，任务，脚本等等。任务将会被检查，看看是否正确地运行了。
 <strong>KITCHEN</strong> 允许你批量使用由 Chef 设计的任务 (例如使用一个时间调度器)。KITCHEN 也是一个后台运行的程序。</p>
-<h3>scriptella</h3>
+<h2>scriptella</h2>
 <p>使用简单，使用 xml 配置、java api 调用，没有提供 Job 管理的功能，没有配置界面。</p>
 <p><a href="https://github.com/scriptella/scriptella-etl">scriptella Github</a>
 <a href="http://scriptella.javaforge.com/tutorial.html">Two Minute Tutorial</a>
 <a href="http://scriptella.javaforge.com/reference/index.html">Scriptella ETL Reference</a>
 <a href="http://commons.apache.org/proper/commons-jexl/reference/syntax.html">Commons JEXL Syntax</a></p>
-<h3>DataX</h3>
+<h2>DataX</h2>
 <p>DataX 是淘宝开源的数据导入导出的工具，解决异构环境的数据交换问题，支持 HDFS 集群与各种关系型数据库之间的数据交换，对于不同数据库的支持都是插件式的，对于新增的数据源类型，只要新开发一个插件就好了。</p>
 <p><img alt="" src="_v_images/2019-11-29-17-14-18.png" /></p>
 <p>其特点在于：</p>
@@ -33,7 +40,7 @@
 <li>数据传输过程在单进程内完成，全内存操作，不读写磁盘，也没有 IPC</li>
 <li>开放式的框架，开发者可以在极短的时间开发一个新插件以快速支持新的数据库/文件系统。（具体参见《DataX 插件开发指南》）</li>
 </ul>
-<h5>DataX 结构模式（框架+插件）</h5>
+<h3>DataX 结构模式（框架+插件）</h3>
 <p><img alt="" src="_v_images/2019-11-29-17-15-49.png" /></p>
 <ul>
 <li>Job: 一道数据同步作业</li>
@@ -61,21 +68,21 @@
 <li>streamwriter：支持向 stream 流写入数据。（常用于测试）</li>
 </ul>
 <p>您可以按需选择使用或者独立开发您自己的插件 (具体参见《DataX 插件开发指南》)</p>
-<h3>Sqoop</h3>
+<h2>Sqoop</h2>
 <p>Sqoop 是 Apache 下的顶级项目，用来将 Hadoop 和关系型数据库中的数据相互转移，可以将一个关系型数据库（例如：MySQL，Oracle，PostgreSQL 等）中的数据导入到 Hadoop 的 HDFS 中，也可以将 HDFS 的数据导入到关系型数据库中。目前在各个公司应用广泛，且发展前景比较乐观。其特点在于：</p>
 <p>1）专门为 Hadoop 而生，随 Hadoop 版本更新支持程度好，且原本即是从 CDH 版本孵化出来的开源项目，支持 CDH4 应该没问题。
 2）支持并行导入，宣称速度很快（由于时间紧，未来得及进行真实环境的测试），可以指定按某个字段进行拆分并行化导入过程。
 3）支持按字段进行导入与导出。
 4）自带的辅助工具比较丰富，如 sqoop-import、sqoop-list-databases、sqoop-list-tables 等。</p>
 <p><img alt="" src="_v_images/2019-11-29-17-16-37.png" /></p>
-<h3>DataX vs Sqoop</h3>
+<h2>DataX vs Sqoop</h2>
 <p>DataX 直接在运行 DataX 的机器上进行数据的抽取及加载。
 而 Sqoop 充分里面了 map-reduce 的计算框架。Sqoop 根据输入条件，生成一个 map-reduce 的作业，在 Hadoop 的框架中运行。
 从理论上讲，用 map-reduce 框架同时在多个节点上进行 import 应该会比从单节点上运行多个并行导入效率高。而实际的测试中也是如此，测试一个 Oracle to hdfs 的作业，DataX 上只能看到运行 DataX 上的机器的数据库连接，而 Sqoop 运行时，4 台 task-tracker 全部产生一个数据库连接。调起的 Sqoop 作业的机器也会产生一个数据库连接，应为需要读取数据表的一些元数据信息，数据量等，做分区。
 Sqoop 现在作为 Apache 的顶级项目，如果要我从 DataX 和 Sqoop 中间选择的话，我想我还是会选择 Sqoop。而且 Sqoop 还有很多第三方的插件。早上使用了 Quest 开发的 OraOop 插件，确实像 quest 说的一样，速度有着大幅的提升，Quest 在数据库方面的经验，确实比旁人深厚。</p>
 <p>在我的测试环境上，一台只有 700m 内存的，IO 低下的 oracle 数据库，百兆的网络，使用 Quest 的 Sqoop 插件在 4 个并行度的情况下，导出到 HDFS 速度有 5MB/s ，这已经让我很满意了。相比使用原生 Sqoop 的 2.8MB/s 快了将近一倍，sqoop 又比 DataX 的 760KB/s 快了两倍。
 另外一点 Sqoop 采用命令行的方式调用，比如容易与我们的现有的调度监控方案相结合，DataX 采用 xml 配置文件的方式，在开发运维上还是有点不方便。</p>
-<h3>参考</h3>
+<h2>参考</h2>
 <p><a href="http://code.taobao.org/p/datax/wiki/index/">DataX 官方 Wiki、代码</a>
 <a href="http://www.xiaohui.org/archives/545.html">大数据异构环境数据同步工具 DataX 与 Sqoop 之比较</a>
 <a href="http://www.open-open.com/lib/view/1325771223625">淘宝异构数据源数据交换工具 DataX</a>

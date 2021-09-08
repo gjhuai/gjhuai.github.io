@@ -67,7 +67,7 @@ h2 {
 }
 
 ul li {
-  list-style: none !important;
+  list-style: circle !important;
   margin-bottom: 20;
   
 }
