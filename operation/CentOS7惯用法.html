@@ -298,7 +298,7 @@ ZONE=public
 rpm -qa | grep kernel
 erlang-kernel-18.3.3-1.el7.x86_64
 kernel-devel-3.10.0-123.el7.x86_64
-abrt-addon-kerneloops-2.1.11-36.el7.centos.x86_64
+abrt-addon-kerneloops-2.1.11-36.el7.centos.x86_64s
 kernel-3.10.0-327.28.3.el7.x86_64
 kernel-3.10.0-123.el7.x86_64
 # 删除旧内核的RPM包
@@ -306,3 +306,47 @@ yum remove xxxx
 # 重启系统，一定不要忘记，否则不生效。
 reboot
 </code></pre>
+<h1>开发配置</h1>
+<h2>升级python3.9</h2>
+<ul>
+<li>获取python安装路径</li>
+</ul>
+<pre><code class="language-python">import requests
+print(requests.__path__)
+</code></pre>
+<ul>
+<li>
+<p>下载解压：<code>tar -xzf Python-3.9.9.tgz</code></p>
+</li>
+<li>
+<p>生成安装配置文件： <code>./configure --enable-optimizations</code>。 或指定编译位置： <code>./configure --prefix=/usr/local/python3</code></p>
+</li>
+<li>
+<p>编译与安装：<code>make altinstall</code></p>
+</li>
+<li>
+<p>删除 <code>/usr/bin/python</code></p>
+</li>
+<li>
+<p>修改文件链接： <code>ln -s /usr/local/bin/python3.9 /usr/bin/python</code> </p>
+</li>
+<li>
+<p>删除 <code>/usr/local/bin/pip</code></p>
+</li>
+<li>
+<p>修改文件链接： <code>ln -s /usr/local/bin/pip3.9 /usr/bin/local/pip</code> </p>
+</li>
+</ul>
+<h3>卸载python3.4</h3>
+<ul>
+<li>运行： <code>whereis python</code> ，删除3.4相关内容：</li>
+</ul>
+<pre><code class="language-shell"># rm -rf /usr/bin/python3.4m
+# rm -rf /usr/bin/python3.4
+# rm -rf /usr/lib/python3.4
+# rm -rf /usr/lib64/python3.4
+# rm -rf /usr/include/python3.4m
+</code></pre>
+<ul>
+<li>运行： <code>whereis pip</code> ，删除3.4相关内容：</li>
+</ul>
