@@ -5,7 +5,7 @@ REMOTE_PATH = "/home/gjh/mynotes"
 
 excludes = ['.git', 'deletable', '.vscode', '.gradle']
 
-sftp = pysftp.Connection(host="192.168.31.200", username="gjh", private_key="~\\.ssh\\id_rsa_200_gjh")
+sftp = pysftp.Connection(host="192.168.31.200", username="gjh", private_key="~\\.ssh\\id_rsa_2048_dyys")
 if not sftp.exists(REMOTE_PATH):
     sftp.mkdir(REMOTE_PATH)
 sftp.chdir(REMOTE_PATH)
